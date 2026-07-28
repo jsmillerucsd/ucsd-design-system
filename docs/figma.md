@@ -137,27 +137,43 @@ Open questions for design — display face, density mode, icon set, sub-brand sc
 
 ## 3. Getting variables out of Figma
 
-### 3.1 The export mechanism — decided
+### 3.1 The export mechanism
 
-UCSD is **not on Figma Enterprise**, so the Variables REST API is unavailable: `GET /v1/files/:key/variables/local` is Enterprise-gated and returns 403 on every other plan. `scripts/sync-figma.mjs` is kept for the day that changes, but it is not the path.
+UCSD is on **Figma Professional**. That settles two things: variable modes work (10 per collection; we need 2), and the Variables REST API is out — `GET /v1/files/:key/variables/local` is Enterprise-gated and 403s on every other plan. `scripts/sync-figma.mjs` is kept for the day that changes.
 
-**The path is the Tokens Studio plugin.** The plugin writes the same DTCG files into `tokens/`, so everything downstream — Style Dictionary, `DESIGN.md`, the skill — is unaffected.
+That leaves two candidates, and **the first is dramatically simpler if it is available**.
 
-#### What that actually requires
+#### Option A — Figma's native DTCG import/export ⟡ CHECK THIS FIRST
 
-Two separate gates, and **both** must be met for light/dark to exist at all:
+Figma shipped native variable import/export conforming to the **DTCG spec** — the same format `tokens/` already uses. Announced at Schema 2025 and rolled out gradually through late 2025.
 
-| Requirement | Why | Consequence if missing |
-|---|---|---|
-| **Figma Professional plan or higher** | Variable *modes* are not available on Free/Starter. Light + Dark is two modes. | Free/Starter cannot express this system. Not a workaround situation — the feature is absent. |
-| The file lives in a **Project**, not Drafts | Figma refuses to create a second mode for files in Drafts, even on a paid plan. | `Your Figma plan only allows for the creation of 1 mode`, on an otherwise-correct setup. |
-| **Tokens Studio Pro** — one seat, the designer's | Creating Themes is Pro-only, and Themes are the only route to a multi-mode Variable Collection. Exporting from Token Sets (free tier) maps each set to a collection with exactly one mode. | Tokens import fine, but every collection lands single-mode. Dark mode has nowhere to live. |
+- **Export:** right-click a collection → **Export modes** (or a single mode → *Export mode*).
+- **Import:** drag a DTCG JSON onto the Variables view; it can create a new collection or update existing modes.
 
-Mode *counts* are generous once you are on a paid tier — Professional allows 10 per collection, Organization 20, Enterprise 40 (raised from 4 at Schema 2025). We need 2. The tier gate is the constraint, not the ceiling.
+No plugin, no licence, no recurring cost. The only documented plan gate on the surrounding feature is *modes themselves*, which Professional has.
+
+**The check that decides everything:** open the Figma file, right-click a variable collection, and see whether **Export modes** appears. It rolled out gradually and some accounts got it later than others.
+
+> This is the payoff from [D3](architecture.md) — choosing DTCG over Style Dictionary's legacy format or Tokens Studio's dialect. Figma converged on the same standard, so the boundary is a file format both sides already speak, with nothing in between.
+
+**Known wrinkle:** aliases resolve only against collections that already exist, so import **primitives first, semantics second**. Importing semantics alone yields variables with unresolved references.
+
+#### Option B — Tokens Studio plugin (fallback)
+
+If native export hasn't reached the account, Tokens Studio writes the same DTCG files. It costs **one Tokens Studio Pro seat**: creating Themes is Pro-only, and Themes are the only route to a multi-mode Variable Collection — the free tier maps each token set to a collection with exactly one mode, leaving dark mode nowhere to live.
+
+Free community plugins (tokenhaus, HaKa, TokensBrücke) also export Figma variables to DTCG and are worth trying before paying for anything.
+
+#### Regardless of option
+
+| Requirement | Why it bites |
+|---|---|
+| The file lives in a **Project**, not Drafts | Figma refuses a second mode for files in Drafts *even on a paid plan* — `Your Figma plan only allows for the creation of 1 mode`, on an otherwise-correct setup. |
+| Import **primitives before semantics** | Aliases resolve against existing collections only. |
 
 #### The seed package
 
-`npm run build:figma-seed` generates [`tokens-studio/`](../tokens-studio/README.md) from `tokens/` — four token sets plus `$metadata.json` and `$themes.json`, importable directly. It exists so the designer never hand-types ~175 variable names from a spec.
+`npm run build:figma-seed` generates [`tokens-studio/`](../tokens-studio/README.md) from `tokens/` so the designer never hand-types ~175 variable names. It is currently in **Tokens Studio format** (`$metadata.json` + `$themes.json`); if Option A is available, the same script should emit plain per-collection DTCG instead.
 
 It is a **one-time seed, not a sync**. After import, Figma is upstream and this output is reference only. `elevation` and `motion` are deliberately excluded: Figma Variables have no shadow or easing type, so they cannot be variables at all (shadows are effect styles, authored by hand). They still reach code normally.
 
