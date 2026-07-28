@@ -1,0 +1,22 @@
+{
+  "name": "ucsd-design-system",
+  "version": "0.0.0",
+  "private": true,
+  "description": "UCSD Design System — token-first, framework-agnostic, LLM-readable. Successor to Decorator V5.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/tokens",
+    "packages/bootstrap"
+  ],
+  "scripts": {
+    "build": "npm run build:tokens && npm run build:bootstrap && npm run build:skill",
+    "build:tokens": "npm run build --workspace @ucsd/tokens",
+    "build:bootstrap": "npm run build --workspace @ucsd/bootstrap",
+    "build:skill": "node scripts/generate-skill-references.mjs",
+    "sync:figma": "node scripts/sync-figma.mjs",
+    "validate": "node skills/ucsd-design-system/scripts/validate.mjs"
+  }
+}

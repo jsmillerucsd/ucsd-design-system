@@ -1,0 +1,112 @@
+# Architecture & Decisions
+
+Why this repo is shaped the way it is. Each decision records the alternative rejected, so a future maintainer can tell an intentional choice from an accident.
+
+---
+
+## Context
+
+**Decorator V5** is UCSD's current web design system: Bootstrap 3, jQuery, Glyphicons, Roboto + Teko, distributed as CSS/JS from `cdn.ucsd.edu/developer/decorator/5.0.2/`, with page templates for homepage / blank slate / two-column / three-column.
+
+Constraints driving the replacement:
+
+1. Bootstrap 3 is long past end of life — no security patches, no flexbox/grid, jQuery-dependent.
+2. New work targets **Next.js and shadcn/Tailwind** as well as Bootstrap, and the system must serve both without forking the brand.
+3. It must also drive **CMS page layouts** — content pages, landing pages, listings.
+4. It must be readable by **LLM coding agents**, which are now a primary consumer of design system documentation.
+5. The existing branding skill points an agent at a kitchen-sink **URL**, which is lossy, slow, and silently rots.
+
+---
+
+## D1. Tokens are the shared layer, not components
+
+**Decision.** Ship one token source. Ship *separate* component implementations per framework.
+
+**Rejected: a universal component library** (web components, or a React lib wrapped for every framework). Wrapping never produces idiomatic code in the host framework, doubles the API surface, and fights each framework's own conventions. Bootstrap developers want `.btn`; React developers want `<Button>`. Giving each what they expect costs less than making both use a compromise.
+
+**Consequence.** "Consistency" is a build property: every target compiles from the same `tokens.json`, so drift requires actively bypassing the build.
+
+---
+
+## D2. Bootstrap 5 and Tailwind/shadcn are both permanent
+
+**Decision.** Both are first-class, indefinitely. Bootstrap 5 is not a migration waystation.
+
+**Why.** UCSD has a long tail of small server-rendered apps and CMS templates where a `<link>` tag is the right answer and a Node build step is not. Forcing them to Tailwind is a tax with no benefit. Meanwhile Next.js systems genuinely benefit from shadcn's composability.
+
+**Consequence.** Every semantic token must be expressible as a Bootstrap 5 Sass variable *and* a Tailwind `@theme` entry. In practice this constrains the token set toward simple scalars, which is a healthy discipline anyway. Breakpoints must match Bootstrap's exactly (see naming contract).
+
+---
+
+## D3. W3C DTCG as the token format
+
+**Decision.** `$value` / `$type` / `$description` JSON.
+
+**Rejected: Style Dictionary's legacy format** (locks us to one build tool) and **Tokens Studio's native dialect** (locks us to one vendor). DTCG is read by Style Dictionary v4, Tokens Studio, and Figma tooling, so we can swap any one of them without touching the source of truth.
+
+---
+
+## D4. shadcn *registry*, not an npm React component package
+
+**Decision.** Publish `registry.json` + component sources; teams run `npx shadcn add https://design.ucsd.edu/r/button.json`.
+
+**Rejected: `@ucsd/react` as a versioned component package.** A versioned component library makes the design system team the bottleneck for every product's edge case, and every consumer eventually needs a variant we didn't anticipate. The registry model gives teams code they own and can modify, while we still own the starting point and the tokens underneath it.
+
+**Bonus.** shadcn ships a registry MCP server, so agents can already enumerate and pull our components with no custom tooling from us.
+
+---
+
+## D5. The skill is generated, and self-contained
+
+**Decision.** `SKILL.md` is a short hand-written router. `references/generated/` is built from `tokens.json` and committed.
+
+**Rejected: the current approach** — a skill that points at `developer.ucsd.edu` URLs. That requires a network fetch per use, burns context on HTML chrome, gives the model no way to verify its output, and goes stale invisibly the moment the site changes.
+
+**Rejected: a fully hand-written skill.** It drifts within one sprint, and a confidently stale hex code is worse than no documentation.
+
+**Why committed rather than gitignored.** The skill must work for anyone who clones the Skills Library with no build step. CI fails if regenerating produces a diff, so committed-and-generated stays honest.
+
+---
+
+## D6. Progressive disclosure in the skill
+
+`SKILL.md` stays under ~150 lines: what the system is, how to choose a stack, the hard rules, and a table of contents. Detail lives in `references/`, loaded only when relevant.
+
+**Why.** Skill frontmatter is always in context; the body loads on trigger; references load on demand. A 2,000-line SKILL.md would consume context on every unrelated task and, past a certain length, models start skimming it. The router pattern keeps the always-on cost near zero.
+
+---
+
+## D7. Layouts are specs, not code
+
+**Decision.** `layouts/*.md` are prose specs with reference markup, not a template package.
+
+**Why.** The CMS, Next.js apps, and static pages all render layouts differently, but they must agree on *anatomy* — which regions exist, what's allowed in each, what the content model fields are, which landmarks are required. That agreement is prose plus a skeleton, not a shared runtime.
+
+---
+
+## D8. One repo
+
+**Decision.** Tokens, packages, layouts, docs and the skill in one repo, npm workspaces.
+
+**Rejected: separate repos per package.** Cross-repo version coordination for a system this size costs more than it saves. One repo means one PR can change a token, its Bootstrap mapping, its docs and the skill together — atomically reviewable.
+
+**Rejected: pnpm.** Not installed on target machines; npm workspaces is sufficient and is one less prerequisite.
+
+---
+
+## D9. Sync is one-way and lands as a pull request
+
+Covered in [`figma-pipeline.md`](figma-pipeline.md) §0 and §7. Recorded here because it is the decision most likely to be re-litigated: someone will eventually propose bidirectional sync so engineers can push values back to Figma. The answer is no — it creates a merge-conflict surface between two systems with incompatible conflict models, and in every reported case it ends with a human manually reconciling both.
+
+---
+
+## Open questions
+
+| # | Question | Blocks | Default if unanswered |
+|---|---|---|---|
+| 1 | Which **CMS**? (Drupal / headless / other) | `layouts/` content-model mapping | Write layouts CMS-agnostically with a mapping table per platform |
+| 2 | Figma plan tier — Enterprise? | Sync mechanism (API vs Tokens Studio) | Assume non-Enterprise; budget a Tokens Studio Pro seat |
+| 3 | Keep **Teko** as the display face? | `font.family.display` | Carry it forward from Decorator V5 |
+| 4 | Icon strategy — Glyphicons are dead | Icon tokens + component | Bootstrap Icons (BS5-native, MIT, ~2,000 glyphs) |
+| 5 | Where does this repo live — new GitHub repo, or inside the Skills Library? | CI publish target | Standalone repo; CI copies `skills/` into the Skills Library on release |
+| 6 | Is there an existing UCSD Tailwind/shadcn user to pilot with? | Phase 5 priority | Sequence after Bootstrap |

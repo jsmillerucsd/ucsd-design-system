@@ -1,0 +1,69 @@
+// =============================================================================
+// @ucsd/bootstrap — UCSD Bootstrap 5 theme
+// =============================================================================
+// The Decorator V5 replacement. Two ways to consume:
+//
+//   1. No build step — link the compiled bundle:
+//        <link rel="stylesheet" href="https://cdn.ucsd.edu/ucsd/2/ucsd-bootstrap.min.css">
+//
+//   2. With a build step — import this file and get Bootstrap's Sass API,
+//      so you can tree-shake and further customise:
+//        @import "@ucsd/bootstrap/scss";
+//
+// Import order below is Bootstrap's required order. Do not rearrange.
+// (@import is used because that is what Bootstrap 5.3 documents; migrate to
+// @use when Bootstrap ships a @use-native entry point.)
+
+// 1. Bootstrap functions — needed before any variable that calls tint/shade.
+@import "bootstrap/scss/functions";
+
+// 2. UCSD token values, then the token -> Bootstrap variable mapping.
+//    Both must land before Bootstrap's own _variables.scss so !default wins ours.
+@import "@ucsd/tokens/dist/scss/tokens";
+@import "bridge";
+
+// 3. Bootstrap variables and maps.
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// 4. Layout & components.
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/tables";
+@import "bootstrap/scss/forms";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/dropdown";
+@import "bootstrap/scss/button-group";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/card";
+@import "bootstrap/scss/accordion";
+@import "bootstrap/scss/breadcrumb";
+@import "bootstrap/scss/pagination";
+@import "bootstrap/scss/badge";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/progress";
+@import "bootstrap/scss/list-group";
+@import "bootstrap/scss/close";
+@import "bootstrap/scss/toasts";
+@import "bootstrap/scss/modal";
+@import "bootstrap/scss/tooltip";
+@import "bootstrap/scss/popover";
+@import "bootstrap/scss/offcanvas";
+@import "bootstrap/scss/spinners";
+@import "bootstrap/scss/placeholders";
+
+// 5. Helpers and the utilities API (generates .m-*, .text-*, etc.)
+@import "bootstrap/scss/helpers";
+@import "bootstrap/scss/utilities/api";
+
+// 6. UCSD additions that Bootstrap has no equivalent for.
+@import "ucsd";

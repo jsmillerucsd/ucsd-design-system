@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.turbo/
+.astro/
+.next/
+*.log
+.DS_Store
+Thumbs.db
+.env
+.env.local
+
+# NOTE: skills/ucsd-design-system/references/generated/ IS committed on purpose.
+# The skill must work for anyone who clones it, with no build step. See docs/architecture.md.

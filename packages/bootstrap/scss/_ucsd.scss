@@ -1,0 +1,105 @@
+// =============================================================================
+// UCSD additions — things Bootstrap has no equivalent for
+// =============================================================================
+// Keep this file small. Anything that can be expressed as a Bootstrap variable
+// belongs in _bridge.scss instead; anything reusable across frameworks belongs
+// in a token. This file is only for genuinely UCSD-specific structure.
+
+// --- Skip link ---------------------------------------------------------------
+// Required on every page (WCAG 2.4.1). Visible only on focus.
+.ucsd-skip-link {
+  position: absolute;
+  inset-inline-start: $ucsd-space-2;
+  inset-block-start: -100%;
+  z-index: 1080;
+  padding: $ucsd-space-2 $ucsd-space-4;
+  background: $ucsd-color-surface-default;
+  color: $ucsd-color-text-link;
+  border: 2px solid $ucsd-color-border-focus;
+  border-radius: $ucsd-radius-md;
+
+  &:focus-visible {
+    inset-block-start: $ucsd-space-2;
+  }
+}
+
+// --- Masthead ----------------------------------------------------------------
+// The UCSD identity band. Sits above any site navigation.
+.ucsd-masthead {
+  background: $ucsd-color-brand-navy;
+  color: $ucsd-color-text-inverse;
+  padding-block: $ucsd-space-3;
+
+  a { color: inherit; }
+
+  &__wordmark {
+    display: block;
+    height: 32px;
+    width: auto;
+  }
+}
+
+// --- Site footer -------------------------------------------------------------
+// NOTE: Decorator V5's footer used UCSD Blue (#00629b), not navy. Carried
+// forward deliberately — verify with brand before changing.
+.ucsd-footer {
+  background: $ucsd-color-brand-blue;
+  color: $ucsd-color-text-inverse;
+  padding-block: $ucsd-space-12;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+// --- Page title band ---------------------------------------------------------
+// White band beneath the masthead. No gold rule — that was a persistent
+// misreading of Decorator V5 and is called out in the old branding skill.
+.ucsd-page-title {
+  background: $ucsd-color-surface-default;
+  padding-block: $ucsd-space-8;
+  border-bottom: 1px solid $ucsd-color-border-subtle;
+}
+
+// --- Prose ------------------------------------------------------------------
+// Long-form content-page body. Constrains measure for readability; CMS authors
+// write into this and get sane vertical rhythm without per-element classes.
+.ucsd-prose {
+  max-width: $ucsd-container-prose;
+
+  > * + * { margin-block-start: $ucsd-space-4; }
+
+  h2, h3, h4 {
+    margin-block-start: $ucsd-space-10;
+    margin-block-end: $ucsd-space-3;
+  }
+
+  ul, ol { padding-inline-start: $ucsd-space-6; }
+  li + li { margin-block-start: $ucsd-space-2; }
+
+  img, figure { margin-block: $ucsd-space-8; }
+
+  blockquote {
+    border-inline-start: 4px solid $ucsd-color-brand-gold;
+    padding-inline-start: $ucsd-space-4;
+    color: $ucsd-color-text-muted;
+  }
+}
+
+// --- Section rhythm ----------------------------------------------------------
+// Landing-page section spacing. Two sizes only, on purpose.
+.ucsd-section    { padding-block: $ucsd-space-16; }
+.ucsd-section--sm { padding-block: $ucsd-space-10; }
+
+// --- Reduced motion ----------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

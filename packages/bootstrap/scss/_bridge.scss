@@ -1,0 +1,138 @@
+// =============================================================================
+// UCSD tokens -> Bootstrap 5 variables
+// =============================================================================
+// The ONE hand-written mapping file in this package, and deliberately so: which
+// UCSD semantic token backs which Bootstrap variable is a design decision, not a
+// mechanical transform. Keeping it small, explicit and reviewable is the point.
+//
+// Everything on the right-hand side comes from @ucsd/tokens (generated).
+// Everything on the left is Bootstrap's own API.
+//
+// Read with docs/token-naming-contract.md open.
+
+// --- Brand / theme colors ----------------------------------------------------
+$primary:   $ucsd-color-action-primary;
+$secondary: $ucsd-color-action-secondary;
+$success:   $ucsd-color-status-success;
+$info:      $ucsd-color-status-info;
+$warning:   $ucsd-color-status-warning;
+$danger:    $ucsd-color-status-danger;
+$light:     $ucsd-color-surface-subtle;
+$dark:      $ucsd-color-surface-inverse;
+
+// --- Body & surfaces ---------------------------------------------------------
+$body-bg:            $ucsd-color-surface-default;
+$body-color:         $ucsd-color-text-default;
+$body-secondary-color: $ucsd-color-text-muted;
+$body-tertiary-color:  $ucsd-color-text-subtle;
+$body-tertiary-bg:     $ucsd-color-surface-subtle;
+$border-color:       $ucsd-color-border-default;
+$border-color-translucent: $ucsd-color-border-subtle;
+
+// --- Links -------------------------------------------------------------------
+$link-color:            $ucsd-color-text-link;
+$link-hover-color:      $ucsd-color-text-link-hover;
+$link-decoration:       underline;
+$link-hover-decoration: underline;
+
+// --- Focus ring --------------------------------------------------------------
+// WCAG 2.2 (2.4.11/2.4.13). Do not reduce width or remove; adjust the color token.
+$focus-ring-width:   3px;
+$focus-ring-opacity: 1;
+$focus-ring-color:   $ucsd-color-border-focus;
+
+// --- Typography --------------------------------------------------------------
+$font-family-sans-serif: #{$ucsd-font-family-sans};
+$font-family-monospace:  #{$ucsd-font-family-mono};
+$headings-font-family:   #{$ucsd-font-family-display};
+
+$font-weight-normal:   $ucsd-font-weight-regular;
+$font-weight-medium:   $ucsd-font-weight-medium;
+$font-weight-semibold: $ucsd-font-weight-semibold;
+$font-weight-bold:     $ucsd-font-weight-bold;
+
+$font-size-base:  1rem; // 16px — matches $ucsd-text-md-size; kept in rem so user font-size settings are honoured
+$font-size-sm:    .875rem;
+$font-size-lg:    1.125rem;
+$line-height-base: 1.5;
+
+$h1-font-size: $ucsd-text-5xl-size;
+$h2-font-size: $ucsd-text-4xl-size;
+$h3-font-size: $ucsd-text-3xl-size;
+$h4-font-size: $ucsd-text-2xl-size;
+$h5-font-size: $ucsd-text-xl-size;
+$h6-font-size: $ucsd-text-lg-size;
+
+// --- Spacing -----------------------------------------------------------------
+// Bootstrap's $spacers map drives every .m-*/.p-*/.gap-* utility.
+// Keys stay numeric and match the UCSD scale, so `.p-4` is $ucsd-space-4.
+$spacer: $ucsd-space-4;
+$spacers: (
+  0:  $ucsd-space-0,
+  1:  $ucsd-space-1,
+  2:  $ucsd-space-2,
+  3:  $ucsd-space-3,
+  4:  $ucsd-space-4,
+  5:  $ucsd-space-5,
+  6:  $ucsd-space-6,
+  7:  $ucsd-space-7,
+  8:  $ucsd-space-8,
+  10: $ucsd-space-10,
+  12: $ucsd-space-12,
+  16: $ucsd-space-16,
+  20: $ucsd-space-20,
+  24: $ucsd-space-24,
+);
+
+// --- Radius ------------------------------------------------------------------
+$border-radius:     $ucsd-radius-md;
+$border-radius-sm:  $ucsd-radius-sm;
+$border-radius-lg:  $ucsd-radius-lg;
+$border-radius-xl:  $ucsd-radius-xl;
+$border-radius-pill: $ucsd-radius-pill;
+
+// --- Elevation ---------------------------------------------------------------
+$box-shadow-sm: $ucsd-elevation-1;
+$box-shadow:    $ucsd-elevation-2;
+$box-shadow-lg: $ucsd-elevation-3;
+
+// --- Motion ------------------------------------------------------------------
+$transition-base:     all $ucsd-motion-duration-base $ucsd-motion-easing-standard;
+$transition-collapse: height $ucsd-motion-duration-slow $ucsd-motion-easing-standard;
+
+// --- Grid --------------------------------------------------------------------
+// MUST match tokens/semantic/layout.json exactly. See token-naming-contract.md.
+$grid-breakpoints: (
+  xs: 0,
+  sm: $ucsd-breakpoint-sm,
+  md: $ucsd-breakpoint-md,
+  lg: $ucsd-breakpoint-lg,
+  xl: $ucsd-breakpoint-xl,
+  xxl: $ucsd-breakpoint-xxl,
+);
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: $ucsd-container-base,
+  xxl: $ucsd-container-wide,
+);
+$grid-gutter-width: $ucsd-space-6;
+
+// --- Components --------------------------------------------------------------
+$btn-padding-x:     $ucsd-button-padding-x;
+$btn-padding-y:     $ucsd-button-padding-y;
+$btn-border-radius: $ucsd-button-radius;
+$btn-font-weight:   $ucsd-font-weight-semibold;
+
+$card-border-radius: $ucsd-radius-lg;
+$card-border-color:  $ucsd-color-border-subtle;
+$card-cap-bg:        $ucsd-color-surface-subtle;
+
+$input-border-color:  $ucsd-color-border-strong;
+$input-focus-border-color: $ucsd-color-border-focus;
+$input-border-radius: $ucsd-radius-md;
+
+// Enable Bootstrap's CSS-variable output so consumers can retheme at runtime.
+$enable-cssgrid: true;
+$enable-dark-mode: true;

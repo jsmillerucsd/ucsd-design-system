@@ -1,0 +1,55 @@
+{
+  "color": {
+    "$description": "Semantic colors, Light mode. Every value MUST be an alias to a primitive — never a literal. Every token here MUST have a counterpart in dark.json (CI enforces).",
+    "surface": {
+      "default": { "$value": "{palette.white}",       "$type": "color", "$description": "Page and card background." },
+      "subtle":  { "$value": "{palette.neutral.50}",  "$type": "color", "$description": "Alternating sections, table stripes." },
+      "raised":  { "$value": "{palette.white}",       "$type": "color", "$description": "Surfaces above the page: modals, popovers, dropdowns." },
+      "sunken":  { "$value": "{palette.neutral.100}", "$type": "color", "$description": "Wells, inset panels, code blocks." },
+      "inverse": { "$value": "{palette.navy.900}",    "$type": "color", "$description": "Dark bands on a light page: footer, hero." }
+    },
+    "text": {
+      "default":    { "$value": "{palette.neutral.900}", "$type": "color" },
+      "muted":      { "$value": "{palette.neutral.600}", "$type": "color", "$description": "Secondary text. AA on surface.default." },
+      "subtle":     { "$value": "{palette.neutral.500}", "$type": "color", "$description": "Tertiary. Large text / non-essential only." },
+      "inverse":    { "$value": "{palette.white}",       "$type": "color", "$description": "Text on surface.inverse." },
+      "link":       { "$value": "{palette.blue.500}",    "$type": "color" },
+      "link-hover": { "$value": "{palette.blue.700}",    "$type": "color" }
+    },
+    "border": {
+      "default": { "$value": "{palette.neutral.300}", "$type": "color" },
+      "subtle":  { "$value": "{palette.neutral.200}", "$type": "color" },
+      "strong":  { "$value": "{palette.neutral.500}", "$type": "color" },
+      "focus":   { "$value": "{palette.blue.500}",    "$type": "color", "$description": "Focus ring. Must hit 3:1 against adjacent surfaces." }
+    },
+    "action": {
+      "primary":          { "$value": "{palette.blue.500}",    "$type": "color" },
+      "primary-hover":    { "$value": "{palette.blue.600}",    "$type": "color" },
+      "primary-active":   { "$value": "{palette.blue.700}",    "$type": "color" },
+      "secondary":        { "$value": "{palette.navy.900}",    "$type": "color" },
+      "secondary-hover":  { "$value": "{palette.navy.950}",    "$type": "color" },
+      "secondary-active": { "$value": "{palette.navy.950}",    "$type": "color" },
+      "disabled":         { "$value": "{palette.neutral.300}", "$type": "color" }
+    },
+    "status": {
+      "info":            { "$value": "{palette.blue.500}",  "$type": "color" },
+      "info-subtle":     { "$value": "{palette.blue.50}",   "$type": "color" },
+      "info-strong":     { "$value": "{palette.blue.700}",  "$type": "color" },
+      "success":         { "$value": "{palette.green.500}", "$type": "color" },
+      "success-subtle":  { "$value": "{palette.green.100}", "$type": "color" },
+      "success-strong":  { "$value": "{palette.green.700}", "$type": "color" },
+      "warning":         { "$value": "{palette.amber.500}", "$type": "color" },
+      "warning-subtle":  { "$value": "{palette.amber.100}", "$type": "color" },
+      "warning-strong":  { "$value": "{palette.amber.700}", "$type": "color" },
+      "danger":          { "$value": "{palette.red.500}",   "$type": "color" },
+      "danger-subtle":   { "$value": "{palette.red.100}",   "$type": "color" },
+      "danger-strong":   { "$value": "{palette.red.700}",   "$type": "color" }
+    },
+    "brand": {
+      "$description": "Immovable brand marks ONLY — logo, wordmark, seal. If you are styling a button, you want color.action.primary.",
+      "navy": { "$value": "{palette.navy.900}", "$type": "color" },
+      "blue": { "$value": "{palette.blue.500}", "$type": "color" },
+      "gold": { "$value": "{palette.gold.500}", "$type": "color" }
+    }
+  }
+}

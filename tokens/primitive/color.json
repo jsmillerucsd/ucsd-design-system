@@ -1,0 +1,74 @@
+{
+  "palette": {
+    "$description": "PLACEHOLDER PALETTE — replaced wholesale by the first Figma sync. Verify every value against brand.ucsd.edu before production use. Primitives are never referenced by components; see docs/token-naming-contract.md.",
+    "white": { "$value": "#ffffff", "$type": "color" },
+    "black": { "$value": "#000000", "$type": "color" },
+
+    "blue": {
+      "$description": "UCSD Blue. 500 is the brand value (#00629b, confirmed in Decorator V5).",
+      "50":  { "$value": "#e6f0f6", "$type": "color" },
+      "100": { "$value": "#cce0ed", "$type": "color" },
+      "200": { "$value": "#99c1db", "$type": "color" },
+      "300": { "$value": "#66a3c9", "$type": "color" },
+      "400": { "$value": "#3384b7", "$type": "color" },
+      "500": { "$value": "#00629b", "$type": "color" },
+      "600": { "$value": "#00507f", "$type": "color" },
+      "700": { "$value": "#003d62", "$type": "color" },
+      "800": { "$value": "#002b45", "$type": "color" },
+      "900": { "$value": "#001827", "$type": "color" }
+    },
+
+    "navy": {
+      "$description": "UCSD Navy. 900 is the brand value (#182b49).",
+      "500": { "$value": "#3a5578", "$type": "color" },
+      "600": { "$value": "#2c4463", "$type": "color" },
+      "700": { "$value": "#243a54", "$type": "color" },
+      "800": { "$value": "#1d3153", "$type": "color" },
+      "900": { "$value": "#182b49", "$type": "color" },
+      "950": { "$value": "#0f1b2e", "$type": "color" }
+    },
+
+    "gold": {
+      "$description": "UCSD Gold. 500 is the brand value (#ffcd00).",
+      "100": { "$value": "#fff7d1", "$type": "color" },
+      "300": { "$value": "#ffe066", "$type": "color" },
+      "400": { "$value": "#ffd633", "$type": "color" },
+      "500": { "$value": "#ffcd00", "$type": "color" },
+      "600": { "$value": "#d9ae00", "$type": "color" },
+      "700": { "$value": "#b38f00", "$type": "color" }
+    },
+
+    "sand":  { "500": { "$value": "#e8e3d3", "$type": "color" } },
+    "stone": { "500": { "$value": "#b6b1a9", "$type": "color" } },
+    "aqua":  { "500": { "$value": "#00c6d7", "$type": "color" } },
+
+    "neutral": {
+      "50":  { "$value": "#f7f7f8", "$type": "color" },
+      "100": { "$value": "#eeeef0", "$type": "color" },
+      "200": { "$value": "#dddde1", "$type": "color" },
+      "300": { "$value": "#c4c4ca", "$type": "color" },
+      "400": { "$value": "#9a9aa3", "$type": "color" },
+      "500": { "$value": "#75757f", "$type": "color" },
+      "600": { "$value": "#5a5a63", "$type": "color" },
+      "700": { "$value": "#44444b", "$type": "color" },
+      "800": { "$value": "#2c2c31", "$type": "color" },
+      "900": { "$value": "#1a1a1d", "$type": "color" }
+    },
+
+    "green": {
+      "100": { "$value": "#e3f1e8", "$type": "color" },
+      "500": { "$value": "#007a33", "$type": "color" },
+      "700": { "$value": "#005b26", "$type": "color" }
+    },
+    "amber": {
+      "100": { "$value": "#fdf3e0", "$type": "color" },
+      "500": { "$value": "#e8a200", "$type": "color" },
+      "700": { "$value": "#8a6100", "$type": "color" }
+    },
+    "red": {
+      "100": { "$value": "#fbe7ea", "$type": "color" },
+      "500": { "$value": "#c8102e", "$type": "color" },
+      "700": { "$value": "#960c22", "$type": "color" }
+    }
+  }
+}
