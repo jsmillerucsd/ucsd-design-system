@@ -41,8 +41,10 @@ const add = (file, line, level, rule, msg) => findings.push({ file, line, level,
 const isTokenSource = (f) =>
   f.includes(`${path.sep}tokens${path.sep}`) || f.endsWith('banned.json') || f.includes('dist');
 
+// Lookarounds rather than \b: a hyphen is a non-word character, so \bpanel\b
+// matches inside ".custom-panel". Class names must match whole, hyphens included.
 const LEGACY_RE = new RegExp(
-  `\\b(${banned.legacyDecoratorClasses.map((c) => c.replace(/[-]/g, '\\-')).join('|')})\\b`,
+  `(?<![\\w-])(${banned.legacyDecoratorClasses.map((c) => c.replace(/-/g, '\\-')).join('|')})(?![\\w-])`,
 );
 
 for (const file of files) {

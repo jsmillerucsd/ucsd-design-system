@@ -34,9 +34,9 @@ with light/dark mode automatically.
 
 | Token | CSS variable | Tailwind | Light | Dark | Use for |
 |---|---|---|---|---|---|
-| `color.action.primary` | `--ucsd-color-action-primary` | `*-action-primary` (bg-, text-, border-) | `#00629b` | `#3384b7` | — |
-| `color.action.primary-hover` | `--ucsd-color-action-primary-hover` | `*-action-primary-hover` (bg-, text-, border-) | `#00507f` | `#66a3c9` | — |
-| `color.action.primary-active` | `--ucsd-color-action-primary-active` | `*-action-primary-active` (bg-, text-, border-) | `#003d62` | `#99c1db` | — |
+| `color.action.primary` | `--ucsd-color-action-primary` | `*-action-primary` (bg-, text-, border-) | `#00629b` | `#66a3c9` | — |
+| `color.action.primary-hover` | `--ucsd-color-action-primary-hover` | `*-action-primary-hover` (bg-, text-, border-) | `#00507f` | `#99c1db` | — |
+| `color.action.primary-active` | `--ucsd-color-action-primary-active` | `*-action-primary-active` (bg-, text-, border-) | `#003d62` | `#cce0ed` | — |
 | `color.action.secondary` | `--ucsd-color-action-secondary` | `*-action-secondary` (bg-, text-, border-) | `#182b49` | `#dddde1` | — |
 | `color.action.secondary-hover` | `--ucsd-color-action-secondary-hover` | `*-action-secondary-hover` (bg-, text-, border-) | `#0f1b2e` | `#ffffff` | — |
 | `color.action.secondary-active` | `--ucsd-color-action-secondary-active` | `*-action-secondary-active` (bg-, text-, border-) | `#0f1b2e` | `#ffffff` | — |

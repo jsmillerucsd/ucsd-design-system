@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UCSD Design System — Kitchen Sink</title>
+  <!-- Built output. Run `npm run build` first. -->
+  <link rel="stylesheet" href="./dist/ucsd-bootstrap.css">
+</head>
+<body>
+<a class="ucsd-skip-link" href="#main">Skip to main content</a>
+
+<header>
+  <div class="ucsd-masthead">
+    <div class="container d-flex justify-content-between align-items-center">
+      <strong>UC San Diego</strong>
+      <button id="mode" class="btn btn-sm btn-outline-light" type="button" aria-pressed="false">
+        Toggle dark mode
+      </button>
+    </div>
+  </div>
+  <nav class="navbar navbar-expand-lg border-bottom" aria-label="Main">
+    <div class="container">
+      <a class="navbar-brand" href="#">Design System</a>
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="#">Components</a>
+        <a class="nav-link" href="#">Tokens</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="ucsd-page-title">
+  <div class="container">
+    <h1>Kitchen Sink</h1>
+    <p class="lead mb-0">Every component in both color modes. Compare against Figma; check focus with the keyboard.</p>
+  </div>
+</div>
+
+<main id="main" class="container my-5">
+
+  <section class="mb-5" aria-labelledby="h-color">
+    <h2 id="h-color">Semantic colors</h2>
+    <p class="text-body-secondary">These swatches must change with the mode toggle. If one doesn't, it's hard-coded.</p>
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <div class="p-4 rounded border" style="background: var(--ucsd-color-surface-default); color: var(--ucsd-color-text-default);">surface / text default</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="p-4 rounded border" style="background: var(--ucsd-color-surface-subtle); color: var(--ucsd-color-text-muted);">surface subtle / text muted</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="p-4 rounded" style="background: var(--ucsd-color-action-primary); color: var(--ucsd-color-text-inverse);">action primary</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="p-4 rounded" style="background: var(--ucsd-color-surface-inverse); color: var(--ucsd-color-text-inverse);">surface inverse</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5" aria-labelledby="h-type">
+    <h2 id="h-type">Typography</h2>
+    <h1 class="mb-2">Heading 1 — Teko display</h1>
+    <h2 class="mb-2">Heading 2</h2>
+    <h3 class="mb-2">Heading 3</h3>
+    <p>Body copy in Roboto. <a href="#">An inline link</a> should be underlined and meet AA contrast.</p>
+    <p class="text-body-secondary">Secondary body text.</p>
+  </section>
+
+  <section class="mb-5" aria-labelledby="h-btn">
+    <h2 id="h-btn">Buttons</h2>
+    <p class="text-body-secondary">Tab through these — every one must show a visible focus ring.</p>
+    <div class="d-flex flex-wrap gap-2">
+      <button class="btn btn-primary">Primary</button>
+      <button class="btn btn-secondary">Secondary</button>
+      <button class="btn btn-outline-secondary">Outline</button>
+      <button class="btn btn-danger">Danger</button>
+      <button class="btn btn-primary" disabled>Disabled</button>
+      <button class="btn btn-primary btn-sm">Small</button>
+      <button class="btn btn-primary btn-lg">Large</button>
+    </div>
+  </section>
+
+  <section class="mb-5" aria-labelledby="h-form">
+    <h2 id="h-form">Form</h2>
+    <form class="row g-3" style="max-width: 40rem;">
+      <div class="col-12">
+        <label for="ks-email" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="ks-email" aria-describedby="ks-email-help" required>
+        <div id="ks-email-help" class="form-text">We'll only use this to contact you about your application.</div>
+      </div>
+      <div class="col-12">
+        <label for="ks-bad" class="form-label">Field with an error</label>
+        <input type="text" class="form-control is-invalid" id="ks-bad" aria-describedby="ks-bad-err">
+        <div id="ks-bad-err" class="invalid-feedback">Enter your student ID, for example A12345678.</div>
+      </div>
+      <fieldset class="col-12">
+        <legend class="h6">Program</legend>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="ks-prog" id="ks-p1" checked>
+          <label class="form-check-label" for="ks-p1">Masters</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="ks-prog" id="ks-p2">
+          <label class="form-check-label" for="ks-p2">Doctoral</label>
+        </div>
+      </fieldset>
+      <div class="col-12"><button class="btn btn-primary" type="button">Submit</button></div>
+    </form>
+  </section>
+
+  <section class="mb-5" aria-labelledby="h-card">
+    <h2 id="h-card">Cards</h2>
+    <div class="row g-4">
+      <div class="col-12 col-md-4">
+        <div class="card h-100">
+          <div class="card-header">Fellowships</div>
+          <div class="card-body">
+            <h3 class="card-title h5"><a href="#">Graduate funding</a></h3>
+            <p class="card-text">The link wraps the heading — the whole card is not a link.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card h-100"><div class="card-body">
+          <h3 class="card-title h5">Plain card</h3>
+          <p class="card-text mb-0">No header.</p>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5" aria-labelledby="h-alert">
+    <h2 id="h-alert">Alerts &amp; badges</h2>
+    <div class="alert alert-info" role="note">Informational. Static advisory copy uses <code>role="note"</code>.</div>
+    <div class="alert alert-success" role="note">Success</div>
+    <div class="alert alert-warning" role="note">Warning</div>
+    <div class="alert alert-danger" role="alert">Danger — this one uses <code>role="alert"</code> because it responds to an action.</div>
+    <span class="badge text-bg-primary">Primary</span>
+    <span class="badge text-bg-secondary">Secondary</span>
+  </section>
+
+  <section class="mb-5" aria-labelledby="h-table">
+    <h2 id="h-table">Table</h2>
+    <div role="region" aria-labelledby="ks-cap" tabindex="0" class="table-responsive">
+      <table class="table">
+        <caption id="ks-cap">Application deadlines by program</caption>
+        <thead><tr><th scope="col">Program</th><th scope="col">Deadline</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Masters</th><td>1 December</td></tr>
+          <tr><th scope="row">Doctoral</th><td>15 December</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="mb-5" aria-labelledby="h-nav">
+    <h2 id="h-nav">Navigation</h2>
+    <nav aria-label="Breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Kitchen sink</li>
+      </ol>
+    </nav>
+    <nav aria-label="Pagination">
+      <ul class="pagination">
+        <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  <section class="mb-5" aria-labelledby="h-prose">
+    <h2 id="h-prose">Prose</h2>
+    <div class="ucsd-prose">
+      <p>Long-form body copy is capped at about 70 characters per line regardless of viewport width, because a full-width line at 1400px is unreadable.</p>
+      <h3>A subheading</h3>
+      <p>Vertical rhythm comes from <code>.ucsd-prose</code>, not per-element margin classes.</p>
+      <blockquote>A blockquote, marked with the gold rule.</blockquote>
+      <ul><li>List item one</li><li>List item two</li></ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ucsd-footer">
+  <div class="container">
+    <p class="mb-0">UCSD footer — UCSD <strong>Blue</strong>, not navy. A persistent Decorator V5 misreading.</p>
+  </div>
+</footer>
+
+<script>
+  // Mode toggle for visual checking. Not part of the shipped system.
+  const btn = document.getElementById('mode');
+  btn.addEventListener('click', () => {
+    const dark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+    document.documentElement.setAttribute('data-bs-theme', dark ? 'light' : 'dark');
+    btn.setAttribute('aria-pressed', String(!dark));
+  });
+</script>
+</body>
+</html>

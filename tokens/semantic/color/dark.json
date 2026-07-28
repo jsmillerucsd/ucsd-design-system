@@ -23,9 +23,9 @@
       "focus":   { "$value": "{palette.gold.500}",    "$type": "color", "$description": "Gold ring on dark: highest contrast option in the brand palette." }
     },
     "action": {
-      "primary":          { "$value": "{palette.blue.400}",   "$type": "color" },
-      "primary-hover":    { "$value": "{palette.blue.300}",   "$type": "color" },
-      "primary-active":   { "$value": "{palette.blue.200}",   "$type": "color" },
+      "primary":          { "$value": "{palette.blue.300}",   "$type": "color", "$description": "Lighter than Light mode's blue.500: dark-mode buttons use dark label text, which fails AA against blue.400 (4.21:1)." },
+      "primary-hover":    { "$value": "{palette.blue.200}",   "$type": "color" },
+      "primary-active":   { "$value": "{palette.blue.100}",   "$type": "color" },
       "secondary":        { "$value": "{palette.neutral.200}", "$type": "color" },
       "secondary-hover":  { "$value": "{palette.white}",      "$type": "color" },
       "secondary-active": { "$value": "{palette.white}",      "$type": "color" },

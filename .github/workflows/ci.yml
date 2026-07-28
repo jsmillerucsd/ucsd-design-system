@@ -20,6 +20,14 @@ jobs:
       - name: Build all targets
         run: npm run build
 
+      # Aliasing, mode parity, naming contract, and WCAG AA contrast in both
+      # modes. This is what blocks a bad Figma sync from merging.
+      - name: Validate tokens
+        run: npm run test:tokens
+
+      - name: Unit and contract tests
+        run: npm test
+
       # The check that keeps the LLM documentation honest. references/generated/
       # and llms.txt are committed so the skill works with no build step; if a
       # rebuild changes them, someone edited a generated file or forgot to rebuild

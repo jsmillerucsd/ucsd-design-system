@@ -51,15 +51,17 @@ Bootstrap 5 and Tailwind/shadcn are **both permanent, first-class targets.** Nei
 ## Quick start
 
 ```bash
-npm install && npm run build
+npm install && npm run build && npm run test:tokens && npm test
 ```
 
-Outputs land in `packages/tokens/dist/`.
+Outputs land in `packages/tokens/dist/`. Then open `packages/bootstrap/kitchen-sink.html` to see it rendered.
 
 ## Docs
 
 - [Architecture & decisions](docs/architecture.md)
 - [**Figma → code pipeline**](docs/figma-pipeline.md) — how design becomes code, sustainably
+- [**Figma brief**](docs/figma-brief.md) — self-contained handout for the UX designer
+- [Testing](docs/testing.md) — including how to test that the LLM guidance actually works
 - [Token naming contract](docs/token-naming-contract.md) — **read before authoring in Figma**
 - [Layouts & CMS patterns](docs/layouts.md)
 - [Migrating off Decorator V5](docs/migration-decorator-v5.md)

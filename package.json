@@ -17,6 +17,8 @@
     "build:bootstrap": "npm run build --workspace @ucsd/bootstrap",
     "build:skill": "node scripts/generate-skill-references.mjs",
     "sync:figma": "node scripts/sync-figma.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:tokens": "node scripts/validate-tokens.mjs",
     "validate": "node skills/ucsd-design-system/scripts/validate.mjs"
   }
 }
