@@ -1,0 +1,263 @@
+{
+  "radius": {
+    "none": {
+      "$value": "0",
+      "$type": "dimension"
+    },
+    "sm": {
+      "$value": "2px",
+      "$type": "dimension"
+    },
+    "md": {
+      "$value": "4px",
+      "$type": "dimension"
+    },
+    "lg": {
+      "$value": "8px",
+      "$type": "dimension"
+    },
+    "xl": {
+      "$value": "16px",
+      "$type": "dimension"
+    },
+    "pill": {
+      "$value": "999px",
+      "$type": "dimension"
+    },
+    "circle": {
+      "$value": "50%",
+      "$type": "dimension"
+    }
+  },
+  "breakpoint": {
+    "$description": "MUST match Bootstrap 5 exactly (576/768/992/1200/1400) so Bootstrap utilities and Tailwind agree. A mismatch here produces bugs that take days to find.",
+    "sm": {
+      "$value": "576px",
+      "$type": "dimension"
+    },
+    "md": {
+      "$value": "768px",
+      "$type": "dimension"
+    },
+    "lg": {
+      "$value": "992px",
+      "$type": "dimension"
+    },
+    "xl": {
+      "$value": "1200px",
+      "$type": "dimension"
+    },
+    "xxl": {
+      "$value": "1400px",
+      "$type": "dimension"
+    }
+  },
+  "container": {
+    "$description": "Max content widths used by layouts/. 'prose' is the readable measure for long-form content pages (~70ch).",
+    "prose": {
+      "$value": "70ch",
+      "$type": "dimension"
+    },
+    "narrow": {
+      "$value": "768px",
+      "$type": "dimension"
+    },
+    "base": {
+      "$value": "1140px",
+      "$type": "dimension"
+    },
+    "wide": {
+      "$value": "1320px",
+      "$type": "dimension"
+    }
+  },
+  "space": {
+    "0": {
+      "$value": "0",
+      "$type": "dimension"
+    },
+    "1": {
+      "$value": "4px",
+      "$type": "dimension"
+    },
+    "2": {
+      "$value": "8px",
+      "$type": "dimension"
+    },
+    "3": {
+      "$value": "12px",
+      "$type": "dimension"
+    },
+    "4": {
+      "$value": "16px",
+      "$type": "dimension"
+    },
+    "5": {
+      "$value": "20px",
+      "$type": "dimension"
+    },
+    "6": {
+      "$value": "24px",
+      "$type": "dimension"
+    },
+    "7": {
+      "$value": "28px",
+      "$type": "dimension"
+    },
+    "8": {
+      "$value": "32px",
+      "$type": "dimension"
+    },
+    "10": {
+      "$value": "40px",
+      "$type": "dimension"
+    },
+    "12": {
+      "$value": "48px",
+      "$type": "dimension"
+    },
+    "16": {
+      "$value": "64px",
+      "$type": "dimension"
+    },
+    "20": {
+      "$value": "80px",
+      "$type": "dimension"
+    },
+    "24": {
+      "$value": "96px",
+      "$type": "dimension"
+    },
+    "$description": "One 4px-based scale for margin, padding and gap. Numbers are multiples of 4 (space.4 = 16px). Deliberately NOT split into inset/stack/inline — that doubles the token count and every team invents a different rule for which to use."
+  },
+  "font": {
+    "$description": "Roboto and Teko carried forward from Decorator V5; see docs/architecture.md open question 3.",
+    "family": {
+      "sans": {
+        "$value": "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+        "$type": "fontFamily"
+      },
+      "display": {
+        "$value": "Teko, Roboto, sans-serif",
+        "$type": "fontFamily",
+        "$description": "Condensed display face. Headings and hero type only — never body copy."
+      },
+      "mono": {
+        "$value": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+        "$type": "fontFamily"
+      }
+    },
+    "weight": {
+      "regular": {
+        "$value": 400,
+        "$type": "fontWeight"
+      },
+      "medium": {
+        "$value": 500,
+        "$type": "fontWeight"
+      },
+      "semibold": {
+        "$value": 600,
+        "$type": "fontWeight"
+      },
+      "bold": {
+        "$value": 700,
+        "$type": "fontWeight"
+      }
+    }
+  },
+  "text": {
+    "$description": "Type ramp. Each step carries size AND line-height so the two can never be mismatched. Steps are named by scale (md, lg, 2xl), never by HTML tag (h1) — an <h1> is not always the largest text on a page.",
+    "xs": {
+      "size": {
+        "$value": "12px",
+        "$type": "dimension"
+      },
+      "line-height": {
+        "$value": "16px",
+        "$type": "dimension"
+      }
+    },
+    "sm": {
+      "size": {
+        "$value": "14px",
+        "$type": "dimension"
+      },
+      "line-height": {
+        "$value": "20px",
+        "$type": "dimension"
+      }
+    },
+    "md": {
+      "size": {
+        "$value": "16px",
+        "$type": "dimension"
+      },
+      "line-height": {
+        "$value": "24px",
+        "$type": "dimension"
+      },
+      "$description": "Body default."
+    },
+    "lg": {
+      "size": {
+        "$value": "18px",
+        "$type": "dimension"
+      },
+      "line-height": {
+        "$value": "28px",
+        "$type": "dimension"
+      }
+    },
+    "xl": {
+      "size": {
+        "$value": "20px",
+        "$type": "dimension"
+      },
+      "line-height": {
+        "$value": "28px",
+        "$type": "dimension"
+      }
+    },
+    "2xl": {
+      "size": {
+        "$value": "24px",
+        "$type": "dimension"
+      },
+      "line-height": {
+        "$value": "32px",
+        "$type": "dimension"
+      }
+    },
+    "3xl": {
+      "size": {
+        "$value": "30px",
+        "$type": "dimension"
+      },
+      "line-height": {
+        "$value": "36px",
+        "$type": "dimension"
+      }
+    },
+    "4xl": {
+      "size": {
+        "$value": "36px",
+        "$type": "dimension"
+      },
+      "line-height": {
+        "$value": "40px",
+        "$type": "dimension"
+      }
+    },
+    "5xl": {
+      "size": {
+        "$value": "48px",
+        "$type": "dimension"
+      },
+      "line-height": {
+        "$value": "52px",
+        "$type": "dimension"
+      }
+    }
+  }
+}

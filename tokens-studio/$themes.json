@@ -1,0 +1,32 @@
+[
+  {
+    "id": "primitives",
+    "name": "Value",
+    "group": "1. Primitives",
+    "selectedTokenSets": {
+      "primitive": "enabled"
+    }
+  },
+  {
+    "id": "semantic-light",
+    "name": "Light",
+    "group": "2. Semantic",
+    "selectedTokenSets": {
+      "primitive": "source",
+      "semantic": "enabled",
+      "semantic-color-light": "enabled",
+      "semantic-color-dark": "disabled"
+    }
+  },
+  {
+    "id": "semantic-dark",
+    "name": "Dark",
+    "group": "2. Semantic",
+    "selectedTokenSets": {
+      "primitive": "source",
+      "semantic": "enabled",
+      "semantic-color-light": "disabled",
+      "semantic-color-dark": "enabled"
+    }
+  }
+]

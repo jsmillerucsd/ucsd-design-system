@@ -127,9 +127,9 @@ Before engineering picks up a component:
 
 ### 2.6 To start, we need three things
 
-1. **The `2. Semantic` collection populated**, even if component designs aren't finished. Tokens unblock all the engineering work; components can follow. This is the critical path.
-2. **The Figma file key** — the string in the URL: `figma.com/design/`**`THIS_PART`**`/File-Name`.
-3. **Confirmation of the Figma plan tier** (see §3.1).
+1. **Confirmation of the Figma plan tier and where the file lives.** Professional or higher, and in a Project rather than Drafts — otherwise variable modes are unavailable and dark mode cannot be built (§3.1). Check this before anything else; it is the only genuinely blocking item.
+2. **The `2. Semantic` collection populated**, even if component designs aren't finished. Tokens unblock all the engineering work; components can follow. Start from the seed package in [`tokens-studio/`](../tokens-studio/README.md) rather than hand-typing names.
+3. **The Figma file key** — the string in the URL: `figma.com/design/`**`THIS_PART`**`/File-Name`.
 
 Open questions for design — display face, density mode, icon set, sub-brand scope — are tracked in [`architecture.md`](architecture.md) so there is one list rather than two.
 
@@ -137,15 +137,31 @@ Open questions for design — display face, density mode, icon set, sub-brand sc
 
 ## 3. Getting variables out of Figma
 
-### 3.1 ⟡ DECIDE: which export mechanism
+### 3.1 The export mechanism — decided
 
-| Option | How | Requires | Verdict |
-|---|---|---|---|
-| **A. Figma Variables REST API** | `GET /v1/files/:key/variables/local` from a scheduled Action | ⚠️ **Figma Enterprise plan** + PAT with `file_variables:read` | **Preferred.** Fully automated, no designer action, no plugin licensing. |
-| **B. Tokens Studio plugin** | Designer pushes to a git branch from inside Figma | Tokens Studio Pro seat; works on **any** Figma plan | **Fallback.** Good DX, but a paid third-party dependency in the critical path. |
-| **C. Manual plugin export** | Designer exports JSON, drops it in a PR | Nothing | Bootstrap only. **Do not ship as the steady state** — it decays the moment someone is on vacation. |
+UCSD is **not on Figma Enterprise**, so the Variables REST API is unavailable: `GET /v1/files/:key/variables/local` is Enterprise-gated and returns 403 on every other plan. `scripts/sync-figma.mjs` is kept for the day that changes, but it is not the path.
 
-The *output* of this stage is identical either way, so downstream is unaffected. Pick on cost and plan tier alone; it is not an architectural decision.
+**The path is the Tokens Studio plugin.** The plugin writes the same DTCG files into `tokens/`, so everything downstream — Style Dictionary, `DESIGN.md`, the skill — is unaffected.
+
+#### What that actually requires
+
+Two separate gates, and **both** must be met for light/dark to exist at all:
+
+| Requirement | Why | Consequence if missing |
+|---|---|---|
+| **Figma Professional plan or higher** | Variable *modes* are not available on Free/Starter. Light + Dark is two modes. | Free/Starter cannot express this system. Not a workaround situation — the feature is absent. |
+| The file lives in a **Project**, not Drafts | Figma refuses to create a second mode for files in Drafts, even on a paid plan. | `Your Figma plan only allows for the creation of 1 mode`, on an otherwise-correct setup. |
+| **Tokens Studio Pro** — one seat, the designer's | Creating Themes is Pro-only, and Themes are the only route to a multi-mode Variable Collection. Exporting from Token Sets (free tier) maps each set to a collection with exactly one mode. | Tokens import fine, but every collection lands single-mode. Dark mode has nowhere to live. |
+
+Mode *counts* are generous once you are on a paid tier — Professional allows 10 per collection, Organization 20, Enterprise 40 (raised from 4 at Schema 2025). We need 2. The tier gate is the constraint, not the ceiling.
+
+#### The seed package
+
+`npm run build:figma-seed` generates [`tokens-studio/`](../tokens-studio/README.md) from `tokens/` — four token sets plus `$metadata.json` and `$themes.json`, importable directly. It exists so the designer never hand-types ~175 variable names from a spec.
+
+It is a **one-time seed, not a sync**. After import, Figma is upstream and this output is reference only. `elevation` and `motion` are deliberately excluded: Figma Variables have no shadow or easing type, so they cannot be variables at all (shadows are effect styles, authored by hand). They still reach code normally.
+
+**The import creates variables; it does not rebind components.** Swapping an existing component library's raw fills onto the new semantic variables is manual work on the designer's side, and it is the real cost of adoption.
 
 ### 3.2 What the sync script does
 

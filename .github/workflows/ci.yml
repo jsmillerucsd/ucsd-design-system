@@ -34,7 +34,7 @@ jobs:
       # rebuild after a token change — either way the docs no longer match the tokens.
       - name: Generated docs are up to date
         run: |
-          if ! git diff --exit-code --stat -- DESIGN.md skills/ llms.txt; then
+          if ! git diff --exit-code --stat -- DESIGN.md skills/ llms.txt tokens-studio/; then
             echo "::error::Generated files are stale. Run 'npm run build' and commit the result."
             exit 1
           fi

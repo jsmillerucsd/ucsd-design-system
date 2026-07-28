@@ -77,8 +77,8 @@ The validator flags raw hex and px where a token exists, Bootstrap 3 leftovers, 
 
 ## Figma → spec, in five steps
 
-1. **The designer authors variables** in three collections — primitives (hidden), semantic (published, with Light and Dark modes), component. Components bind only to semantic. → [the contract](docs/figma.md)
-2. **`npm run sync:figma`** pulls those variables into `tokens/**.json` as DTCG, preserving aliases, and opens a pull request.
+1. **The designer authors variables** in three collections — primitives (hidden), semantic (published, with Light and Dark modes), component. Components bind only to semantic. → [the contract](docs/figma.md). To skip hand-typing ~175 names, import the seed in [`tokens-studio/`](tokens-studio/README.md) first.
+2. **The Tokens Studio plugin** pushes those variables back to `tokens/**.json` as DTCG, preserving aliases, and opens a pull request.
 3. **The gate runs.** Aliases resolve, every token exists in both modes, names match the contract, and text/background pairs pass WCAG 2.2 AA — in both modes. A bad sync cannot merge.
 4. **`npm run build`** compiles every target and regenerates `DESIGN.md`.
 5. **Apps and agents pick it up.** Nobody retypes a hex code anywhere in this chain.
@@ -89,6 +89,7 @@ The validator flags raw hex and px where a token exists, Bootstrap 3 leftovers, 
 |---|---|---|
 | [`DESIGN.md`](DESIGN.md) | The file you hand an agent. Visual identity + every semantic token. | Frontmatter generated; prose from `docs/design-md/` |
 | `tokens/` | DTCG JSON. **Source of truth.** Synced from Figma — never hand-edit. | No — synced |
+| `tokens-studio/` | One-time seed package the designer imports into Figma to create the variables. | No — generated |
 | `packages/tokens/` | Style Dictionary build → CSS, Sass, Tailwind, TS, JSON | Config only |
 | `packages/bootstrap/` | Bootstrap 5 theme + CDN bundle. The Decorator replacement. | Small bridge file |
 | `docs/` | Usage guides, layouts, the Figma pipeline, decisions | Yes |
