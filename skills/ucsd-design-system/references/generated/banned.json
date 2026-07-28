@@ -1,0 +1,159 @@
+{
+  "$comment": "GENERATED. Literal values that must not appear in source — a token exists for each.",
+  "colors": {
+    "#ffffff": [
+      "--ucsd-color-surface-default",
+      "--ucsd-color-surface-raised",
+      "--ucsd-color-text-inverse"
+    ],
+    "#f7f7f8": [
+      "--ucsd-color-surface-subtle"
+    ],
+    "#eeeef0": [
+      "--ucsd-color-surface-sunken"
+    ],
+    "#182b49": [
+      "--ucsd-color-action-secondary",
+      "--ucsd-color-surface-inverse",
+      "--ucsd-color-brand-navy"
+    ],
+    "#1a1a1d": [
+      "--ucsd-color-text-default"
+    ],
+    "#5a5a63": [
+      "--ucsd-color-text-muted"
+    ],
+    "#75757f": [
+      "--ucsd-color-text-subtle",
+      "--ucsd-color-border-strong"
+    ],
+    "#00629b": [
+      "--ucsd-color-action-primary",
+      "--ucsd-color-text-link",
+      "--ucsd-color-border-focus",
+      "--ucsd-color-status-info",
+      "--ucsd-color-brand-blue"
+    ],
+    "#003d62": [
+      "--ucsd-color-action-primary-active",
+      "--ucsd-color-text-link-hover",
+      "--ucsd-color-status-info-strong"
+    ],
+    "#c4c4ca": [
+      "--ucsd-color-action-disabled",
+      "--ucsd-color-border-default"
+    ],
+    "#dddde1": [
+      "--ucsd-color-border-subtle"
+    ],
+    "#00507f": [
+      "--ucsd-color-action-primary-hover"
+    ],
+    "#0f1b2e": [
+      "--ucsd-color-action-secondary-hover",
+      "--ucsd-color-action-secondary-active"
+    ],
+    "#e6f0f6": [
+      "--ucsd-color-status-info-subtle"
+    ],
+    "#007a33": [
+      "--ucsd-color-status-success"
+    ],
+    "#e3f1e8": [
+      "--ucsd-color-status-success-subtle"
+    ],
+    "#005b26": [
+      "--ucsd-color-status-success-strong"
+    ],
+    "#e8a200": [
+      "--ucsd-color-status-warning"
+    ],
+    "#fdf3e0": [
+      "--ucsd-color-status-warning-subtle"
+    ],
+    "#8a6100": [
+      "--ucsd-color-status-warning-strong"
+    ],
+    "#c8102e": [
+      "--ucsd-color-status-danger"
+    ],
+    "#fbe7ea": [
+      "--ucsd-color-status-danger-subtle"
+    ],
+    "#960c22": [
+      "--ucsd-color-status-danger-strong"
+    ],
+    "#ffcd00": [
+      "--ucsd-color-brand-gold"
+    ]
+  },
+  "primitiveHexes": [
+    "#000000",
+    "#cce0ed",
+    "#99c1db",
+    "#66a3c9",
+    "#3384b7",
+    "#002b45",
+    "#001827",
+    "#3a5578",
+    "#2c4463",
+    "#243a54",
+    "#1d3153",
+    "#fff7d1",
+    "#ffe066",
+    "#ffd633",
+    "#d9ae00",
+    "#b38f00",
+    "#e8e3d3",
+    "#b6b1a9",
+    "#00c6d7",
+    "#9a9aa3",
+    "#44444b",
+    "#2c2c31"
+  ],
+  "space": {
+    "4px": "--ucsd-space-1",
+    "8px": "--ucsd-space-2",
+    "12px": "--ucsd-space-3",
+    "16px": "--ucsd-space-4",
+    "20px": "--ucsd-space-5",
+    "24px": "--ucsd-space-6",
+    "28px": "--ucsd-space-7",
+    "32px": "--ucsd-space-8",
+    "40px": "--ucsd-space-10",
+    "48px": "--ucsd-space-12",
+    "64px": "--ucsd-space-16",
+    "80px": "--ucsd-space-20",
+    "96px": "--ucsd-space-24"
+  },
+  "radius": {
+    "2px": "--ucsd-radius-sm",
+    "4px": "--ucsd-radius-md",
+    "8px": "--ucsd-radius-lg",
+    "16px": "--ucsd-radius-xl",
+    "999px": "--ucsd-radius-pill"
+  },
+  "legacyDecoratorClasses": [
+    "panel",
+    "panel-body",
+    "panel-heading",
+    "panel-default",
+    "btn-default",
+    "glyphicon",
+    "img-responsive",
+    "hidden-xs",
+    "visible-xs",
+    "col-xs-1",
+    "col-xs-2",
+    "col-xs-3",
+    "col-xs-4",
+    "col-xs-6",
+    "col-xs-12",
+    "well",
+    "page-header",
+    "form-horizontal",
+    "control-label",
+    "input-lg",
+    "input-sm"
+  ]
+}

@@ -1,0 +1,249 @@
+/**
+ * Generate the LLM-facing documentation from the built tokens.
+ *
+ * This script is the reason the system doesn't rot. Hand-written design-system
+ * docs drift from the tokens within one sprint, and a confidently stale hex code
+ * is worse than no documentation at all. So the token reference is a BUILD
+ * ARTIFACT: change a value in Figma, and the model's knowledge changes with it,
+ * in the same commit.
+ *
+ * Outputs (all committed — the skill must work with no build step):
+ *   skills/ucsd-design-system/references/generated/tokens.md   full token reference
+ *   skills/ucsd-design-system/references/generated/banned.json machine-readable literals to reject
+ *   llms.txt                                                   convention for non-Claude tools
+ *   .ai/design-system-rules.md                                 Cursor / Copilot mirror
+ */
+
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const DIST = path.join(REPO, 'packages', 'tokens', 'dist');
+const GEN = path.join(REPO, 'skills', 'ucsd-design-system', 'references', 'generated');
+
+const read = async (p) => JSON.parse(await fs.readFile(p, 'utf8'));
+
+let light, dark;
+try {
+  [light, dark] = await Promise.all([
+    read(path.join(DIST, 'tokens.json')),
+    read(path.join(DIST, 'tokens.dark.json')),
+  ]);
+} catch {
+  console.error('\ngenerate-skill-references: tokens not built.\n  Run `npm run build:tokens` first.\n');
+  process.exit(1);
+}
+
+const darkByPath = new Map(dark.map((t) => [t.path, t]));
+
+/** Tailwind utility namespace for a token, mirroring formats/tailwind-theme.mjs. */
+function tailwindHint(t) {
+  const p = t.path.split('.');
+  if (p[0] === 'color') return `\`*-${p.slice(1).join('-')}\` (bg-, text-, border-)`;
+  if (p[0] === 'space') return `\`p-${p[1]}\` \`m-${p[1]}\` \`gap-${p[1]}\``;
+  if (p[0] === 'radius') return `\`rounded-${p[1]}\``;
+  if (p[0] === 'elevation') return `\`shadow-${p[1]}\``;
+  if (p[0] === 'text' && p[2] === 'size') return `\`text-${p[1]}\``;
+  return '—';
+}
+
+const esc = (s) => String(s ?? '').replace(/\|/g, '\\|');
+
+/** Group semantic tokens by their first two path segments (color.action, space, ...). */
+function groupOf(t) {
+  const p = t.path.split('.');
+  return p[0] === 'color' ? `color.${p[1]}` : p[0];
+}
+
+const semantic = light.filter((t) => t.tier === 'semantic');
+const primitive = light.filter((t) => t.tier === 'primitive');
+const component = light.filter((t) => t.tier === 'component');
+
+const groups = [...new Set(semantic.map(groupOf))].sort();
+
+// --- tokens.md ---------------------------------------------------------------
+
+const lines = [
+  '# UCSD Design Tokens — full reference',
+  '',
+  '> **GENERATED FILE — do not edit.** Produced by `scripts/generate-skill-references.mjs`',
+  '> from `packages/tokens/dist/tokens.json`. To change a value, change it in Figma',
+  '> and run the sync; see `docs/figma-pipeline.md`.',
+  '',
+  `Semantic tokens: **${semantic.length}** · component: **${component.length}** · primitives: **${primitive.length}**`,
+  '',
+  '## How to reference a token',
+  '',
+  '| Target | Syntax | Example |',
+  '|---|---|---|',
+  '| Plain CSS / any framework | `var(--ucsd-<path>)` | `var(--ucsd-color-action-primary)` |',
+  '| Bootstrap 5 Sass | `$ucsd-<path>` | `$ucsd-color-action-primary` |',
+  '| Tailwind / shadcn | utility class | `bg-action-primary` |',
+  '| JS / React | `tokens[\'<path>\']` | `tokens[\'color.action.primary\']` |',
+  '',
+  '## Semantic tokens',
+  '',
+  'These are the tokens you should be using. They carry intent, and they change',
+  'with light/dark mode automatically.',
+  '',
+];
+
+for (const g of groups) {
+  const rows = semantic.filter((t) => groupOf(t) === g);
+  lines.push(`### \`${g}\``, '');
+  const isColor = g.startsWith('color');
+  lines.push(
+    isColor
+      ? '| Token | CSS variable | Tailwind | Light | Dark | Use for |'
+      : '| Token | CSS variable | Tailwind | Value | Use for |',
+    isColor ? '|---|---|---|---|---|---|' : '|---|---|---|---|---|',
+  );
+  for (const t of rows) {
+    const d = darkByPath.get(t.path);
+    lines.push(
+      isColor
+        ? `| \`${t.path}\` | \`${t.cssVar}\` | ${tailwindHint(t)} | \`${t.value}\` | \`${d?.value ?? '—'}\` | ${esc(t.description) || '—'} |`
+        : `| \`${t.path}\` | \`${t.cssVar}\` | ${tailwindHint(t)} | \`${t.value}\` | ${esc(t.description) || '—'} |`,
+    );
+  }
+  lines.push('');
+}
+
+lines.push(
+  '## Component tokens',
+  '',
+  'Only where a component needs a knob the semantic layer should not carry.',
+  '',
+  '| Token | CSS variable | Resolves to | Value |',
+  '|---|---|---|---|',
+  ...component.map((t) => `| \`${t.path}\` | \`${t.cssVar}\` | \`${t.reference ?? '—'}\` | \`${t.value}\` |`),
+  '',
+  '## Primitives — DO NOT USE DIRECTLY',
+  '',
+  'Listed only so you can recognise them. Referencing a primitive from a component',
+  'hard-codes a brand decision and breaks dark mode. Always use a semantic token.',
+  '',
+  '<details><summary>Primitive palette</summary>',
+  '',
+  '| Token | Value |',
+  '|---|---|',
+  ...primitive.map((t) => `| \`${t.path}\` | \`${t.value}\` |`),
+  '',
+  '</details>',
+  '',
+);
+
+// --- banned.json (fuels the validator) ---------------------------------------
+
+// A literal value usually maps to several tokens (16px is both space.4 and
+// text.md.size; #00629b is both color.action.primary and color.brand.blue).
+// Suggesting the wrong one is worse than suggesting nothing, so the map is
+// keyed by CATEGORY and each entry keeps ranked candidates.
+
+/** Preferred order when several semantic colours share a value. Brand last: it is rarely what you want. */
+const COLOR_RANK = ['color.action', 'color.surface', 'color.text', 'color.border', 'color.status', 'color.brand'];
+const rankOf = (t) => {
+  const i = COLOR_RANK.findIndex((p) => t.path.startsWith(p));
+  return i === -1 ? COLOR_RANK.length : i;
+};
+
+const colorCandidates = {};
+for (const t of light.filter((t) => t.tier === 'semantic' && t.type === 'color')) {
+  const hex = String(t.value).toLowerCase();
+  if (!/^#[0-9a-f]{3,8}$/.test(hex)) continue;
+  (colorCandidates[hex] ??= []).push(t);
+}
+for (const hex of Object.keys(colorCandidates)) {
+  colorCandidates[hex] = colorCandidates[hex]
+    .sort((a, b) => rankOf(a) - rankOf(b))
+    .map((t) => t.cssVar);
+}
+
+/** Hexes that exist only as primitives — real, but never the right thing to type. */
+const primitiveHexes = [
+  ...new Set(
+    primitive
+      .filter((t) => t.type === 'color')
+      .map((t) => String(t.value).toLowerCase())
+      .filter((h) => !colorCandidates[h]),
+  ),
+];
+
+const dimsFor = (prefix) =>
+  Object.fromEntries(
+    light
+      .filter((t) => t.path.startsWith(`${prefix}.`) && /^\d+px$/.test(String(t.value)))
+      .map((t) => [String(t.value), t.cssVar]),
+  );
+
+const banned = {
+  $comment: 'GENERATED. Literal values that must not appear in source — a token exists for each.',
+  colors: colorCandidates,
+  primitiveHexes,
+  space: dimsFor('space'),
+  radius: dimsFor('radius'),
+  legacyDecoratorClasses: [
+    'panel', 'panel-body', 'panel-heading', 'panel-default',
+    'btn-default', 'glyphicon', 'img-responsive', 'hidden-xs', 'visible-xs',
+    'col-xs-1', 'col-xs-2', 'col-xs-3', 'col-xs-4', 'col-xs-6', 'col-xs-12',
+    'well', 'page-header', 'form-horizontal', 'control-label', 'input-lg', 'input-sm',
+  ],
+};
+
+// --- llms.txt ----------------------------------------------------------------
+
+const llmsTxt = `# UCSD Design System
+
+> Token-first design system for UC San Diego. Successor to Decorator V5 (Bootstrap 3).
+> Bootstrap 5 and Tailwind/shadcn are both first-class targets; they share tokens, not markup.
+
+## Core rules
+- Never write a raw hex colour or raw px spacing. Use a semantic token.
+- Never reference a primitive (\`palette.*\`) from a component. Use a semantic token.
+- Dark mode is automatic when you use semantic tokens. Do not write \`dark:\` overrides for colour.
+- Breakpoints are Bootstrap 5's: 576 / 768 / 992 / 1200 / 1400.
+- Every page needs a skip link, one \`<h1>\`, and a visible focus ring.
+
+## Docs
+- [Token reference](skills/ucsd-design-system/references/generated/tokens.md): every token, light + dark values, and how to reference it from CSS, Sass, Tailwind or JS.
+- [Skill entry point](skills/ucsd-design-system/SKILL.md): how to choose a stack and the hard rules.
+- [Layouts](layouts/README.md): CMS page patterns — content, landing, listing, article, section.
+- [Token naming contract](docs/token-naming-contract.md): the naming scheme and its rationale.
+- [Figma pipeline](docs/figma-pipeline.md): how design changes become code.
+- [Architecture](docs/architecture.md): decisions and rejected alternatives.
+
+## Optional
+- [Migration from Decorator V5](docs/migration-decorator-v5.md): Bootstrap 3 to 5 class mapping.
+`;
+
+// --- .ai mirror for non-Claude tools -----------------------------------------
+
+const aiRules = `# UCSD Design System — rules for AI code assistants
+
+Mirror of \`skills/ucsd-design-system/SKILL.md\` for tools that read \`.ai/\` (Cursor, Copilot).
+GENERATED — do not edit. Source of truth is the SKILL.md.
+
+Full token reference: \`../skills/ucsd-design-system/references/generated/tokens.md\`
+
+## Hard rules
+1. No raw hex colours. No raw px for spacing/radius. Use \`var(--ucsd-*)\`, \`$ucsd-*\`, or the Tailwind utility.
+2. Never reference \`palette.*\` from a component — it breaks dark mode and rebranding.
+3. Semantic tokens carry intent: \`color-action-primary\`, not \`palette-blue-500\`.
+4. Bootstrap 5 only. Bootstrap 3 classes (\`panel\`, \`btn-default\`, \`glyphicon\`, \`col-xs-*\`) are errors.
+5. Dark mode comes free from semantic tokens. Don't hand-write colour overrides.
+6. Run \`node skills/ucsd-design-system/scripts/validate.mjs <files>\` on what you produce.
+`;
+
+await fs.mkdir(GEN, { recursive: true });
+await fs.mkdir(path.join(REPO, '.ai'), { recursive: true });
+await Promise.all([
+  fs.writeFile(path.join(GEN, 'tokens.md'), lines.join('\n'), 'utf8'),
+  fs.writeFile(path.join(GEN, 'banned.json'), JSON.stringify(banned, null, 2) + '\n', 'utf8'),
+  fs.writeFile(path.join(REPO, 'llms.txt'), llmsTxt, 'utf8'),
+  fs.writeFile(path.join(REPO, '.ai', 'design-system-rules.md'), aiRules, 'utf8'),
+]);
+
+console.log(
+  `skill references: ${semantic.length} semantic + ${component.length} component tokens documented`,
+);

@@ -1,0 +1,58 @@
+name: Figma sync
+
+# Pulls Figma Variables into tokens/ and opens a PR. Never pushes to main:
+# a token change is a reviewable diff with a version bump, not a live mutation.
+# See docs/figma-pipeline.md §7.
+
+on:
+  schedule:
+    - cron: '17 11 * * 1-5' # weekday mornings, off the hour to avoid the rush
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Pull variables from Figma
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+          FIGMA_FILE_KEY: ${{ secrets.FIGMA_FILE_KEY }}
+        run: npm run sync:figma
+
+      # Rebuild so the PR shows the downstream effect of the token change:
+      # the reviewer sees the CSS/Sass/Tailwind/doc diff, not just the JSON.
+      - name: Rebuild all targets
+        run: npm run build
+
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/figma-sync
+          title: 'chore(tokens): figma sync'
+          commit-message: 'chore(tokens): sync design tokens from Figma'
+          labels: tokens, design-sync
+          delete-branch: true
+          body: |
+            Automated sync from Figma Variables.
+
+            **Review checklist**
+            - [ ] Values match what the designer intended
+            - [ ] No semantic token became a literal (CI checks, but eyeball it)
+            - [ ] Every semantic token still has both Light and Dark values
+            - [ ] Removals / renames? → this is a **major** bump and needs a migration note
+            - [ ] Contrast pairs still pass AA in both modes
+
+            Approval needs **one design** and **one engineering** reviewer.
+            See `docs/figma-pipeline.md` §7.

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "ucsd",
+  "homepage": "https://design.ucsd.edu",
+  "items": [
+    {
+      "name": "tokens",
+      "type": "registry:style",
+      "description": "UCSD design tokens. Required by every other item — installs the CSS custom properties and the Tailwind @theme mapping.",
+      "dependencies": ["@ucsd/tokens"],
+      "cssVars": {},
+      "files": []
+    }
+  ]
+}

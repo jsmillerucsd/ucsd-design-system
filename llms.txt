@@ -1,0 +1,22 @@
+# UCSD Design System
+
+> Token-first design system for UC San Diego. Successor to Decorator V5 (Bootstrap 3).
+> Bootstrap 5 and Tailwind/shadcn are both first-class targets; they share tokens, not markup.
+
+## Core rules
+- Never write a raw hex colour or raw px spacing. Use a semantic token.
+- Never reference a primitive (`palette.*`) from a component. Use a semantic token.
+- Dark mode is automatic when you use semantic tokens. Do not write `dark:` overrides for colour.
+- Breakpoints are Bootstrap 5's: 576 / 768 / 992 / 1200 / 1400.
+- Every page needs a skip link, one `<h1>`, and a visible focus ring.
+
+## Docs
+- [Token reference](skills/ucsd-design-system/references/generated/tokens.md): every token, light + dark values, and how to reference it from CSS, Sass, Tailwind or JS.
+- [Skill entry point](skills/ucsd-design-system/SKILL.md): how to choose a stack and the hard rules.
+- [Layouts](layouts/README.md): CMS page patterns — content, landing, listing, article, section.
+- [Token naming contract](docs/token-naming-contract.md): the naming scheme and its rationale.
+- [Figma pipeline](docs/figma-pipeline.md): how design changes become code.
+- [Architecture](docs/architecture.md): decisions and rejected alternatives.
+
+## Optional
+- [Migration from Decorator V5](docs/migration-decorator-v5.md): Bootstrap 3 to 5 class mapping.
