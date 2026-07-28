@@ -195,6 +195,16 @@ if (manifestLight) {
         continue;
       }
       const ratio = contrast(a, b);
+
+      // NaN < min is false, so an unparseable colour would slip through as a pass
+      // and the script would still claim AA compliance. Fail loudly instead.
+      if (!Number.isFinite(ratio)) {
+        fail('contrast-unparseable',
+          `${modeName}: cannot compute contrast for ${fg} (${a}) on ${bg} (${b}). ` +
+          `Colour values must be hex; rgb()/hsl()/named colours are not supported.`);
+        continue;
+      }
+
       if (ratio < min) {
         fail('contrast',
           `${modeName}: ${fg} (${a}) on ${bg} (${b}) is ${ratio.toFixed(2)}:1, needs ${min}:1.`);

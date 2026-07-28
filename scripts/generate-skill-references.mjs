@@ -20,9 +20,33 @@ import { fileURLToPath } from 'node:url';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(REPO, 'packages', 'tokens', 'dist');
-const GEN = path.join(REPO, 'skills', 'ucsd-design-system', 'references', 'generated');
+const SKILL_DIR = path.join(REPO, 'skills', 'ucsd-design-system');
+const GEN = path.join(SKILL_DIR, 'references', 'generated');
 
 const read = async (p) => JSON.parse(await fs.readFile(p, 'utf8'));
+
+/**
+ * Extract a `## ` section body from a markdown document.
+ *
+ * Used to derive the `.ai/` mirror from SKILL.md rather than duplicating its rules
+ * in a string literal here. A hardcoded copy would drift the moment SKILL.md changed,
+ * and CI would not notice — regenerating would reproduce the same stale text.
+ * Throwing on a missing heading turns a silent drift into a build failure.
+ */
+function section(md, titlePattern) {
+  const body = md
+    .split(/^## /m)
+    .slice(1)
+    .find((part) => titlePattern.test(part.split('\n', 1)[0]));
+  if (!body) {
+    console.error(
+      `\ngenerate-skill-references: no SKILL.md section matching ${titlePattern}.\n` +
+      `  The .ai/ mirror is derived from SKILL.md — restore the heading or update this script.\n`,
+    );
+    process.exit(1);
+  }
+  return body.split('\n').slice(1).join('\n').trim();
+}
 
 let light, dark;
 try {
@@ -218,21 +242,29 @@ const llmsTxt = `# UCSD Design System
 `;
 
 // --- .ai mirror for non-Claude tools -----------------------------------------
+// Sections are lifted verbatim from SKILL.md so the two can never disagree.
+
+const skillMd = await fs.readFile(path.join(SKILL_DIR, 'SKILL.md'), 'utf8');
 
 const aiRules = `# UCSD Design System — rules for AI code assistants
 
 Mirror of \`skills/ucsd-design-system/SKILL.md\` for tools that read \`.ai/\` (Cursor, Copilot).
-GENERATED — do not edit. Source of truth is the SKILL.md.
+GENERATED — do not edit. Source of truth is SKILL.md; the sections below are extracted
+from it verbatim by \`scripts/generate-skill-references.mjs\`.
 
 Full token reference: \`../skills/ucsd-design-system/references/generated/tokens.md\`
 
+## Pick the target
+
+${section(skillMd, /Pick the target/)}
+
 ## Hard rules
-1. No raw hex colours. No raw px for spacing/radius. Use \`var(--ucsd-*)\`, \`$ucsd-*\`, or the Tailwind utility.
-2. Never reference \`palette.*\` from a component — it breaks dark mode and rebranding.
-3. Semantic tokens carry intent: \`color-action-primary\`, not \`palette-blue-500\`.
-4. Bootstrap 5 only. Bootstrap 3 classes (\`panel\`, \`btn-default\`, \`glyphicon\`, \`col-xs-*\`) are errors.
-5. Dark mode comes free from semantic tokens. Don't hand-write colour overrides.
-6. Run \`node skills/ucsd-design-system/scripts/validate.mjs <files>\` on what you produce.
+
+${section(skillMd, /Hard rules/)}
+
+## Verify your own output
+
+${section(skillMd, /Verify your own output/)}
 `;
 
 await fs.mkdir(GEN, { recursive: true });

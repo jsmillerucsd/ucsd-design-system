@@ -93,6 +93,24 @@ describe('breakpoints match Bootstrap exactly', () => {
       assert.ok(bootstrapCss.includes(`min-width: ${v}`), `Bootstrap CSS missing min-width: ${v}`);
     }
   });
+
+  test('Tailwind breakpoints are literal values, never var()', () => {
+    // CSS forbids custom properties in a media query condition, so a var() here
+    // makes every responsive variant silently never match.
+    for (const [k, v] of Object.entries(EXPECTED)) {
+      assert.match(tailwind, new RegExp(`--breakpoint-${k}:\\s*${v};`));
+    }
+    assert.doesNotMatch(tailwind, /--breakpoint-[a-z]+:\s*var\(/);
+  });
+});
+
+describe('Tailwind defaults are reset', () => {
+  test('drops Tailwind\'s own palette and breakpoints', () => {
+    // Without these, bg-blue-500 compiles and ignores dark mode, and Tailwind's
+    // default 2xl (1536px) survives alongside our xxl (1400px).
+    assert.match(tailwind, /--color-\*:\s*initial;/);
+    assert.match(tailwind, /--breakpoint-\*:\s*initial;/);
+  });
 });
 
 describe('dark mode', () => {

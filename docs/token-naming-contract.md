@@ -41,11 +41,16 @@ Rendered as CSS custom properties with the `ucsd` prefix:
 
 **Rules.** Lowercase `kebab-case` segments. Singular nouns (`color`, not `colors`). No abbreviations except the universally understood `bg`, `fg`, `min`, `max`. Numeric scales unquoted and unpadded (`60`, not `060`). US spelling (`color`).
 
-**Validation regex** (enforced in CI):
+**Validation regex** (enforced in CI by `scripts/validate-tokens.mjs`):
 
 ```
-^[a-z][a-z0-9]*(-[a-z0-9]+)*(\.[a-z][a-z0-9]*(-[a-z0-9]+)*)*$
+^[a-z][a-z0-9]*(-[a-z0-9]+)*(\.[a-z0-9]+(-[a-z0-9]+)*)*$
 ```
+
+The first segment must start with a letter; later segments may start with a digit,
+because numeric scale steps are the norm — `space.4`, `text.2xl.size`,
+`palette.blue.500`, `elevation.1`. A pattern requiring every segment to begin with
+a letter would reject most of the token set.
 
 ---
 

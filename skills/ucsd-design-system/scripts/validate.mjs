@@ -37,15 +37,34 @@ if (files.length === 0) {
 const findings = [];
 const add = (file, line, level, rule, msg) => findings.push({ file, line, level, rule, msg });
 
-/** Regions where a literal hex is legitimate: the token definitions themselves. */
-const isTokenSource = (f) =>
-  f.includes(`${path.sep}tokens${path.sep}`) || f.endsWith('banned.json') || f.includes('dist');
+/**
+ * Regions where a literal hex is legitimate: generated or token-definition files.
+ *
+ * Matches whole path SEGMENTS. A substring test would skip any file whose path
+ * merely contains "dist" — "district-map.html", "distribution.css" — and silently
+ * report it clean, which is the most dangerous possible failure for a tool an
+ * agent uses to check its own work.
+ */
+const isTokenSource = (f) => {
+  const segs = f.split(/[\\/]/);
+  return segs.includes('tokens') || segs.includes('dist') || f.endsWith('banned.json');
+};
 
 // Lookarounds rather than \b: a hyphen is a non-word character, so \bpanel\b
 // matches inside ".custom-panel". Class names must match whole, hyphens included.
+// The `g` flag matters — without it only the first legacy class on a line is seen.
 const LEGACY_RE = new RegExp(
   `(?<![\\w-])(${banned.legacyDecoratorClasses.map((c) => c.replace(/-/g, '\\-')).join('|')})(?![\\w-])`,
+  'g',
 );
+
+/** `#fff` and `#ffffff` are the same colour; token values are always 6-digit. */
+const expandHex = (hex) => {
+  const h = hex.slice(1);
+  return h.length === 3 || h.length === 4
+    ? `#${[...h].map((c) => c + c).join('')}`
+    : hex;
+};
 
 for (const file of files) {
   let src;
@@ -64,7 +83,7 @@ for (const file of files) {
 
     // 1. Literal colours
     for (const m of raw.matchAll(/#[0-9a-fA-F]{3,8}\b/g)) {
-      const hex = m[0].toLowerCase();
+      const hex = expandHex(m[0].toLowerCase());
       const candidates = banned.colors[hex];
       if (candidates?.length) {
         const [first, ...rest] = candidates;
@@ -99,11 +118,16 @@ for (const file of files) {
       }
     }
 
-    // 4. Bootstrap 3 / Decorator V5 leftovers
-    const legacy = banned.legacyDecoratorClasses.length && raw.match(LEGACY_RE);
-    if (legacy) {
-      add(file, n, 'error', 'bootstrap3-legacy',
-        `"${legacy[1]}" is a Bootstrap 3 class. See references/migration.md.`);
+    // 4. Bootstrap 3 / Decorator V5 leftovers — every match on the line, not just
+    //    the first, so a migration sweep doesn't need repeated passes.
+    if (banned.legacyDecoratorClasses.length) {
+      const seen = new Set();
+      for (const m of raw.matchAll(LEGACY_RE)) {
+        if (seen.has(m[1])) continue;
+        seen.add(m[1]);
+        add(file, n, 'error', 'bootstrap3-legacy',
+          `"${m[1]}" is a Bootstrap 3 class. See references/migration.md.`);
+      }
     }
 
     // 5. Focus suppressed with no replacement

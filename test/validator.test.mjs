@@ -68,6 +68,35 @@ describe('noncompliant fixture', async () => {
   test('ranks action-primary above brand-blue for #00629b', () => {
     assert.match(out, /#00629b is a token value — use var\(--ucsd-color-action-primary\)/);
   });
+
+  test('reports every legacy class on a line, not just the first', () => {
+    for (const cls of ['well', 'page-header', 'control-label']) {
+      assert.ok(out.includes(`"${cls}" is a Bootstrap 3 class`), `missing ${cls} in:\n${out}`);
+    }
+  });
+
+  test('resolves 3-digit hex shorthand against 6-digit token values', () => {
+    // #fff must map to a token, not be dismissed as "not in the palette".
+    assert.match(out, /#fff is a token value/);
+    assert.doesNotMatch(out, /#fff is not in the palette/);
+  });
+});
+
+describe('path filtering', () => {
+  // A substring test for "dist" would skip these entirely and report them clean —
+  // the worst failure mode for a tool an agent uses to check its own work.
+  test('does not skip files whose path merely contains "dist"', async () => {
+    const { promises: fsp } = await import('node:fs');
+    const tmp = fixture('district-map.html');
+    await fsp.copyFile(fixture('noncompliant.html'), tmp);
+    try {
+      const { code, out } = await validate(tmp);
+      assert.equal(code, 1, `expected findings in a "district" path, got:\n${out}`);
+      assert.match(out, /bootstrap3-legacy/);
+    } finally {
+      await fsp.rm(tmp, { force: true });
+    }
+  });
 });
 
 describe('compliant fixture', async () => {

@@ -5,6 +5,9 @@
  *
  *   FIGMA_TOKEN=figd_...  FIGMA_FILE_KEY=abc123  node scripts/sync-figma.mjs
  *
+ * This file is only I/O: fetch, report, write. The mapping logic lives in
+ * scripts/lib/figma-transform.mjs so it can be tested without a Figma account.
+ *
  * STATUS: written against the documented shape of the Figma Variables REST API,
  * but NOT yet run against the real UCSD file — no file key or token exists yet.
  * Expect to adjust collection names in COLLECTIONS on first run.
@@ -17,6 +20,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { transform, sortDeep } from './lib/figma-transform.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TOKENS = path.join(REPO, 'tokens');
@@ -35,13 +39,6 @@ See docs/figma-pipeline.md §3 for the plan, including the Tokens Studio fallbac
   process.exit(1);
 }
 
-/** Maps Figma collection names to the tier they belong to. Adjust on first run. */
-const COLLECTIONS = {
-  '1. Primitives': { tier: 'primitive', dir: 'primitive' },
-  '2. Semantic': { tier: 'semantic', dir: 'semantic' },
-  '3. Component': { tier: 'component', dir: 'component' },
-};
-
 const res = await fetch(
   `https://api.figma.com/v1/files/${FIGMA_FILE_KEY}/variables/local`,
   { headers: { 'X-Figma-Token': FIGMA_TOKEN } },
@@ -55,128 +52,27 @@ if (!res.ok) {
 }
 
 const { meta } = await res.json();
-const variables = Object.values(meta.variables);
-const collections = meta.variableCollections;
+const { files, problems } = transform(meta);
 
-// --- helpers -----------------------------------------------------------------
+// --- validate BEFORE writing -------------------------------------------------
+// Nothing touches tokens/ unless the whole file is sound. Writing first and
+// failing afterwards would leave an invalid, half-synced working tree behind.
 
-const toHex = ({ r, g, b, a }) => {
-  const c = (v) => Math.round(v * 255).toString(16).padStart(2, '0');
-  return `#${c(r)}${c(g)}${c(b)}${a < 1 ? c(a) : ''}`;
-};
-
-/** Figma names are slash-delimited: "color/action/primary". */
-const segments = (name) => name.split('/').map((s) => s.trim().toLowerCase().replace(/\s+/g, '-'));
-
-const dtcgType = (figmaType, pathSegs) => {
-  if (figmaType === 'COLOR') return 'color';
-  if (figmaType === 'STRING') return pathSegs.includes('family') ? 'fontFamily' : 'string';
-  if (figmaType === 'FLOAT') {
-    if (pathSegs.includes('weight')) return 'fontWeight';
-    if (pathSegs.includes('duration')) return 'duration';
-    return 'dimension';
-  }
-  throw new Error(`BOOLEAN variable "${pathSegs.join('/')}" is not a design token — remove it from the published collection.`);
-};
-
-/** Numbers become dimensions with units; weights and durations don't. */
-const formatFloat = (n, type) =>
-  type === 'dimension' ? (n === 0 ? '0' : `${n}px`)
-  : type === 'duration' ? `${n}ms`
-  : n;
-
-const resolveAlias = (id) => {
-  const target = meta.variables[id];
-  if (!target) throw new Error(`alias points at unknown variable ${id}`);
-  return `{${segments(target.name).join('.')}}`;
-};
-
-const setDeep = (obj, segs, value) => {
-  let node = obj;
-  for (const s of segs.slice(0, -1)) node = node[s] ??= {};
-  node[segs.at(-1)] = value;
-};
-
-/** Stable key order so PR diffs are readable rather than reshuffled noise. */
-const sortDeep = (o) =>
-  Array.isArray(o) ? o
-  : o && typeof o === 'object'
-    ? Object.fromEntries(Object.keys(o).sort().map((k) => [k, sortDeep(o[k])]))
-    : o;
-
-// --- build one tree per (collection, mode) -----------------------------------
-
-const trees = new Map(); // "dir/file" -> object
-const problems = [];
-
-for (const v of variables) {
-  const collection = collections[v.variableCollectionId];
-  const spec = COLLECTIONS[collection?.name];
-  if (!spec) continue; // unmapped collection — ignored on purpose
-
-  const segs = segments(v.name);
-  let type;
-  try {
-    type = dtcgType(v.resolvedType, segs);
-  } catch (e) {
-    problems.push(e.message);
-    continue;
-  }
-
-  for (const mode of collection.modes) {
-    const rawValue = v.valuesByMode[mode.modeId];
-    if (rawValue === undefined) {
-      problems.push(`"${v.name}" has no value in mode "${mode.name}"`);
-      continue;
-    }
-
-    let value;
-    if (rawValue?.type === 'VARIABLE_ALIAS') {
-      value = resolveAlias(rawValue.id);
-    } else if (v.resolvedType === 'COLOR') {
-      value = toHex(rawValue);
-    } else if (v.resolvedType === 'FLOAT') {
-      value = formatFloat(rawValue, type);
-    } else {
-      value = rawValue;
-    }
-
-    // A semantic colour that is a literal rather than an alias breaks theming.
-    if (spec.tier === 'semantic' && type === 'color' && rawValue?.type !== 'VARIABLE_ALIAS') {
-      problems.push(`"${v.name}" (${mode.name}) is a literal ${value}. Semantic tokens must alias a primitive.`);
-    }
-
-    // Colour collections split by mode; everything else uses the default mode only.
-    const multiMode = collection.modes.length > 1 && segs[0] === 'color';
-    if (!multiMode && mode.modeId !== collection.defaultModeId) continue;
-
-    const file = multiMode
-      ? `${spec.dir}/color/${mode.name.toLowerCase()}.json`
-      : `${spec.dir}/${segs[0]}.json`;
-
-    const tree = trees.get(file) ?? {};
-    trees.set(file, tree);
-
-    const token = { $value: value, $type: type };
-    if (v.description) token.$description = v.description;
-    setDeep(tree, segs, token);
-  }
+if (problems.length) {
+  console.error(`\n${problems.length} problem(s) in the Figma file — nothing was written:`);
+  for (const p of problems) console.error(`  - ${p}`);
+  console.error('\nFix these in Figma. See docs/figma-pipeline.md §2 for the authoring contract.');
+  process.exit(1);
 }
 
 // --- write -------------------------------------------------------------------
 
-for (const [file, tree] of trees) {
+for (const [file, tree] of files) {
   const dest = path.join(TOKENS, file);
   await fs.mkdir(path.dirname(dest), { recursive: true });
   await fs.writeFile(dest, JSON.stringify(sortDeep(tree), null, 2) + '\n', 'utf8');
   console.log(`wrote tokens/${file}`);
 }
 
-if (problems.length) {
-  console.error(`\n${problems.length} problem(s) in the Figma file:`);
-  for (const p of problems) console.error(`  - ${p}`);
-  console.error('\nFix these in Figma. See docs/figma-pipeline.md §2 for the authoring contract.');
-  process.exit(1);
-}
-
-console.log(`\nSynced ${variables.length} variables into ${trees.size} file(s). Review the diff, then commit.`);
+const count = Object.keys(meta.variables).length;
+console.log(`\nSynced ${count} variables into ${files.size} file(s). Review the diff, then commit.`);

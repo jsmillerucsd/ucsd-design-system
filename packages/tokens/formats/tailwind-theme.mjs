@@ -7,56 +7,90 @@
  * republished as `--color-action-primary` generates `bg-action-primary`,
  * `text-action-primary`, `border-action-primary`, and so on.
  *
- * We emit `var(--ucsd-*)` rather than literal values on purpose: the utility then
- * resolves through tokens.css at runtime, so Tailwind classes follow dark mode
- * automatically with no `dark:` variant and no second theme block.
+ * Most values are emitted as `var(--ucsd-*)` on purpose: the utility then resolves
+ * through tokens.css at runtime, so Tailwind classes follow dark mode automatically
+ * with no `dark:` variant and no second theme block. Breakpoints are the exception
+ * — see LITERAL_NAMESPACES.
  */
+
+/**
+ * Namespaces that must be emitted as literal values rather than var() references.
+ *
+ * Tailwind inlines breakpoint values into media query CONDITIONS, and CSS does not
+ * permit custom properties there: `@media (width >= var(--ucsd-breakpoint-md))` is
+ * invalid and never matches, which would silently break every `md:` / `lg:` utility.
+ * Everything else lands in a property position, where var() is fine.
+ */
+const LITERAL_NAMESPACES = new Set(['breakpoint']);
+
+/**
+ * Tailwind namespaces we replace wholesale, resetting its defaults to `initial`.
+ *
+ * Without this, Tailwind's built-in palette stays available and `bg-blue-500`
+ * compiles happily while ignoring dark mode — contradicting the documented rule
+ * that only UCSD semantic colours may be used. Same for breakpoints: Tailwind's
+ * default `2xl` (1536px) would survive alongside our `xxl` (1400px).
+ *
+ * Namespaces NOT listed here (spacing, radius, shadow, text, font) intentionally
+ * keep Tailwind's defaults as a fallback, because our scales are deliberately
+ * sparse and removing them would break common utilities like `rounded-full`.
+ */
+const RESET_NAMESPACES = ['color', 'breakpoint'];
 
 /** Token path prefix -> Tailwind namespace. Order matters: first match wins. */
 const NAMESPACE_MAP = [
-  { prefix: ['color'],      ns: 'color',   drop: 1 },
-  { prefix: ['space'],      ns: 'spacing', drop: 1 },
-  { prefix: ['radius'],     ns: 'radius',  drop: 1 },
-  { prefix: ['elevation'],  ns: 'shadow',  drop: 1 },
-  { prefix: ['font', 'family'], ns: 'font', drop: 2 },
+  { prefix: ['color'],          ns: 'color',       drop: 1 },
+  { prefix: ['space'],          ns: 'spacing',     drop: 1 },
+  { prefix: ['radius'],         ns: 'radius',      drop: 1 },
+  { prefix: ['elevation'],      ns: 'shadow',      drop: 1 },
+  { prefix: ['font', 'family'], ns: 'font',        drop: 2 },
   { prefix: ['font', 'weight'], ns: 'font-weight', drop: 2 },
-  { prefix: ['breakpoint'], ns: 'breakpoint', drop: 1 },
-  { prefix: ['container'],  ns: 'container',  drop: 1 },
+  { prefix: ['breakpoint'],     ns: 'breakpoint',  drop: 1 },
+  { prefix: ['container'],      ns: 'container',   drop: 1 },
 ];
 
 const startsWith = (path, prefix) => prefix.every((seg, i) => path[i] === seg);
 
-/** `text.md.size` / `text.md.line-height` need bespoke handling: Tailwind pairs them. */
+/**
+ * Returns the Tailwind variable name for a token, plus whether it needs a literal
+ * value. Null means the token is intentionally not exposed as a utility.
+ *
+ * `text.md.size` / `text.md.line-height` need bespoke handling: Tailwind pairs them
+ * with the `--text-<size>--line-height` convention.
+ */
 function tailwindName(token) {
   const path = token.path;
 
   if (path[0] === 'text' && path.length === 3) {
-    if (path[2] === 'size') return `--text-${path[1]}`;
-    if (path[2] === 'line-height') return `--text-${path[1]}--line-height`;
+    if (path[2] === 'size') return { name: `--text-${path[1]}`, literal: false };
+    if (path[2] === 'line-height') return { name: `--text-${path[1]}--line-height`, literal: false };
     return null;
   }
 
   for (const { prefix, ns, drop } of NAMESPACE_MAP) {
     if (startsWith(path, prefix)) {
       const rest = path.slice(drop).join('-');
-      return rest ? `--${ns}-${rest}` : null;
+      if (!rest) return null;
+      return { name: `--${ns}-${rest}`, literal: LITERAL_NAMESPACES.has(path[0]) };
     }
   }
-  return null; // primitives and component tokens are intentionally not exposed as utilities
+  return null; // primitives and component tokens are not utilities
 }
 
 export const tailwindTheme = {
   name: 'css/ucsd-tailwind-theme',
-  format: ({ dictionary, options }) => {
-    const prefix = options?.prefix ?? 'ucsd';
+  format: ({ dictionary }) => {
     const lines = [];
     const seen = new Set();
 
     for (const token of dictionary.allTokens) {
-      const name = tailwindName(token);
-      if (!name || seen.has(name)) continue;
-      seen.add(name);
-      lines.push(`  ${name}: var(--${prefix}-${token.name.replace(new RegExp(`^${prefix}-`), '')});`);
+      const mapped = tailwindName(token);
+      if (!mapped || seen.has(mapped.name)) continue;
+      seen.add(mapped.name);
+
+      // token.name already carries the `ucsd` prefix from the platform config.
+      const value = mapped.literal ? (token.$value ?? token.value) : `var(--${token.name})`;
+      lines.push(`  ${mapped.name}: ${value};`);
     }
 
     return [
@@ -71,6 +105,9 @@ export const tailwindTheme = {
       ' */',
       '',
       '@theme {',
+      '  /* Drop Tailwind\'s own palette and breakpoints so only UCSD values exist. */',
+      ...RESET_NAMESPACES.map((ns) => `  --${ns}-*: initial;`),
+      '',
       ...lines.sort(),
       '}',
       '',

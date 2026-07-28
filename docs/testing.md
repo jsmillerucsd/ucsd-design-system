@@ -15,8 +15,9 @@ The third is the one most design systems never test, and it's the one that deter
 | Layer | Command | Runs in CI | Status |
 |---|---|---|---|
 | Token validation | `npm run test:tokens` | ✔ | **Working** |
-| Build contract tests | `npm test` | ✔ | **Working** — 35 assertions |
+| Build contract tests | `npm test` | ✔ | **Working** — 56 assertions total |
 | Validator self-tests | `npm test` | ✔ | **Working** |
+| Figma transform tests | `npm test` | ✔ | **Working** — no Figma account needed |
 | Generated docs freshness | `git diff --exit-code` | ✔ | **Working** |
 | Visual check | open `packages/bootstrap/kitchen-sink.html` | ✖ | Manual |
 | Screenshot regression | — | ✖ | Proposed |
@@ -60,6 +61,14 @@ These exist so a Style Dictionary or Bootstrap upgrade fails here rather than in
 `test/validator.test.mjs` runs the validator against a deliberately noncompliant fixture and a compliant one, asserting **both** directions. False positives matter as much as misses: a tool that cries wolf gets ignored, and then nobody checks anything.
 
 This caught a real bug during development — `.custom-panel` tripped the Bootstrap 3 `panel` rule, because `\b` treats a hyphen as a word boundary. Fixed with lookarounds.
+
+## 3b. Figma transform tests
+
+`test/figma-transform.test.mjs` runs `scripts/lib/figma-transform.mjs` against a synthetic Figma API payload, so the sync mapping is verified **without a Figma account or an Enterprise plan**.
+
+The transform was originally written inline in `sync-figma.mjs`, which made it impossible to exercise without credentials — and it shipped with four logic bugs, including one that would have written token files to paths the build does not read, defining every non-colour token twice. Splitting the pure mapping out from the I/O is what makes it testable.
+
+Covered: file routing matches the committed `tokens/` layout exactly, aliases survive as references rather than being flattened, dangling aliases become reported problems rather than crashes, literal semantic colours are rejected, unmapped token roots are errors rather than stray new files, and mode names are slugified and validated.
 
 ## 4. Generated docs freshness
 
