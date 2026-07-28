@@ -1,5 +1,5 @@
 /**
- * Token validation gate — docs/figma-pipeline.md §3.4.
+ * Token validation gate — docs/figma.md §3.4.
  *
  * Runs against the token SOURCE (tokens/) and the BUILT output (dist/), and is
  * the thing that blocks a bad Figma sync from merging:
@@ -252,5 +252,5 @@ for (const [rule, msgs] of Object.entries(byRule)) {
   console.log(`\n[${rule}]  ${msgs.length} problem(s)`);
   for (const m of msgs) console.log(`  - ${m}`);
 }
-console.log(`\n${problems.length} problem(s). See docs/token-naming-contract.md and docs/figma-pipeline.md §3.4.`);
+console.log(`\n${problems.length} problem(s). See docs/token-naming-contract.md and docs/figma.md §3.4.`);
 process.exit(1);

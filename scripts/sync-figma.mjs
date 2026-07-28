@@ -1,7 +1,7 @@
 /**
  * Figma Variables -> tokens/*.json
  *
- * One-way sync, Figma to git, landing as a pull request. See docs/figma-pipeline.md §3.
+ * One-way sync, Figma to git, landing as a pull request. See docs/figma.md §3.
  *
  *   FIGMA_TOKEN=figd_...  FIGMA_FILE_KEY=abc123  node scripts/sync-figma.mjs
  *
@@ -34,7 +34,7 @@ Figma sync is not configured.
   FIGMA_FILE_KEY  from the file URL: figma.com/design/<FILE_KEY>/...
 
 Set both and re-run. Until then, tokens/ holds placeholder values.
-See docs/figma-pipeline.md §3 for the plan, including the Tokens Studio fallback.
+See docs/figma.md §3 for the plan, including the Tokens Studio fallback.
 `);
   process.exit(1);
 }
@@ -61,7 +61,7 @@ const { files, problems } = transform(meta);
 if (problems.length) {
   console.error(`\n${problems.length} problem(s) in the Figma file — nothing was written:`);
   for (const p of problems) console.error(`  - ${p}`);
-  console.error('\nFix these in Figma. See docs/figma-pipeline.md §2 for the authoring contract.');
+  console.error('\nFix these in Figma. See docs/figma.md §2 for the authoring contract.');
   process.exit(1);
 }
 

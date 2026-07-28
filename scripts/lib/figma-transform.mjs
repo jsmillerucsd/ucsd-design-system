@@ -103,7 +103,7 @@ function fileFor({ spec, segs, mode, collection, splitsByMode }) {
       return {
         problem:
           `Semantic colours need both a Light and a Dark mode, but "${collection.name}" ` +
-          `has only "${mode.name}". Add the missing mode — see docs/figma-brief.md §3.`,
+          `has only "${mode.name}". Add the missing mode — see docs/figma.md §3.`,
       };
     }
     const modeSlug = slug(mode.name);

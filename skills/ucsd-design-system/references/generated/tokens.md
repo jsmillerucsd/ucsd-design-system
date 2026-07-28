@@ -2,7 +2,7 @@
 
 > **GENERATED FILE — do not edit.** Produced by `scripts/generate-skill-references.mjs`
 > from `packages/tokens/dist/tokens.json`. To change a value, change it in Figma
-> and run the sync; see `docs/figma-pipeline.md`.
+> and run the sync; see `docs/figma.md`.
 
 Semantic tokens: **103** · component: **12** · primitives: **46**
 

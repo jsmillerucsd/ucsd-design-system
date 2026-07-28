@@ -1,11 +1,4 @@
-# UCSD Design System
-
-> Token-first design system for UC San Diego. Successor to Decorator V5 (Bootstrap 3).
-> Bootstrap 5 and Tailwind/shadcn are both first-class targets; they share tokens, not markup.
-
-## Core rules
-
-Extracted verbatim from [DESIGN.md](DESIGN.md), which is the canonical statement of them.
+## Do's and Don'ts
 
 These are not style preferences. Each one, violated, breaks dark mode, rebranding, or accessibility.
 
@@ -25,16 +18,3 @@ These are not style preferences. Each one, violated, breaks dark mode, rebrandin
 - **Do** prefer space and surface change over borders, and borders over shadows, when separating regions.
 - **Do** trust the modest end of the type ramp. The pull toward a much larger heading is a marketing-site reflex.
 - **Do** let pages end. Vertical white space is correct, not underfilled.
-
-## Docs
-- [DESIGN.md](DESIGN.md): **start here.** The visual identity — every semantic token with light and dark values, plus what UCSD should look and feel like.
-- [Using it](docs/using/nextjs.md): per-stack setup — Next.js/React, Bootstrap 5, and everything else.
-- [Token reference](skills/ucsd-design-system/references/generated/tokens.md): every token including primitives and component tokens, with CSS/Sass/Tailwind/JS syntax.
-- [Skill entry point](skills/ucsd-design-system/SKILL.md): how to choose a stack, accessibility, and how to verify your output.
-- [Layouts](docs/layouts/README.md): CMS page patterns — content, landing, listing.
-- [Token naming contract](docs/token-naming-contract.md): the naming scheme and its rationale.
-- [Figma → code](docs/figma.md): how design changes become code.
-- [Architecture](docs/architecture.md): decisions and rejected alternatives.
-
-## Optional
-- [Migration from Decorator V5](docs/migration.md): Bootstrap 3 to 5 class mapping.

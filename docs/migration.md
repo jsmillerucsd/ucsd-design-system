@@ -1,10 +1,49 @@
 # Migrating Decorator V5 → UCSD Design System
 
-Decorator V5 is Bootstrap **3**. This system is Bootstrap **5**. That's two majors: the grid changed from floats to flexbox, jQuery is gone, and many class names changed. Treat a page conversion as a rewrite of the markup, not a stylesheet swap.
+Decorator V5 is Bootstrap **3**, served from `cdn.ucsd.edu/developer/decorator/5.0.2/` with jQuery, Glyphicons, and templates for homepage / blank slate / two-column / three-column. This system is Bootstrap **5**.
+
+That's two majors: the grid moved from floats to flexbox, `xs` stopped being a suffix, jQuery is gone along with its plugin API, Glyphicons were removed, and many class names changed.
+
+**A page conversion is a rewrite of the markup, not a stylesheet swap.** Budget accordingly — the common failure is estimating this as a CSS change.
 
 ## Coexistence rule
 
-Old and new may coexist **per page**, never within one page. Bootstrap 3 and 5 define overlapping class names with different meanings — loading both produces layouts that are subtly wrong in ways that are very hard to debug. Migrate whole pages.
+Old and new may coexist **per page**, never within one page. Bootstrap 3 and 5 define overlapping class names with different meanings; loading both produces layouts that are subtly wrong and very hard to debug.
+
+The unit of migration is therefore a page, and a site can run mixed for as long as it needs to.
+
+## Approach
+
+**1. Inventory.** List every page grouped by which Decorator template it uses, recording custom CSS/JS and who owns the content. Most sites discover here that a handful of templates cover 90% of pages.
+
+**2. Convert one page per template** as a reference:
+
+| Decorator V5 template | New pattern |
+|---|---|
+| homepage | [`layouts/landing-page.md`](layouts/landing-page.md) |
+| two-column | [`layouts/content-page.md`](layouts/content-page.md) |
+| three-column | [`layouts/listing-page.md`](layouts/listing-page.md) |
+| blank slate | [`layouts/content-page.md`](layouts/content-page.md) with the sidebar and title band off |
+
+Get these reviewed properly — by design, by an accessibility reviewer, and by whoever owns the content. Everything downstream copies them, so an error here multiplies.
+
+**3. Batch the rest** against the reference conversions.
+
+**4. Validate every page.**
+
+```bash
+npm run validate "site/**/*.html"
+```
+
+**5. Remove the Decorator CDN link** only once a page has no Bootstrap 3 classes left. The validator's `bootstrap3-legacy` rule is the gate.
+
+### Using an agent for the conversion
+
+This is a good task for one — the mapping is mechanical and large:
+
+> Convert this page from Decorator V5 to the UCSD Design System. Read `DESIGN.md` for the rules and tokens, and follow `docs/migration.md` for the class mapping. Pick the layout pattern that matches. Run `npm run validate` and fix everything it reports before showing me the result.
+
+Review the output. The mapping is mechanical; **judgment calls are not** — whether a `.well` should be a card or a plain section, whether a three-column page is really a listing, whether the alt text a human wrote is still accurate. Those need a person.
 
 ## Class mapping
 
@@ -98,23 +137,27 @@ Decorator V5 pages hard-code hex values. Replace every one with a token:
 | `#182b49` | `var(--ucsd-color-action-secondary)` / `--ucsd-color-brand-navy` |
 | `#ffcd00` | `var(--ucsd-color-brand-gold)` |
 
-Full list: `generated/tokens.md`. Run the validator to find them all.
+Full list: `DESIGN.md`, or `generated/tokens.md` for primitives and component tokens. Run the validator to find them all.
 
 ## Carried-forward details
 
 Three things Decorator V5 got right and people routinely get wrong. Preserve them:
 
-- The site footer is UCSD **Blue** (`#00629b`), not navy.
+- The site footer is UCSD **Blue**, not navy.
 - The white page-title band has **no gold rule** beneath it.
 - Active navbar items are dark blue — not a yellow underline.
 
-## Suggested order
+## What improves
 
-1. Inventory pages; group by template (homepage / two-column / three-column / blank slate).
-2. Convert one page per template as a reference. Get it reviewed.
-3. Batch the rest against those references.
-4. Run the validator on every converted page:
-   ```bash
-   node skills/ucsd-design-system/scripts/validate.mjs "path/**/*.html"
-   ```
-5. Remove the Decorator CDN link only when a page has **no** Bootstrap 3 classes left.
+Worth stating, because migrations need a reason beyond "the old one is old":
+
+| | Decorator V5 | New |
+|---|---|---|
+| Bootstrap | 3 (end of life, no security patches) | 5.3 |
+| jQuery | Required | None |
+| Dark mode | Not expressible — the old skill explicitly refuses to advise on it | Native, free with semantic tokens |
+| Versioning | Mutable CDN path; consumers can't pin | Immutable versioned URLs + a major-line alias |
+| Other frameworks | Bootstrap only | Tokens work in Tailwind, shadcn, Vue, Svelte, email |
+| Brand changes | Hand-edited CSS | Change in Figma → PR → every target |
+| Agent support | A skill pointing at a kitchen-sink URL | `DESIGN.md` generated from the tokens, plus a validator |
+| Accessibility | Not systematically enforced | Contrast checked in CI; validator catches the mechanical subset |

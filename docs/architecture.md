@@ -54,11 +54,15 @@ Constraints driving the replacement:
 
 **Bonus.** shadcn ships a registry MCP server, so agents can already enumerate and pull our components with no custom tooling from us.
 
+**Not built yet.** This is the decision, not the state. `design.ucsd.edu/r/` does not resolve and there is no `packages/registry/` — the stub was removed rather than left to imply otherwise. Sequenced as Phase 5 in [`figma.md`](figma.md). Until it exists, React teams use `@ucsd/tokens` with shadcn's own components; see [`using/nextjs.md`](using/nextjs.md).
+
 ---
 
 ## D5. The skill is generated, and self-contained
 
-**Decision.** `SKILL.md` is a short hand-written router. `references/generated/` is built from `tokens.json` and committed.
+**Decision.** `SKILL.md` is a short hand-written router. Everything else in the skill is generated: `references/generated/` holds the token reference built from `tokens.json`, plus **copies of the agent-relevant docs** (`using/*`, `accessibility`, `migration`, `layouts`), taken at build time from their single home under `docs/`.
+
+**Why copies rather than links.** The guides need to serve a human landing on the repo *and* an agent that may have the skill without the repo. Authoring them twice would drift; linking from the skill breaks the moment it is published standalone. Copying at build time gives one authored source and a self-contained skill, and CI's staleness check over `skills/` catches a stale copy for free. Relative links are flattened to repo paths on the way in, since a link that resolves in `docs/` resolves nowhere in the Skills Library.
 
 **Rejected: the current approach** — a skill that points at `developer.ucsd.edu` URLs. That requires a network fetch per use, burns context on HTML chrome, gives the model no way to verify its output, and goes stale invisibly the moment the site changes.
 
@@ -70,7 +74,7 @@ Constraints driving the replacement:
 
 ## D6. Progressive disclosure in the skill
 
-`SKILL.md` stays under ~150 lines: what the system is, how to choose a stack, the hard rules, and a table of contents. Detail lives in `references/`, loaded only when relevant.
+`SKILL.md` stays under ~150 lines: what the system is, how to choose a stack, the hard rules, and a table of contents. Detail lives in `references/generated/`, loaded only when relevant.
 
 **Why.** Skill frontmatter is always in context; the body loads on trigger; references load on demand. A 2,000-line SKILL.md would consume context on every unrelated task and, past a certain length, models start skimming it. The router pattern keeps the always-on cost near zero.
 
@@ -78,7 +82,7 @@ Constraints driving the replacement:
 
 ## D7. Layouts are specs, not code
 
-**Decision.** `layouts/*.md` are prose specs with reference markup, not a template package.
+**Decision.** `docs/layouts/*.md` are prose specs with reference markup, not a template package.
 
 **Why.** The CMS, Next.js apps, and static pages all render layouts differently, but they must agree on *anatomy* — which regions exist, what's allowed in each, what the content model fields are, which landmarks are required. That agreement is prose plus a skeleton, not a shared runtime.
 
@@ -96,7 +100,29 @@ Constraints driving the replacement:
 
 ## D9. Sync is one-way and lands as a pull request
 
-Covered in [`figma-pipeline.md`](figma-pipeline.md) §0 and §7. Recorded here because it is the decision most likely to be re-litigated: someone will eventually propose bidirectional sync so engineers can push values back to Figma. The answer is no — it creates a merge-conflict surface between two systems with incompatible conflict models, and in every reported case it ends with a human manually reconciling both.
+Covered in [`figma.md`](figma.md) §0 and §7. Recorded here because it is the decision most likely to be re-litigated: someone will eventually propose bidirectional sync so engineers can push values back to Figma. The answer is no — it creates a merge-conflict surface between two systems with incompatible conflict models, and in every reported case it ends with a human manually reconciling both.
+
+---
+
+## D10. `DESIGN.md` is the agent front door — generated, not authored
+
+**Decision.** Ship a root [`DESIGN.md`](../DESIGN.md) in Google's [DESIGN.md format](https://github.com/google-labs-code/design.md) as the canonical file we hand any coding agent. Its YAML frontmatter is **generated** from the built tokens; its prose is **hand-written** in `docs/design-md/`. `tokens/` remains the source of truth for values.
+
+**Why another LLM surface.** `SKILL.md` and `llms.txt` each only work if the tool already knows to look for them. DESIGN.md is the zero-config convention — Stitch, Cursor, Copilot, v0, or a contractor with a clone all pick it up with no setup. It is also the first artifact in this repo that states what UCSD should *feel* like, which is the thing that decides whether generated output is on-brand or merely on-palette.
+
+**Rejected: DESIGN.md as the source of truth for values.** This is the obvious reading — the format has a token schema and a linter, and most of the ~14,000 DESIGN.md files on GitHub are the only design artifact their project has. It does not survive contact with this repo:
+
+- The format **has no modes concept** ([#13](https://github.com/google-labs-code/design.md/issues/13), open). It cannot express our light/dark semantic layer, which D9's Figma contract requires and `validate-tokens.mjs` enforces.
+- It has **one flat colour map**, collapsing the primitive/semantic/component tiers that make a rebrand a one-line change.
+- It would create a **second place a value can be edited**, which is precisely what D9's one-way sync exists to prevent.
+
+The format's authors say the same thing. Its [PHILOSOPHY.md](https://github.com/google-labs-code/design.md/blob/main/PHILOSOPHY.md) states that token values "serve as context and are not rendering instructions," and that the format is explicitly "not trying to reinvent the decades long work established by languages and tools that came before us." The maintainer rejected a PR adding a `design.md import` command on the grounds that DESIGN.md "is meant to capture the intent behind the design and this can't be done statically" — the risk being that "the intent process isn't skipped because tokens were captured." Generating the frontmatter while hand-writing the prose is the shape that respects that.
+
+**Rejected: adding DESIGN.md alongside the existing surfaces unchanged.** That would have made a third copy of the hard rules. Instead the rules now live once, in `docs/design-md/08-dos-and-donts.md`, and reach `llms.txt` and the skill by extraction. This also fixed a latent bug: `llms.txt`'s core rules were a hand-typed literal that could silently disagree with `SKILL.md`, and nothing in CI would have caught it.
+
+**Consequence — the drift rule.** Prose in `docs/design-md/` may name tokens but must never contain their values. Values exist only in generated frontmatter, so the generated half cannot go stale and the hand-written half has no numbers that could. `generate-design-md.mjs` fails the build on a literal hex or dimension outside a code fence. (This is the convention worked out in [#16](https://github.com/google-labs-code/design.md/issues/16), which is the same drift concern applied to the format itself.)
+
+**Known cost.** The spec is at `alpha` and the CLI at `0.4.0`; expect breaking changes. Exposure is near zero *because* the file is generated — a spec bump is an edit to one script, not a migration. CI gates on lint **errors** only; ~35 warnings are expected and permanent, and are enumerated in `.github/workflows/ci.yml`.
 
 ---
 

@@ -8,10 +8,18 @@
  * in the same commit.
  *
  * Outputs (all committed — the skill must work with no build step):
- *   skills/ucsd-design-system/references/generated/tokens.md   full token reference
- *   skills/ucsd-design-system/references/generated/banned.json machine-readable literals to reject
- *   llms.txt                                                   convention for non-Claude tools
- *   .ai/design-system-rules.md                                 Cursor / Copilot mirror
+ *   skills/…/references/generated/tokens.md    full token reference
+ *   skills/…/references/generated/banned.json  machine-readable literals to reject
+ *   skills/…/references/generated/*.md         copies of the agent-relevant docs/
+ *   llms.txt                                   convention for non-Claude tools
+ *
+ * Nothing here is hand-written prose. The visual rules live once, in
+ * docs/design-md/08-dos-and-donts.md, and reach DESIGN.md and then llms.txt by
+ * extraction; the guides live once, under docs/, and are copied in. Before this,
+ * llms.txt carried a hand-typed copy of the rules that could silently disagree
+ * with SKILL.md, and nothing in CI would have caught it.
+ *
+ * Runs AFTER generate-design-md.mjs — see the build script ordering in package.json.
  */
 
 import { promises as fs } from 'node:fs';
@@ -29,10 +37,10 @@ const read = async (p) => JSON.parse(await fs.readFile(p, 'utf8'));
 /**
  * Extract a `## ` section body from a markdown document.
  *
- * Used to derive the `.ai/` mirror from SKILL.md rather than duplicating its rules
- * in a string literal here. A hardcoded copy would drift the moment SKILL.md changed,
- * and CI would not notice — regenerating would reproduce the same stale text.
- * Throwing on a missing heading turns a silent drift into a build failure.
+ * Used to lift the rules out of DESIGN.md rather than restating them in a string
+ * literal here. A hardcoded copy would drift the moment the rules changed, and CI
+ * would not notice — regenerating would reproduce the same stale text. Exiting on
+ * a missing heading turns a silent drift into a build failure.
  */
 function section(md, titlePattern) {
   const body = md
@@ -41,8 +49,9 @@ function section(md, titlePattern) {
     .find((part) => titlePattern.test(part.split('\n', 1)[0]));
   if (!body) {
     console.error(
-      `\ngenerate-skill-references: no SKILL.md section matching ${titlePattern}.\n` +
-      `  The .ai/ mirror is derived from SKILL.md — restore the heading or update this script.\n`,
+      `\ngenerate-skill-references: no DESIGN.md section matching ${titlePattern}.\n` +
+      `  Rules are extracted from DESIGN.md — restore the heading in\n` +
+      `  docs/design-md/ or update this script.\n`,
     );
     process.exit(1);
   }
@@ -57,6 +66,15 @@ try {
   ]);
 } catch {
   console.error('\ngenerate-skill-references: tokens not built.\n  Run `npm run build:tokens` first.\n');
+  process.exit(1);
+}
+
+/** The canonical visual rules. Extracted, never retyped — see the header note. */
+let designMd;
+try {
+  designMd = await fs.readFile(path.join(REPO, 'DESIGN.md'), 'utf8');
+} catch {
+  console.error('\ngenerate-skill-references: DESIGN.md not found.\n  Run `npm run build:designmd` first.\n');
   process.exit(1);
 }
 
@@ -118,7 +136,7 @@ const lines = [
   '',
   '> **GENERATED FILE — do not edit.** Produced by `scripts/generate-skill-references.mjs`',
   '> from `packages/tokens/dist/tokens.json`. To change a value, change it in Figma',
-  '> and run the sync; see `docs/figma-pipeline.md`.',
+  '> and run the sync; see `docs/figma.md`.',
   '',
   `Semantic tokens: **${semantic.length}** · component: **${component.length}** · primitives: **${primitive.length}**`,
   '',
@@ -247,65 +265,88 @@ const banned = {
 
 // --- llms.txt ----------------------------------------------------------------
 
+const dosAndDonts = section(designMd, /Do's and Don'ts/);
+
 const llmsTxt = `# UCSD Design System
 
 > Token-first design system for UC San Diego. Successor to Decorator V5 (Bootstrap 3).
 > Bootstrap 5 and Tailwind/shadcn are both first-class targets; they share tokens, not markup.
 
 ## Core rules
-- Never write a raw hex colour or raw px spacing. Use a semantic token.
-- Never reference a primitive (\`palette.*\`) from a component. Use a semantic token.
-- Dark mode is automatic when you use semantic tokens. Do not write \`dark:\` overrides for colour.
-- Breakpoints are Bootstrap 5's: 576 / 768 / 992 / 1200 / 1400.
-- Every page needs a skip link, one \`<h1>\`, and a visible focus ring.
+
+Extracted verbatim from [DESIGN.md](DESIGN.md), which is the canonical statement of them.
+
+${dosAndDonts}
 
 ## Docs
-- [Token reference](skills/ucsd-design-system/references/generated/tokens.md): every token, light + dark values, and how to reference it from CSS, Sass, Tailwind or JS.
-- [Skill entry point](skills/ucsd-design-system/SKILL.md): how to choose a stack and the hard rules.
-- [Layouts](layouts/README.md): CMS page patterns — content, landing, listing, article, section.
+- [DESIGN.md](DESIGN.md): **start here.** The visual identity — every semantic token with light and dark values, plus what UCSD should look and feel like.
+- [Using it](docs/using/nextjs.md): per-stack setup — Next.js/React, Bootstrap 5, and everything else.
+- [Token reference](skills/ucsd-design-system/references/generated/tokens.md): every token including primitives and component tokens, with CSS/Sass/Tailwind/JS syntax.
+- [Skill entry point](skills/ucsd-design-system/SKILL.md): how to choose a stack, accessibility, and how to verify your output.
+- [Layouts](docs/layouts/README.md): CMS page patterns — content, landing, listing.
 - [Token naming contract](docs/token-naming-contract.md): the naming scheme and its rationale.
-- [Figma pipeline](docs/figma-pipeline.md): how design changes become code.
+- [Figma → code](docs/figma.md): how design changes become code.
 - [Architecture](docs/architecture.md): decisions and rejected alternatives.
 
 ## Optional
-- [Migration from Decorator V5](docs/migration-decorator-v5.md): Bootstrap 3 to 5 class mapping.
+- [Migration from Decorator V5](docs/migration.md): Bootstrap 3 to 5 class mapping.
 `;
 
-// --- .ai mirror for non-Claude tools -----------------------------------------
-// Sections are lifted verbatim from SKILL.md so the two can never disagree.
+// --- copy the agent-relevant docs into the skill ------------------------------
+//
+// These are authored once, under docs/, where a human finds them. The skill needs
+// its own copies because it is published to the Skills Library standalone, where
+// there is no repo around it (architecture D5).
+//
+// Relative links are flattened to backticked repo paths on the way in: a link like
+// [x](../migration.md) resolves in docs/ and resolves nowhere in the skill, so
+// carrying it across would manufacture broken links. A path an agent can look up
+// is more useful there than a link that 404s.
 
-const skillMd = await fs.readFile(path.join(SKILL_DIR, 'SKILL.md'), 'utf8');
+/** [docs-relative source, name inside references/generated/] */
+const COPY = [
+  ['using/nextjs.md', 'using-nextjs.md'],
+  ['using/bootstrap.md', 'using-bootstrap.md'],
+  ['using/other.md', 'using-other.md'],
+  ['accessibility.md', 'accessibility.md'],
+  ['migration.md', 'migration.md'],
+  ['layouts/README.md', 'layouts.md'],
+];
 
-const aiRules = `# UCSD Design System — rules for AI code assistants
+const posix = (p) => p.split(path.sep).join('/');
 
-Mirror of \`skills/ucsd-design-system/SKILL.md\` for tools that read \`.ai/\` (Cursor, Copilot).
-GENERATED — do not edit. Source of truth is SKILL.md; the sections below are extracted
-from it verbatim by \`scripts/generate-skill-references.mjs\`.
+const flattenLinks = (md, sourceDir) =>
+  md.replace(/\[([^\]]+)\]\((?!https?:|#)([^)#]+)(#[^)]*)?\)/g, (_m, text, target) => {
+    const resolved = posix(path.relative(REPO, path.resolve(REPO, sourceDir, target)));
+    // Link text is very often already a path (`../migration.md`), and appending the
+    // resolved path to it reads as a stutter. Replace outright in that case.
+    const bare = text.replace(/`/g, '').trim();
+    return /\.(md|json|mjs)$|\//.test(bare) ? `\`${resolved}\`` : `${text} (\`${resolved}\`)`;
+  });
 
-Full token reference: \`../skills/ucsd-design-system/references/generated/tokens.md\`
-
-## Pick the target
-
-${section(skillMd, /Pick the target/)}
-
-## Hard rules
-
-${section(skillMd, /Hard rules/)}
-
-## Verify your own output
-
-${section(skillMd, /Verify your own output/)}
-`;
+const copied = await Promise.all(
+  COPY.map(async ([from, to]) => {
+    const src = path.join(REPO, 'docs', from);
+    const body = await fs.readFile(src, 'utf8').catch(() => {
+      console.error(`\ngenerate-skill-references: docs/${from} is missing — update the COPY list.\n`);
+      process.exit(1);
+    });
+    const rel = `docs/${from}`;
+    const header =
+      `<!-- COPY of ${rel} — do not edit here. Edit the source and run \`npm run build\`. -->\n\n`;
+    return [to, header + flattenLinks(body, path.posix.dirname(rel))];
+  }),
+);
 
 await fs.mkdir(GEN, { recursive: true });
-await fs.mkdir(path.join(REPO, '.ai'), { recursive: true });
 await Promise.all([
   fs.writeFile(path.join(GEN, 'tokens.md'), lines.join('\n'), 'utf8'),
   fs.writeFile(path.join(GEN, 'banned.json'), JSON.stringify(banned, null, 2) + '\n', 'utf8'),
   fs.writeFile(path.join(REPO, 'llms.txt'), llmsTxt, 'utf8'),
-  fs.writeFile(path.join(REPO, '.ai', 'design-system-rules.md'), aiRules, 'utf8'),
+  ...copied.map(([name, body]) => fs.writeFile(path.join(GEN, name), body, 'utf8')),
 ]);
 
 console.log(
-  `skill references: ${semantic.length} semantic + ${component.length} component tokens documented`,
+  `skill references: ${semantic.length} semantic + ${component.length} component tokens, ` +
+    `${copied.length} docs copied`,
 );

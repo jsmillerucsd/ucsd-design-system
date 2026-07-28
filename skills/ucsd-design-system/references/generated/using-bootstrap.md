@@ -1,6 +1,10 @@
+<!-- COPY of docs/using/bootstrap.md — do not edit here. Edit the source and run `npm run build`. -->
+
 # Building with Bootstrap 5
 
-UCSD's Bootstrap 5 theme is Bootstrap with the UCSD tokens compiled in. **Everything in Bootstrap's own documentation applies.** This file covers only what's UCSD-specific.
+For static pages, server-rendered apps, CMS templates, and anything without a Node build step.
+
+UCSD's Bootstrap 5 theme is Bootstrap with the UCSD tokens compiled in. **Everything in Bootstrap's own documentation applies.** This file covers only what's UCSD-specific. For the rules and the full token list, read `DESIGN.md`.
 
 ## Setup
 
@@ -95,7 +99,7 @@ These have no Bootstrap equivalent. Full definitions in `packages/bootstrap/scss
 
 ## Common mistakes
 
-- Writing Bootstrap 3 class names — `panel`, `btn-default`, `col-xs-*`, `img-responsive`. See `migration.md`.
+- Writing Bootstrap 3 class names — `panel`, `btn-default`, `col-xs-*`, `img-responsive`. See `docs/migration.md`.
 - Overriding theme colours with inline styles or a raw hex. Use the token.
 - `outline: none` on focus with no replacement.
 - Using `.container-fluid` for text content — long-form copy needs `.ucsd-prose` to cap the measure.

@@ -1,8 +1,14 @@
-# Building with Tailwind & shadcn
+<!-- COPY of docs/using/nextjs.md — do not edit here. Edit the source and run `npm run build`. -->
 
-For Next.js and React. Tailwind v4 (CSS-first config) plus shadcn components pulled from the UCSD registry.
+# Building with Next.js, React & Tailwind
+
+For Next.js and React apps. Tailwind v4 (CSS-first config) on UCSD tokens. For the rules and the full token list, read `DESIGN.md`.
 
 ## Setup
+
+```bash
+npm install @ucsd/tokens
+```
 
 ```css
 /* app/globals.css */
@@ -13,13 +19,7 @@ For Next.js and React. Tailwind v4 (CSS-first config) plus shadcn components pul
 
 That's the whole configuration. No `tailwind.config.js` — Tailwind v4 reads the `@theme` block from the imported CSS.
 
-Components:
-
-```bash
-npx shadcn@latest add https://design.ucsd.edu/r/button.json
-```
-
-You get the source in your repo and you own it. Modify it freely — that's the model. Just keep the token classes when you do.
+> **Components:** there is **no UCSD component package or shadcn registry yet.** `design.ucsd.edu/r/` does not resolve. The plan is a shadcn registry (see architecture D4 (`docs/architecture.md`)), sequenced as Phase 5 in `docs/figma.md`. Until then: install shadcn's own components with `npx shadcn@latest add button`, then swap their default classes for the UCSD token utilities below. You own the code either way — that's the model.
 
 ## How tokens become utilities
 
@@ -45,24 +45,22 @@ The values are `var(--ucsd-*)` references, not literals. That's deliberate: util
 <div class="bg-white text-black dark:bg-slate-900 dark:text-white">…</div>
 ```
 
-Enabling dark mode is a class or attribute on a wrapper — `.dark`, `[data-theme="dark"]`, or `[data-bs-theme="dark"]` all work.
+Enabling dark mode is a class or attribute on a wrapper — `.dark`, `[data-theme="dark"]` or `[data-bs-theme="dark"]` all work.
 
 ## Rules specific to this stack
 
 1. **Don't use Tailwind's default palette.** `bg-blue-500`, `text-slate-700`, `bg-white` are not UCSD colours and don't respond to dark mode. Use the semantic utilities above.
 2. **Don't use arbitrary values for colour or spacing** — `bg-[#00629b]`, `p-[17px]`. If no token fits, say so rather than inventing one.
 3. **Arbitrary values are fine for genuine one-offs** that aren't colour or spacing — `grid-cols-[200px_1fr]`, `max-w-[--ucsd-container-prose]`.
-4. **Breakpoints are UCSD's.** `sm: md: lg: xl: 2xl:` map to 576/768/992/1200/1400 via the theme. Never `min-[850px]:`.
-5. **Compose with `cn()`**, the standard shadcn `clsx` + `tailwind-merge` helper, so consumer classes can override.
+4. **Breakpoints are UCSD's.** `sm: md: lg: xl: 2xl:` come from the `breakpoint.*` scale and match Bootstrap exactly. Never `min-[850px]:`.
+5. **Compose with `cn()`**, the standard `clsx` + `tailwind-merge` helper, so consumer classes can override.
 
-## shadcn component conventions
+## Component conventions
 
 - Keep the `cva` variant structure. Add UCSD variants rather than replacing the base.
 - Variant names match the design system, not Tailwind: `variant="primary" | "secondary" | "ghost" | "danger"`.
-- Keep the Radix primitive underneath. It's carrying the focus management, keyboard handling and ARIA — hand-rolled replacements reliably lose those.
-- Keep `focus-visible:ring-*` classes. Focus styling is a requirement, not decoration.
-
-Example variant wired to tokens:
+- Keep the Radix primitive underneath. It carries focus management, keyboard handling and ARIA that hand-rolled replacements reliably lose.
+- Keep `focus-visible:ring-*`. Focus styling is a requirement, not decoration.
 
 ```tsx
 const buttonVariants = cva(
@@ -84,11 +82,15 @@ const buttonVariants = cva(
 );
 ```
 
-Note `size.md` is `h-11` (44px) — the WCAG 2.2 minimum target size. Don't go below it for primary actions.
+`size.md` is `h-11` — the WCAG 2.2 minimum target size. Don't go below it for primary actions.
 
 ## Next.js notes
 
 - Import `@ucsd/tokens/css` once in the root layout's global stylesheet, not per route.
 - Self-host Roboto and Teko via `next/font` rather than a Google Fonts link — avoids a render-blocking third-party request and the layout shift.
-- Server Components by default; `"use client"` only where you need interactivity. Most shadcn primitives need it, most layout does not.
-- Setting the initial theme: write the class before paint (an inline script in `<head>`) or you get a flash of the wrong mode.
+- Server Components by default; `"use client"` only where you need interactivity. Most primitives need it, most layout does not.
+- Set the initial theme before paint (an inline script in `<head>`) or you get a flash of the wrong mode.
+
+## Plain React, Vite, and other SPAs
+
+Everything above applies except the Next.js notes. If you aren't using Tailwind at all, import `@ucsd/tokens/css` and use `var(--ucsd-*)` directly — see `docs/using/other.md`.
