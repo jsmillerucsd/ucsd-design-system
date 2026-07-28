@@ -131,7 +131,7 @@ The format's authors say the same thing. Its [PHILOSOPHY.md](https://github.com/
 | # | Question | Blocks | Default if unanswered |
 |---|---|---|---|
 | 1 | Which **CMS**? (Drupal / headless / other) | `layouts/` content-model mapping | Write layouts CMS-agnostically with a mapping table per platform |
-| 2 | ~~Figma plan tier — Enterprise?~~ **Answered: not Enterprise.** Remaining: is it Professional or Free/Starter? | Whether dark mode is possible at all | Sync is Tokens Studio, not the API ([figma.md §3.1](figma.md)). Budget one Tokens Studio Pro seat. **If Figma is Free/Starter, variable modes do not exist and dark mode has nowhere to live — that upgrade is a hard prerequisite, not a nice-to-have.** |
+| 2 | ~~Figma plan tier?~~ **Answered: Professional.** | — | Settled. Variable modes work (10 per collection; we need 2). Sync is Tokens Studio, not the REST API — still needs one Tokens Studio Pro seat, and the file in a Project rather than Drafts. **Code Connect is Organization/Enterprise-only, so it is off the table**; the component naming convention carries that weight instead ([figma.md §5.1](figma.md)). |
 | 3 | Keep **Teko** as the display face? | `font.family.display` | Carry it forward from Decorator V5 |
 | 4 | Icon strategy — Glyphicons are dead | Icon tokens + component | Bootstrap Icons (BS5-native, MIT, ~2,000 glyphs) |
 | 5 | Where does this repo live — new GitHub repo, or inside the Skills Library? | CI publish target | Standalone repo; CI copies `skills/` into the Skills Library on release |

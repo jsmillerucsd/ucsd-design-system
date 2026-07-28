@@ -225,27 +225,36 @@ Cross-framework consistency is a *property of the build*, not of anyone's discip
 
 Components are written **once, by hand**, per target. Then Figma is made to point at that code so it never has to be guessed at again.
 
-### 5.1 Figma Code Connect
+### 5.1 Figma Code Connect — **not available to us**
 
-[Code Connect](https://www.figma.com/code-connect-docs/) maps a Figma component to a real snippet from this repo. Once published, Dev Mode shows **our** `<Button variant="primary">` instead of generated div soup — for every developer and every agent reading that file.
+[Code Connect](https://www.figma.com/code-connect-docs/) maps a Figma component to a real snippet from this repo, so Dev Mode shows **our** `<Button variant="primary">` instead of generated div soup. It is the ideal answer to "which code component is this frame?"
 
-```ts
-figma.connect(Button, 'https://figma.com/design/<KEY>?node-id=<ID>', {
-  props: {
-    variant:  figma.enum('Variant', { Primary: 'primary', Secondary: 'secondary' }),
-    disabled: figma.boolean('Disabled'),
-    label:    figma.string('Label'),
-  },
-  example: ({ variant, disabled, label }) =>
-    <Button variant={variant} disabled={disabled}>{label}</Button>,
-})
-```
+**It requires the Organization or Enterprise plan.** UCSD is on Professional, so this is out of reach until that changes. Recorded here because it is the obvious thing to reach for and the disappointment is better spent once.
 
-Code Connect supports HTML as well as React, so we publish two mappings per component — one for Bootstrap 5 markup, one for React. Cost is ~20 lines per component; do it for the highest-traffic ones and skip the long tail.
+What replaces it, until then: **the component naming convention in [§2.4](#24-component-hygiene) is the only mapping signal we have.** Figma `Button` ↔ `<Button>` ↔ `.btn`, matched exactly. With Code Connect that convention is a convenience; without it, it is load-bearing — an agent has nothing else to go on. Enforce it in design review.
 
 ### 5.2 Dev Mode MCP, and how to build from a frame
 
-Figma's Dev Mode MCP server runs locally and exposes the current selection: `get_code`, `get_variable_defs`, `get_code_connect_map`, `get_image`. ⚠️ Verify seat and plan requirements against current Figma docs before promising this to the team.
+Figma's MCP server exposes the current selection to an agent: `get_code`, `get_variable_defs`, `get_code_connect_map`, `get_image`.
+
+**Available on Professional — with a caveat that decides whether it is usable at all.** Access is gated by *seat*, not just plan:
+
+| Seat | Limit | Verdict |
+|---|---|---|
+| View / Collab | ~6 tool calls **per month** | A demo, not a workflow |
+| **Dev or Full** | ~200/day, 10/min on Professional | What you need |
+
+Two servers exist: a **remote** one (`mcp.figma.com/mcp`, no local setup, works on all plans) and a **desktop** one (`http://127.0.0.1:3845/mcp`, requires the Figma desktop app open with the MCP server enabled in preferences, and a Dev or Full seat on a paid plan). Prefer remote unless you need selection-based context or your org restricts external MCP endpoints.
+
+For Claude Code, the official plugin bundles the MCP config:
+
+```bash
+claude plugin install figma@claude-plugins-official
+```
+
+⚠️ Figma has signalled this may become usage-billed; it was free during beta. Verify current billing before building a team workflow on it.
+
+Note that `get_code_connect_map` returns nothing for us (§5.1), so step 2 below is a no-op until UCSD is on Organization or Enterprise.
 
 **It complements `DESIGN.md`; it does not replace it.** Dev Mode MCP answers *"what does this frame look like?"* — `DESIGN.md` answers *"what are we allowed to build, with which tokens and rules?"* Used alone, Dev Mode MCP produces plausible code full of raw hex values.
 
@@ -262,7 +271,7 @@ A Figma frame is the **visual** answer, not the implementation answer:
 Procedure:
 
 1. **Get the variables, not the pixels.** Call `get_variable_defs` on the selection first — it returns the *token names* the designer bound, which map straight to `--ucsd-*`. Highest-value step, most often skipped.
-2. **Check `get_code_connect_map`.** If the component already exists in code, use it — don't regenerate from the frame.
+2. **Match the component by name.** Figma `Button` is `<Button>` and `.btn` — check whether it already exists in code before regenerating it from the frame. (`get_code_connect_map` would answer this automatically, but Code Connect needs a plan we don't have; see §5.1.)
 3. **Translate remaining literals to tokens.** Look them up in `DESIGN.md`. If a value has no token, don't invent one — flag it. An unmapped value is either a designer error or a genuine gap worth raising.
 4. **Rebuild the layout in flow.** Auto Layout → flexbox/grid; fixed frame widths → container tokens. Discard absolute positioning unless the design genuinely calls for overlay.
 5. **Add what the frame can't show:** focus, keyboard behaviour, error/empty/loading states, reduced motion. A static frame shows one state of many; the rest are yours, not omissions by the designer.
@@ -311,7 +320,7 @@ If Dev Mode output shows a **primitive** binding (`blue/500`, `palette/*`), that
 | **2** | Figma sync automated | A colour change in Figma opens a PR unaided |
 | **3** | Bootstrap 5 theme + versioned CDN | One real page renders with zero Decorator CSS |
 | **4** | Publish the skill to the Skills Library | An agent builds a compliant page from `DESIGN.md` alone |
-| **5** | shadcn registry + Code Connect on the top components | `npx shadcn add` works from `design.ucsd.edu/r/` |
+| **5** | shadcn registry | `npx shadcn add` works from `design.ucsd.edu/r/` |
 | **6** | CMS layout patterns | Content and landing templates in production |
 
 Phases 3–6 are independent once 1–2 land. **Phase 0 is the urgent one** — it costs about a week and is nearly free right now; every week the designer builds under an ad-hoc naming scheme is a week of manual remapping later.

@@ -75,6 +75,8 @@ npm run validate "src/**/*.tsx"
 
 The validator flags raw hex and px where a token exists, Bootstrap 3 leftovers, and common accessibility misses. Claude Code users also get the [skill](skills/ucsd-design-system/SKILL.md), which routes to the right guide automatically.
 
+Building from a Figma frame? Figma's MCP server pairs with `DESIGN.md` — the frame answers *what it looks like*, `DESIGN.md` answers *what you're allowed to build*. Setup and the seat requirement are in [docs/figma.md §5.2](docs/figma.md).
+
 ## Figma → spec, in five steps
 
 1. **The designer authors variables** in three collections — primitives (hidden), semantic (published, with Light and Dark modes), component. Components bind only to semantic. → [the contract](docs/figma.md). To skip hand-typing ~175 names, import the seed in [`tokens-studio/`](tokens-studio/README.md) first.
