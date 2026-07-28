@@ -133,6 +133,13 @@
     "16px": "--ucsd-radius-xl",
     "999px": "--ucsd-radius-pill"
   },
+  "breakpoints": [
+    "576",
+    "768",
+    "992",
+    "1200",
+    "1400"
+  ],
   "legacyDecoratorClasses": [
     "panel",
     "panel-body",

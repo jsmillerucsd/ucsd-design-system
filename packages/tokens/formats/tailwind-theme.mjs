@@ -57,8 +57,12 @@ const startsWith = (path, prefix) => prefix.every((seg, i) => path[i] === seg);
  *
  * `text.md.size` / `text.md.line-height` need bespoke handling: Tailwind pairs them
  * with the `--text-<size>--line-height` convention.
+ *
+ * Exported so scripts/generate-skill-references.mjs can derive its documentation
+ * hints from the same mapping rather than maintaining a parallel copy.
+ * `token.path` is an array of segments.
  */
-function tailwindName(token) {
+export function tailwindName(token) {
   const path = token.path;
 
   if (path[0] === 'text' && path.length === 3) {

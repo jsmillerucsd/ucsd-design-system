@@ -23,93 +23,93 @@ with light/dark mode automatically.
 ### `breakpoint`
 
 | Token | CSS variable | Tailwind | Value | Use for |
-|---|---|---|---|---|
-| `breakpoint.sm` | `--ucsd-breakpoint-sm` | — | `576px` | — |
-| `breakpoint.md` | `--ucsd-breakpoint-md` | — | `768px` | — |
-| `breakpoint.lg` | `--ucsd-breakpoint-lg` | — | `992px` | — |
-| `breakpoint.xl` | `--ucsd-breakpoint-xl` | — | `1200px` | — |
-| `breakpoint.xxl` | `--ucsd-breakpoint-xxl` | — | `1400px` | — |
+| --- | --- | --- | --- | --- |
+| `breakpoint.sm` | `--ucsd-breakpoint-sm` | `sm:` variants | `576px` | — |
+| `breakpoint.md` | `--ucsd-breakpoint-md` | `md:` variants | `768px` | — |
+| `breakpoint.lg` | `--ucsd-breakpoint-lg` | `lg:` variants | `992px` | — |
+| `breakpoint.xl` | `--ucsd-breakpoint-xl` | `xl:` variants | `1200px` | — |
+| `breakpoint.xxl` | `--ucsd-breakpoint-xxl` | `xxl:` variants | `1400px` | — |
 
 ### `color.action`
 
 | Token | CSS variable | Tailwind | Light | Dark | Use for |
-|---|---|---|---|---|---|
-| `color.action.primary` | `--ucsd-color-action-primary` | `*-action-primary` (bg-, text-, border-) | `#00629b` | `#66a3c9` | — |
-| `color.action.primary-hover` | `--ucsd-color-action-primary-hover` | `*-action-primary-hover` (bg-, text-, border-) | `#00507f` | `#99c1db` | — |
-| `color.action.primary-active` | `--ucsd-color-action-primary-active` | `*-action-primary-active` (bg-, text-, border-) | `#003d62` | `#cce0ed` | — |
-| `color.action.secondary` | `--ucsd-color-action-secondary` | `*-action-secondary` (bg-, text-, border-) | `#182b49` | `#dddde1` | — |
-| `color.action.secondary-hover` | `--ucsd-color-action-secondary-hover` | `*-action-secondary-hover` (bg-, text-, border-) | `#0f1b2e` | `#ffffff` | — |
-| `color.action.secondary-active` | `--ucsd-color-action-secondary-active` | `*-action-secondary-active` (bg-, text-, border-) | `#0f1b2e` | `#ffffff` | — |
-| `color.action.disabled` | `--ucsd-color-action-disabled` | `*-action-disabled` (bg-, text-, border-) | `#c4c4ca` | `#243a54` | — |
+| --- | --- | --- | --- | --- | --- |
+| `color.action.primary` | `--ucsd-color-action-primary` | `bg-action-primary` `text-action-primary` `border-action-primary` | `#00629b` | `#66a3c9` | — |
+| `color.action.primary-hover` | `--ucsd-color-action-primary-hover` | `bg-action-primary-hover` `text-action-primary-hover` `border-action-primary-hover` | `#00507f` | `#99c1db` | — |
+| `color.action.primary-active` | `--ucsd-color-action-primary-active` | `bg-action-primary-active` `text-action-primary-active` `border-action-primary-active` | `#003d62` | `#cce0ed` | — |
+| `color.action.secondary` | `--ucsd-color-action-secondary` | `bg-action-secondary` `text-action-secondary` `border-action-secondary` | `#182b49` | `#dddde1` | — |
+| `color.action.secondary-hover` | `--ucsd-color-action-secondary-hover` | `bg-action-secondary-hover` `text-action-secondary-hover` `border-action-secondary-hover` | `#0f1b2e` | `#ffffff` | — |
+| `color.action.secondary-active` | `--ucsd-color-action-secondary-active` | `bg-action-secondary-active` `text-action-secondary-active` `border-action-secondary-active` | `#0f1b2e` | `#ffffff` | — |
+| `color.action.disabled` | `--ucsd-color-action-disabled` | `bg-action-disabled` `text-action-disabled` `border-action-disabled` | `#c4c4ca` | `#243a54` | — |
 
 ### `color.border`
 
 | Token | CSS variable | Tailwind | Light | Dark | Use for |
-|---|---|---|---|---|---|
-| `color.border.default` | `--ucsd-color-border-default` | `*-border-default` (bg-, text-, border-) | `#c4c4ca` | `#243a54` | — |
-| `color.border.subtle` | `--ucsd-color-border-subtle` | `*-border-subtle` (bg-, text-, border-) | `#dddde1` | `#1d3153` | — |
-| `color.border.strong` | `--ucsd-color-border-strong` | `*-border-strong` (bg-, text-, border-) | `#75757f` | `#75757f` | — |
-| `color.border.focus` | `--ucsd-color-border-focus` | `*-border-focus` (bg-, text-, border-) | `#00629b` | `#ffcd00` | Focus ring. Must hit 3:1 against adjacent surfaces. |
+| --- | --- | --- | --- | --- | --- |
+| `color.border.default` | `--ucsd-color-border-default` | `bg-border-default` `text-border-default` `border-border-default` | `#c4c4ca` | `#243a54` | — |
+| `color.border.subtle` | `--ucsd-color-border-subtle` | `bg-border-subtle` `text-border-subtle` `border-border-subtle` | `#dddde1` | `#1d3153` | — |
+| `color.border.strong` | `--ucsd-color-border-strong` | `bg-border-strong` `text-border-strong` `border-border-strong` | `#75757f` | `#75757f` | — |
+| `color.border.focus` | `--ucsd-color-border-focus` | `bg-border-focus` `text-border-focus` `border-border-focus` | `#00629b` | `#ffcd00` | Focus ring. Must hit 3:1 against adjacent surfaces. |
 
 ### `color.brand`
 
 | Token | CSS variable | Tailwind | Light | Dark | Use for |
-|---|---|---|---|---|---|
-| `color.brand.navy` | `--ucsd-color-brand-navy` | `*-brand-navy` (bg-, text-, border-) | `#182b49` | `#182b49` | — |
-| `color.brand.blue` | `--ucsd-color-brand-blue` | `*-brand-blue` (bg-, text-, border-) | `#00629b` | `#3384b7` | — |
-| `color.brand.gold` | `--ucsd-color-brand-gold` | `*-brand-gold` (bg-, text-, border-) | `#ffcd00` | `#ffcd00` | — |
+| --- | --- | --- | --- | --- | --- |
+| `color.brand.navy` | `--ucsd-color-brand-navy` | `bg-brand-navy` `text-brand-navy` `border-brand-navy` | `#182b49` | `#182b49` | — |
+| `color.brand.blue` | `--ucsd-color-brand-blue` | `bg-brand-blue` `text-brand-blue` `border-brand-blue` | `#00629b` | `#3384b7` | — |
+| `color.brand.gold` | `--ucsd-color-brand-gold` | `bg-brand-gold` `text-brand-gold` `border-brand-gold` | `#ffcd00` | `#ffcd00` | — |
 
 ### `color.status`
 
 | Token | CSS variable | Tailwind | Light | Dark | Use for |
-|---|---|---|---|---|---|
-| `color.status.info` | `--ucsd-color-status-info` | `*-status-info` (bg-, text-, border-) | `#00629b` | `#66a3c9` | — |
-| `color.status.info-subtle` | `--ucsd-color-status-info-subtle` | `*-status-info-subtle` (bg-, text-, border-) | `#e6f0f6` | `#001827` | — |
-| `color.status.info-strong` | `--ucsd-color-status-info-strong` | `*-status-info-strong` (bg-, text-, border-) | `#003d62` | `#cce0ed` | — |
-| `color.status.success` | `--ucsd-color-status-success` | `*-status-success` (bg-, text-, border-) | `#007a33` | `#007a33` | — |
-| `color.status.success-subtle` | `--ucsd-color-status-success-subtle` | `*-status-success-subtle` (bg-, text-, border-) | `#e3f1e8` | `#005b26` | — |
-| `color.status.success-strong` | `--ucsd-color-status-success-strong` | `*-status-success-strong` (bg-, text-, border-) | `#005b26` | `#e3f1e8` | — |
-| `color.status.warning` | `--ucsd-color-status-warning` | `*-status-warning` (bg-, text-, border-) | `#e8a200` | `#e8a200` | — |
-| `color.status.warning-subtle` | `--ucsd-color-status-warning-subtle` | `*-status-warning-subtle` (bg-, text-, border-) | `#fdf3e0` | `#8a6100` | — |
-| `color.status.warning-strong` | `--ucsd-color-status-warning-strong` | `*-status-warning-strong` (bg-, text-, border-) | `#8a6100` | `#fdf3e0` | — |
-| `color.status.danger` | `--ucsd-color-status-danger` | `*-status-danger` (bg-, text-, border-) | `#c8102e` | `#c8102e` | — |
-| `color.status.danger-subtle` | `--ucsd-color-status-danger-subtle` | `*-status-danger-subtle` (bg-, text-, border-) | `#fbe7ea` | `#960c22` | — |
-| `color.status.danger-strong` | `--ucsd-color-status-danger-strong` | `*-status-danger-strong` (bg-, text-, border-) | `#960c22` | `#fbe7ea` | — |
+| --- | --- | --- | --- | --- | --- |
+| `color.status.info` | `--ucsd-color-status-info` | `bg-status-info` `text-status-info` `border-status-info` | `#00629b` | `#66a3c9` | — |
+| `color.status.info-subtle` | `--ucsd-color-status-info-subtle` | `bg-status-info-subtle` `text-status-info-subtle` `border-status-info-subtle` | `#e6f0f6` | `#001827` | — |
+| `color.status.info-strong` | `--ucsd-color-status-info-strong` | `bg-status-info-strong` `text-status-info-strong` `border-status-info-strong` | `#003d62` | `#cce0ed` | — |
+| `color.status.success` | `--ucsd-color-status-success` | `bg-status-success` `text-status-success` `border-status-success` | `#007a33` | `#007a33` | — |
+| `color.status.success-subtle` | `--ucsd-color-status-success-subtle` | `bg-status-success-subtle` `text-status-success-subtle` `border-status-success-subtle` | `#e3f1e8` | `#005b26` | — |
+| `color.status.success-strong` | `--ucsd-color-status-success-strong` | `bg-status-success-strong` `text-status-success-strong` `border-status-success-strong` | `#005b26` | `#e3f1e8` | — |
+| `color.status.warning` | `--ucsd-color-status-warning` | `bg-status-warning` `text-status-warning` `border-status-warning` | `#e8a200` | `#e8a200` | — |
+| `color.status.warning-subtle` | `--ucsd-color-status-warning-subtle` | `bg-status-warning-subtle` `text-status-warning-subtle` `border-status-warning-subtle` | `#fdf3e0` | `#8a6100` | — |
+| `color.status.warning-strong` | `--ucsd-color-status-warning-strong` | `bg-status-warning-strong` `text-status-warning-strong` `border-status-warning-strong` | `#8a6100` | `#fdf3e0` | — |
+| `color.status.danger` | `--ucsd-color-status-danger` | `bg-status-danger` `text-status-danger` `border-status-danger` | `#c8102e` | `#c8102e` | — |
+| `color.status.danger-subtle` | `--ucsd-color-status-danger-subtle` | `bg-status-danger-subtle` `text-status-danger-subtle` `border-status-danger-subtle` | `#fbe7ea` | `#960c22` | — |
+| `color.status.danger-strong` | `--ucsd-color-status-danger-strong` | `bg-status-danger-strong` `text-status-danger-strong` `border-status-danger-strong` | `#960c22` | `#fbe7ea` | — |
 
 ### `color.surface`
 
 | Token | CSS variable | Tailwind | Light | Dark | Use for |
-|---|---|---|---|---|---|
-| `color.surface.default` | `--ucsd-color-surface-default` | `*-surface-default` (bg-, text-, border-) | `#ffffff` | `#0f1b2e` | Page and card background. |
-| `color.surface.subtle` | `--ucsd-color-surface-subtle` | `*-surface-subtle` (bg-, text-, border-) | `#f7f7f8` | `#182b49` | Alternating sections, table stripes. |
-| `color.surface.raised` | `--ucsd-color-surface-raised` | `*-surface-raised` (bg-, text-, border-) | `#ffffff` | `#1d3153` | Surfaces above the page: modals, popovers, dropdowns. |
-| `color.surface.sunken` | `--ucsd-color-surface-sunken` | `*-surface-sunken` (bg-, text-, border-) | `#eeeef0` | `#000000` | Wells, inset panels, code blocks. |
-| `color.surface.inverse` | `--ucsd-color-surface-inverse` | `*-surface-inverse` (bg-, text-, border-) | `#182b49` | `#f7f7f8` | Dark bands on a light page: footer, hero. |
+| --- | --- | --- | --- | --- | --- |
+| `color.surface.default` | `--ucsd-color-surface-default` | `bg-surface-default` `text-surface-default` `border-surface-default` | `#ffffff` | `#0f1b2e` | Page and card background. |
+| `color.surface.subtle` | `--ucsd-color-surface-subtle` | `bg-surface-subtle` `text-surface-subtle` `border-surface-subtle` | `#f7f7f8` | `#182b49` | Alternating sections, table stripes. |
+| `color.surface.raised` | `--ucsd-color-surface-raised` | `bg-surface-raised` `text-surface-raised` `border-surface-raised` | `#ffffff` | `#1d3153` | Surfaces above the page: modals, popovers, dropdowns. |
+| `color.surface.sunken` | `--ucsd-color-surface-sunken` | `bg-surface-sunken` `text-surface-sunken` `border-surface-sunken` | `#eeeef0` | `#000000` | Wells, inset panels, code blocks. |
+| `color.surface.inverse` | `--ucsd-color-surface-inverse` | `bg-surface-inverse` `text-surface-inverse` `border-surface-inverse` | `#182b49` | `#f7f7f8` | Dark bands on a light page: footer, hero. |
 
 ### `color.text`
 
 | Token | CSS variable | Tailwind | Light | Dark | Use for |
-|---|---|---|---|---|---|
-| `color.text.default` | `--ucsd-color-text-default` | `*-text-default` (bg-, text-, border-) | `#1a1a1d` | `#f7f7f8` | — |
-| `color.text.muted` | `--ucsd-color-text-muted` | `*-text-muted` (bg-, text-, border-) | `#5a5a63` | `#c4c4ca` | Secondary text. AA on surface.default. |
-| `color.text.subtle` | `--ucsd-color-text-subtle` | `*-text-subtle` (bg-, text-, border-) | `#75757f` | `#9a9aa3` | Tertiary. Large text / non-essential only. |
-| `color.text.inverse` | `--ucsd-color-text-inverse` | `*-text-inverse` (bg-, text-, border-) | `#ffffff` | `#0f1b2e` | Text on surface.inverse. |
-| `color.text.link` | `--ucsd-color-text-link` | `*-text-link` (bg-, text-, border-) | `#00629b` | `#66a3c9` | — |
-| `color.text.link-hover` | `--ucsd-color-text-link-hover` | `*-text-link-hover` (bg-, text-, border-) | `#003d62` | `#99c1db` | — |
+| --- | --- | --- | --- | --- | --- |
+| `color.text.default` | `--ucsd-color-text-default` | `bg-text-default` `text-text-default` `border-text-default` | `#1a1a1d` | `#f7f7f8` | — |
+| `color.text.muted` | `--ucsd-color-text-muted` | `bg-text-muted` `text-text-muted` `border-text-muted` | `#5a5a63` | `#c4c4ca` | Secondary text. AA on surface.default. |
+| `color.text.subtle` | `--ucsd-color-text-subtle` | `bg-text-subtle` `text-text-subtle` `border-text-subtle` | `#75757f` | `#9a9aa3` | Tertiary. Large text / non-essential only. |
+| `color.text.inverse` | `--ucsd-color-text-inverse` | `bg-text-inverse` `text-text-inverse` `border-text-inverse` | `#ffffff` | `#0f1b2e` | Text on surface.inverse. |
+| `color.text.link` | `--ucsd-color-text-link` | `bg-text-link` `text-text-link` `border-text-link` | `#00629b` | `#66a3c9` | — |
+| `color.text.link-hover` | `--ucsd-color-text-link-hover` | `bg-text-link-hover` `text-text-link-hover` `border-text-link-hover` | `#003d62` | `#99c1db` | — |
 
 ### `container`
 
 | Token | CSS variable | Tailwind | Value | Use for |
-|---|---|---|---|---|
-| `container.prose` | `--ucsd-container-prose` | — | `70ch` | — |
-| `container.narrow` | `--ucsd-container-narrow` | — | `768px` | — |
-| `container.base` | `--ucsd-container-base` | — | `1140px` | — |
-| `container.wide` | `--ucsd-container-wide` | — | `1320px` | — |
+| --- | --- | --- | --- | --- |
+| `container.prose` | `--ucsd-container-prose` | `max-w-prose` | `70ch` | — |
+| `container.narrow` | `--ucsd-container-narrow` | `max-w-narrow` | `768px` | — |
+| `container.base` | `--ucsd-container-base` | `max-w-base` | `1140px` | — |
+| `container.wide` | `--ucsd-container-wide` | `max-w-wide` | `1320px` | — |
 
 ### `elevation`
 
 | Token | CSS variable | Tailwind | Value | Use for |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `elevation.0` | `--ucsd-elevation-0` | `shadow-0` | `none` | — |
 | `elevation.1` | `--ucsd-elevation-1` | `shadow-1` | `0 1px 2px 0 rgba(24, 43, 73, 0.08)` | — |
 | `elevation.2` | `--ucsd-elevation-2` | `shadow-2` | `0 2px 6px 0 rgba(24, 43, 73, 0.10)` | — |
@@ -119,19 +119,19 @@ with light/dark mode automatically.
 ### `font`
 
 | Token | CSS variable | Tailwind | Value | Use for |
-|---|---|---|---|---|
-| `font.family.sans` | `--ucsd-font-family-sans` | — | `Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif` | — |
-| `font.family.display` | `--ucsd-font-family-display` | — | `Teko, Roboto, sans-serif` | Condensed display face. Headings and hero type only — never body copy. |
-| `font.family.mono` | `--ucsd-font-family-mono` | — | `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` | — |
-| `font.weight.regular` | `--ucsd-font-weight-regular` | — | `400` | — |
-| `font.weight.medium` | `--ucsd-font-weight-medium` | — | `500` | — |
-| `font.weight.semibold` | `--ucsd-font-weight-semibold` | — | `600` | — |
-| `font.weight.bold` | `--ucsd-font-weight-bold` | — | `700` | — |
+| --- | --- | --- | --- | --- |
+| `font.family.sans` | `--ucsd-font-family-sans` | `font-sans` | `Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif` | — |
+| `font.family.display` | `--ucsd-font-family-display` | `font-display` | `Teko, Roboto, sans-serif` | Condensed display face. Headings and hero type only — never body copy. |
+| `font.family.mono` | `--ucsd-font-family-mono` | `font-mono` | `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` | — |
+| `font.weight.regular` | `--ucsd-font-weight-regular` | `font-regular` | `400` | — |
+| `font.weight.medium` | `--ucsd-font-weight-medium` | `font-medium` | `500` | — |
+| `font.weight.semibold` | `--ucsd-font-weight-semibold` | `font-semibold` | `600` | — |
+| `font.weight.bold` | `--ucsd-font-weight-bold` | `font-bold` | `700` | — |
 
 ### `motion`
 
 | Token | CSS variable | Tailwind | Value | Use for |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `motion.duration.fast` | `--ucsd-motion-duration-fast` | — | `120ms` | — |
 | `motion.duration.base` | `--ucsd-motion-duration-base` | — | `200ms` | — |
 | `motion.duration.slow` | `--ucsd-motion-duration-slow` | — | `320ms` | — |
@@ -142,7 +142,7 @@ with light/dark mode automatically.
 ### `radius`
 
 | Token | CSS variable | Tailwind | Value | Use for |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `radius.none` | `--ucsd-radius-none` | `rounded-none` | `0` | — |
 | `radius.sm` | `--ucsd-radius-sm` | `rounded-sm` | `2px` | — |
 | `radius.md` | `--ucsd-radius-md` | `rounded-md` | `4px` | — |
@@ -154,7 +154,7 @@ with light/dark mode automatically.
 ### `space`
 
 | Token | CSS variable | Tailwind | Value | Use for |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `space.0` | `--ucsd-space-0` | `p-0` `m-0` `gap-0` | `0` | — |
 | `space.1` | `--ucsd-space-1` | `p-1` `m-1` `gap-1` | `4px` | — |
 | `space.2` | `--ucsd-space-2` | `p-2` `m-2` `gap-2` | `8px` | — |
@@ -173,25 +173,25 @@ with light/dark mode automatically.
 ### `text`
 
 | Token | CSS variable | Tailwind | Value | Use for |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `text.xs.size` | `--ucsd-text-xs-size` | `text-xs` | `12px` | — |
-| `text.xs.line-height` | `--ucsd-text-xs-line-height` | — | `16px` | — |
+| `text.xs.line-height` | `--ucsd-text-xs-line-height` | paired with `text-xs` | `16px` | — |
 | `text.sm.size` | `--ucsd-text-sm-size` | `text-sm` | `14px` | — |
-| `text.sm.line-height` | `--ucsd-text-sm-line-height` | — | `20px` | — |
+| `text.sm.line-height` | `--ucsd-text-sm-line-height` | paired with `text-sm` | `20px` | — |
 | `text.md.size` | `--ucsd-text-md-size` | `text-md` | `16px` | — |
-| `text.md.line-height` | `--ucsd-text-md-line-height` | — | `24px` | — |
+| `text.md.line-height` | `--ucsd-text-md-line-height` | paired with `text-md` | `24px` | — |
 | `text.lg.size` | `--ucsd-text-lg-size` | `text-lg` | `18px` | — |
-| `text.lg.line-height` | `--ucsd-text-lg-line-height` | — | `28px` | — |
+| `text.lg.line-height` | `--ucsd-text-lg-line-height` | paired with `text-lg` | `28px` | — |
 | `text.xl.size` | `--ucsd-text-xl-size` | `text-xl` | `20px` | — |
-| `text.xl.line-height` | `--ucsd-text-xl-line-height` | — | `28px` | — |
+| `text.xl.line-height` | `--ucsd-text-xl-line-height` | paired with `text-xl` | `28px` | — |
 | `text.2xl.size` | `--ucsd-text-2xl-size` | `text-2xl` | `24px` | — |
-| `text.2xl.line-height` | `--ucsd-text-2xl-line-height` | — | `32px` | — |
+| `text.2xl.line-height` | `--ucsd-text-2xl-line-height` | paired with `text-2xl` | `32px` | — |
 | `text.3xl.size` | `--ucsd-text-3xl-size` | `text-3xl` | `30px` | — |
-| `text.3xl.line-height` | `--ucsd-text-3xl-line-height` | — | `36px` | — |
+| `text.3xl.line-height` | `--ucsd-text-3xl-line-height` | paired with `text-3xl` | `36px` | — |
 | `text.4xl.size` | `--ucsd-text-4xl-size` | `text-4xl` | `36px` | — |
-| `text.4xl.line-height` | `--ucsd-text-4xl-line-height` | — | `40px` | — |
+| `text.4xl.line-height` | `--ucsd-text-4xl-line-height` | paired with `text-4xl` | `40px` | — |
 | `text.5xl.size` | `--ucsd-text-5xl-size` | `text-5xl` | `48px` | — |
-| `text.5xl.line-height` | `--ucsd-text-5xl-line-height` | — | `52px` | — |
+| `text.5xl.line-height` | `--ucsd-text-5xl-line-height` | paired with `text-5xl` | `52px` | — |
 
 ## Component tokens
 

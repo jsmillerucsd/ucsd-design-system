@@ -10,7 +10,7 @@
  */
 
 /** Maps Figma collection names to the tier they belong to. Adjust on first run. */
-export const COLLECTIONS = {
+const COLLECTIONS = {
   '1. Primitives': { tier: 'primitive', dir: 'primitive' },
   '2. Semantic': { tier: 'semantic', dir: 'semantic' },
   '3. Component': { tier: 'component', dir: 'component' },
@@ -28,7 +28,7 @@ export const COLLECTIONS = {
  * closed set (docs/token-naming-contract.md), so an unknown root means the contract
  * changed and a human has to decide where it belongs.
  */
-export const FILE_FOR_ROOT = {
+const FILE_FOR_ROOT = {
   primitive: {
     palette: 'primitive/color.json',
   },
@@ -46,7 +46,7 @@ export const FILE_FOR_ROOT = {
 };
 
 /** Colour modes we know how to write. Anything else has no home in the build. */
-export const KNOWN_MODES = new Set(['light', 'dark']);
+const KNOWN_MODES = new Set(['light', 'dark']);
 
 // --- helpers -----------------------------------------------------------------
 
@@ -59,9 +59,9 @@ export const toHex = ({ r, g, b, a }) => {
 export const slug = (s) => s.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
 /** Figma names are slash-delimited: "color/action/primary". */
-export const segments = (name) => name.split('/').map(slug);
+const segments = (name) => name.split('/').map(slug);
 
-export const dtcgType = (figmaType, pathSegs) => {
+const dtcgType = (figmaType, pathSegs) => {
   if (figmaType === 'COLOR') return 'color';
   if (figmaType === 'STRING') return pathSegs.includes('family') ? 'fontFamily' : 'string';
   if (figmaType === 'FLOAT') {
@@ -90,6 +90,44 @@ export const sortDeep = (o) =>
   : o && typeof o === 'object'
     ? Object.fromEntries(Object.keys(o).sort().map((k) => [k, sortDeep(o[k])]))
     : o;
+
+/**
+ * Decide which file a token belongs in.
+ *
+ * Returns `{ file }` or `{ problem }` — never both. Pulled out of the main loop so
+ * the routing rules read as one flat set of cases instead of four nested levels.
+ */
+function fileFor({ spec, segs, mode, collection, splitsByMode }) {
+  if (splitsByMode) {
+    if (collection.modes.length < 2) {
+      return {
+        problem:
+          `Semantic colours need both a Light and a Dark mode, but "${collection.name}" ` +
+          `has only "${mode.name}". Add the missing mode — see docs/figma-brief.md §3.`,
+      };
+    }
+    const modeSlug = slug(mode.name);
+    if (!KNOWN_MODES.has(modeSlug)) {
+      return {
+        problem:
+          `Colour mode "${mode.name}" is not supported. Name the modes exactly "Light" and "Dark" — ` +
+          `the build reads tokens/semantic/color/{light,dark}.json.`,
+      };
+    }
+    return { file: `${spec.dir}/color/${modeSlug}.json` };
+  }
+
+  if (spec.tier === 'component') return { file: `${spec.dir}/${segs[0]}.json` };
+
+  const file = FILE_FOR_ROOT[spec.tier]?.[segs[0]];
+  if (file) return { file };
+  return {
+    problem:
+      `"${segs.join('/')}" has an unmapped root "${segs[0]}" for the ${spec.tier} tier. ` +
+      `Add it to FILE_FOR_ROOT in scripts/lib/figma-transform.mjs, or rename it to ` +
+      `fit the closed vocabulary in docs/token-naming-contract.md.`,
+  };
+}
 
 // --- transform ---------------------------------------------------------------
 
@@ -126,6 +164,9 @@ export function transform(meta) {
       continue;
     }
 
+    // Mode-invariant, so decided once per variable rather than per mode.
+    const splitsByMode = spec.tier === 'semantic' && segs[0] === 'color';
+
     for (const mode of collection.modes) {
       const rawValue = v.valuesByMode[mode.modeId];
       if (rawValue === undefined) {
@@ -157,39 +198,12 @@ export function transform(meta) {
       }
 
       // Semantic colours split by mode; everything else uses the default mode only.
-      const splitsByMode = spec.tier === 'semantic' && segs[0] === 'color';
       if (!splitsByMode && mode.modeId !== collection.defaultModeId) continue;
 
-      let file;
-      if (splitsByMode) {
-        if (collection.modes.length < 2) {
-          problems.push(
-            `Semantic colours need both a Light and a Dark mode, but "${collection.name}" ` +
-            `has only "${mode.name}". Add the missing mode — see docs/figma-brief.md §3.`,
-          );
-          continue;
-        }
-        const modeSlug = slug(mode.name);
-        if (!KNOWN_MODES.has(modeSlug)) {
-          problems.push(
-            `Colour mode "${mode.name}" is not supported. Name the modes exactly "Light" and "Dark" — ` +
-            `the build reads tokens/semantic/color/{light,dark}.json.`,
-          );
-          continue;
-        }
-        file = `${spec.dir}/color/${modeSlug}.json`;
-      } else if (spec.tier === 'component') {
-        file = `${spec.dir}/${segs[0]}.json`;
-      } else {
-        file = FILE_FOR_ROOT[spec.tier]?.[segs[0]];
-        if (!file) {
-          problems.push(
-            `"${v.name}" has an unmapped root "${segs[0]}" for the ${spec.tier} tier. ` +
-            `Add it to FILE_FOR_ROOT in scripts/lib/figma-transform.mjs, or rename it to ` +
-            `fit the closed vocabulary in docs/token-naming-contract.md.`,
-          );
-          continue;
-        }
+      const { file, problem } = fileFor({ spec, segs, mode, collection, splitsByMode });
+      if (problem) {
+        problems.push(problem);
+        continue;
       }
 
       const tree = files.get(file) ?? {};

@@ -48,22 +48,47 @@ async function loadTree(file) {
 
 const merge = (...maps) => new Map(maps.flatMap((m) => [...m]));
 
-const [prim, light, dark, space, typo, layout, button] = await Promise.all([
-  loadTree(path.join(SRC, 'primitive', 'color.json')),
-  loadTree(path.join(SRC, 'semantic', 'color', 'light.json')),
-  loadTree(path.join(SRC, 'semantic', 'color', 'dark.json')),
-  loadTree(path.join(SRC, 'semantic', 'space.json')),
-  loadTree(path.join(SRC, 'semantic', 'typography.json')),
-  loadTree(path.join(SRC, 'semantic', 'layout.json')),
-  loadTree(path.join(SRC, 'component', 'button.json')),
+/**
+ * Discover token files rather than listing them by name.
+ *
+ * Naming each file meant a newly added one — say a second component file synced
+ * from Figma, which scripts/lib/figma-transform.mjs creates automatically — was
+ * silently never loaded, so nothing in it was checked while CI still went green.
+ */
+async function tokenFiles(dir) {
+  const found = [];
+  for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) found.push(...await tokenFiles(full));
+    else if (entry.name.endsWith('.json')) found.push(full);
+  }
+  return found;
+}
+
+const allFiles = await tokenFiles(SRC);
+const rel = (f) => path.relative(SRC, f).split(path.sep).join('/');
+const load = async (matches) =>
+  merge(...await Promise.all(allFiles.filter((f) => matches(rel(f))).map(loadTree)));
+
+const [prim, light, dark, nonColorSemantic, component] = await Promise.all([
+  load((r) => r.startsWith('primitive/')),
+  load((r) => r === 'semantic/color/light.json'),
+  load((r) => r === 'semantic/color/dark.json'),
+  load((r) => r.startsWith('semantic/') && !r.startsWith('semantic/color/')),
+  load((r) => r.startsWith('component/')),
 ]);
 
-const nonColorSemantic = merge(space, typo, layout);
+for (const [mode, map] of [['light', light], ['dark', dark]]) {
+  if (map.size === 0) {
+    fail('missing-mode-file', `tokens/semantic/color/${mode}.json is missing or empty.`);
+  }
+}
 
 // ---------------------------------------------------------------------------
 // 1 + 2. Aliasing and resolution
 // ---------------------------------------------------------------------------
 
+// Same predicate as `asReference` in packages/tokens/build.mjs — keep in step.
 const isRef = (v) => typeof v === 'string' && /^\{[^}]+\}$/.test(v);
 const refTarget = (v) => v.slice(1, -1);
 
@@ -77,7 +102,7 @@ function resolve(refPath, universe, seen = new Set(), hops = 0) {
 }
 
 for (const [modeName, modeMap] of [['Light', light], ['Dark', dark]]) {
-  const universe = merge(prim, modeMap, nonColorSemantic, button);
+  const universe = merge(prim, modeMap, nonColorSemantic, component);
 
   for (const [name, token] of modeMap) {
     if (!isRef(token.$value)) {
@@ -89,7 +114,7 @@ for (const [modeName, modeMap] of [['Light', light], ['Dark', dark]]) {
     if (r.error) fail('unresolvable-alias', `${modeName}: color.${name} — ${r.error}`);
   }
 
-  for (const [name, token] of button) {
+  for (const [name, token] of component) {
     if (isRef(token.$value)) {
       const r = resolve(refTarget(token.$value), universe);
       if (r.error) fail('unresolvable-alias', `${modeName}: ${name} — ${r.error}`);
@@ -114,7 +139,7 @@ for (const name of dark.keys()) {
 
 const NAME_RE = /^[a-z][a-z0-9]*(-[a-z0-9]+)*(\.[a-z0-9]+(-[a-z0-9]+)*)*$/;
 
-for (const [prefix, map] of [['color', light], ['color', dark], ['', nonColorSemantic], ['', button], ['', prim]]) {
+for (const [prefix, map] of [['color', light], ['color', dark], ['', nonColorSemantic], ['', component], ['', prim]]) {
   for (const name of map.keys()) {
     const full = prefix ? `${prefix}.${name}` : name;
     if (!NAME_RE.test(full)) {

@@ -26,8 +26,10 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..');
 const DIST = path.join(HERE, 'dist');
 
-/** Style Dictionary globs need POSIX separators, including on Windows. */
-const g = (...segs) => path.join(REPO, ...segs).split(path.sep).join('/');
+/** Style Dictionary paths need POSIX separators, including on Windows. */
+const posix = (p) => p.split(path.sep).join('/');
+const g = (...segs) => posix(path.join(REPO, ...segs));
+const DIST_POSIX = posix(DIST);
 
 const PREFIX = 'ucsd';
 
@@ -45,12 +47,29 @@ const sourcesFor = (mode) => [...COMMON_SOURCES, g('tokens', 'semantic', 'color'
 /** Values are authored with units already (`16px`), so no size transforms are wanted. */
 const TRANSFORMS = ['attribute/cti', 'name/kebab', 'color/css'];
 
-const isDarkToken = (token) =>
-  token.filePath.split(path.sep).join('/').includes('/semantic/color/dark.json');
+const isDarkToken = (token) => posix(token.filePath).includes('/semantic/color/dark.json');
+
+/**
+ * Every platform shares the same transforms and prefix; only the output directory
+ * and file list differ. Declaring that once keeps the light and dark passes from
+ * drifting apart when a transform is added.
+ */
+const platform = (dir, files) => ({
+  transforms: TRANSFORMS,
+  prefix: PREFIX,
+  buildPath: `${DIST_POSIX}/${dir}`,
+  files,
+});
 
 // ---------------------------------------------------------------------------
 // Custom formats
 // ---------------------------------------------------------------------------
+
+/**
+ * A DTCG alias, or null if the value is a literal. Same predicate as `isRef` in
+ * scripts/validate-tokens.mjs — keep the two in step.
+ */
+const asReference = (v) => (typeof v === 'string' && /^\{[^}]+\}$/.test(v) ? v : null);
 
 /** Flat manifest consumed by the docs site and `scripts/generate-skill-references.mjs`. */
 const manifest = {
@@ -66,10 +85,7 @@ const manifest = {
             : 'semantic',
         type: t.$type ?? t.type ?? null,
         value: t.$value ?? t.value,
-        reference: typeof (t.original?.$value ?? t.original?.value) === 'string'
-          && /^\{.+\}$/.test(t.original?.$value ?? t.original?.value)
-            ? (t.original.$value ?? t.original.value)
-            : null,
+        reference: asReference(t.original?.$value ?? t.original?.value),
         description: t.$description ?? t.comment ?? null,
       })),
       null,
@@ -108,49 +124,28 @@ const lightPass = new StyleDictionary({
   source: sourcesFor('light'),
   log: { verbosity: 'default', warnings: 'warn' },
   platforms: {
-    css: {
-      transforms: TRANSFORMS,
-      prefix: PREFIX,
-      buildPath: `${DIST.split(path.sep).join('/')}/css/`,
-      files: [{
-        destination: '_root.css',
-        format: 'css/variables',
-        options: { selector: ':root', outputReferences: true },
-      }],
-    },
-    scss: {
-      transforms: TRANSFORMS,
-      prefix: PREFIX,
-      buildPath: `${DIST.split(path.sep).join('/')}/scss/`,
-      files: [{
-        destination: '_tokens.scss',
-        format: 'scss/variables',
-        // Bootstrap needs literal values at compile time to build its own maps,
-        // so references are resolved here rather than emitted as var().
-        options: { outputReferences: false },
-      }],
-    },
-    tailwind: {
-      transforms: TRANSFORMS,
-      prefix: PREFIX,
-      buildPath: `${DIST.split(path.sep).join('/')}/tailwind/`,
-      files: [{ destination: 'theme.css', format: 'css/ucsd-tailwind-theme', options: { prefix: PREFIX } }],
-    },
-    js: {
-      transforms: TRANSFORMS,
-      prefix: PREFIX,
-      buildPath: `${DIST.split(path.sep).join('/')}/js/`,
-      files: [
-        { destination: 'tokens.js',   format: 'javascript/ucsd-esm' },
-        { destination: 'tokens.d.ts', format: 'typescript/ucsd-dts' },
-      ],
-    },
-    manifest: {
-      transforms: TRANSFORMS,
-      prefix: PREFIX,
-      buildPath: `${DIST.split(path.sep).join('/')}/`,
-      files: [{ destination: 'tokens.json', format: 'json/ucsd-manifest' }],
-    },
+    css: platform('css/', [{
+      destination: '_root.css',
+      format: 'css/variables',
+      options: { selector: ':root', outputReferences: true },
+    }]),
+    scss: platform('scss/', [{
+      destination: '_tokens.scss',
+      format: 'scss/variables',
+      // Bootstrap needs literal values at compile time to build its own maps,
+      // so references are resolved here rather than emitted as var().
+      options: { outputReferences: false },
+    }]),
+    tailwind: platform('tailwind/', [
+      { destination: 'theme.css', format: 'css/ucsd-tailwind-theme' },
+    ]),
+    js: platform('js/', [
+      { destination: 'tokens.js',   format: 'javascript/ucsd-esm' },
+      { destination: 'tokens.d.ts', format: 'typescript/ucsd-dts' },
+    ]),
+    manifest: platform('', [
+      { destination: 'tokens.json', format: 'json/ucsd-manifest' },
+    ]),
   },
 });
 
@@ -163,23 +158,15 @@ const darkPass = new StyleDictionary({
   // resulting `var(--ucsd-palette-*)` resolves correctly at runtime.
   log: { verbosity: 'default', warnings: 'disabled' },
   platforms: {
-    css: {
-      transforms: TRANSFORMS,
-      prefix: PREFIX,
-      buildPath: `${DIST.split(path.sep).join('/')}/css/`,
-      files: [{
-        destination: '_dark.css',
-        format: 'css/variables',
-        filter: isDarkToken,
-        options: { selector: DARK_SELECTOR, outputReferences: true },
-      }],
-    },
-    manifest: {
-      transforms: TRANSFORMS,
-      prefix: PREFIX,
-      buildPath: `${DIST.split(path.sep).join('/')}/`,
-      files: [{ destination: 'tokens.dark.json', format: 'json/ucsd-manifest', filter: isDarkToken }],
-    },
+    css: platform('css/', [{
+      destination: '_dark.css',
+      format: 'css/variables',
+      filter: isDarkToken,
+      options: { selector: DARK_SELECTOR, outputReferences: true },
+    }]),
+    manifest: platform('', [
+      { destination: 'tokens.dark.json', format: 'json/ucsd-manifest', filter: isDarkToken },
+    ]),
   },
 });
 
@@ -190,8 +177,10 @@ const darkPass = new StyleDictionary({
 // maxRetries: Windows throws EBUSY when an editor, indexer or AV scanner holds a
 // handle on dist/. Retrying briefly is the standard mitigation.
 await fs.rm(DIST, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
-await lightPass.buildAllPlatforms();
-await darkPass.buildAllPlatforms();
+
+// The passes read disjoint sources and write disjoint files, so there is no
+// ordering dependency between them.
+await Promise.all([lightPass.buildAllPlatforms(), darkPass.buildAllPlatforms()]);
 
 // Stitch the two CSS blocks into the single file consumers import.
 const cssDir = path.join(DIST, 'css');

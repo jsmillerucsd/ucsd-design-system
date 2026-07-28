@@ -17,6 +17,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { tailwindName } from '../packages/tokens/formats/tailwind-theme.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(REPO, 'packages', 'tokens', 'dist');
@@ -61,15 +62,35 @@ try {
 
 const darkByPath = new Map(dark.map((t) => [t.path, t]));
 
-/** Tailwind utility namespace for a token, mirroring formats/tailwind-theme.mjs. */
+/**
+ * Utility hint for a token, derived from the SAME mapping the Tailwind formatter
+ * uses. A hand-written second copy had already drifted: font, breakpoint and
+ * container tokens do get utilities, but the docs showed "—" for all of them.
+ *
+ * Keyed on the emitted Tailwind variable name, so a token that stops being exposed
+ * automatically falls back to "—" here with no edit.
+ */
+const HINTS = [
+  [/^--color-(.+)$/,             (x) => `\`bg-${x}\` \`text-${x}\` \`border-${x}\``],
+  [/^--spacing-(.+)$/,           (x) => `\`p-${x}\` \`m-${x}\` \`gap-${x}\``],
+  [/^--radius-(.+)$/,            (x) => `\`rounded-${x}\``],
+  [/^--shadow-(.+)$/,            (x) => `\`shadow-${x}\``],
+  [/^--text-(.+)--line-height$/, (x) => `paired with \`text-${x}\``],
+  [/^--text-(.+)$/,              (x) => `\`text-${x}\``],
+  [/^--font-weight-(.+)$/,       (x) => `\`font-${x}\``],
+  [/^--font-(.+)$/,              (x) => `\`font-${x}\``],
+  [/^--breakpoint-(.+)$/,        (x) => `\`${x}:\` variants`],
+  [/^--container-(.+)$/,         (x) => `\`max-w-${x}\``],
+];
+
 function tailwindHint(t) {
-  const p = t.path.split('.');
-  if (p[0] === 'color') return `\`*-${p.slice(1).join('-')}\` (bg-, text-, border-)`;
-  if (p[0] === 'space') return `\`p-${p[1]}\` \`m-${p[1]}\` \`gap-${p[1]}\``;
-  if (p[0] === 'radius') return `\`rounded-${p[1]}\``;
-  if (p[0] === 'elevation') return `\`shadow-${p[1]}\``;
-  if (p[0] === 'text' && p[2] === 'size') return `\`text-${p[1]}\``;
-  return '—';
+  const mapped = tailwindName({ path: t.path.split('.') });
+  if (!mapped) return '—';
+  for (const [re, format] of HINTS) {
+    const m = mapped.name.match(re);
+    if (m) return format(m[1]);
+  }
+  return `\`${mapped.name.replace(/^--/, '')}\``;
 }
 
 const esc = (s) => String(s ?? '').replace(/\|/g, '\\|');
@@ -84,7 +105,11 @@ const semantic = light.filter((t) => t.tier === 'semantic');
 const primitive = light.filter((t) => t.tier === 'primitive');
 const component = light.filter((t) => t.tier === 'component');
 
-const groups = [...new Set(semantic.map(groupOf))].sort();
+// Group in one pass. The previous form re-derived groupOf() for every token once
+// per group, and re-split every path each time.
+const byGroup = Map.groupBy(semantic, groupOf);
+
+const row = (cells) => `| ${cells.join(' | ')} |`;
 
 // --- tokens.md ---------------------------------------------------------------
 
@@ -113,23 +138,23 @@ const lines = [
   '',
 ];
 
-for (const g of groups) {
-  const rows = semantic.filter((t) => groupOf(t) === g);
-  lines.push(`### \`${g}\``, '');
+for (const g of [...byGroup.keys()].sort()) {
   const isColor = g.startsWith('color');
-  lines.push(
-    isColor
-      ? '| Token | CSS variable | Tailwind | Light | Dark | Use for |'
-      : '| Token | CSS variable | Tailwind | Value | Use for |',
-    isColor ? '|---|---|---|---|---|---|' : '|---|---|---|---|---|',
-  );
-  for (const t of rows) {
-    const d = darkByPath.get(t.path);
-    lines.push(
-      isColor
-        ? `| \`${t.path}\` | \`${t.cssVar}\` | ${tailwindHint(t)} | \`${t.value}\` | \`${d?.value ?? '—'}\` | ${esc(t.description) || '—'} |`
-        : `| \`${t.path}\` | \`${t.cssVar}\` | ${tailwindHint(t)} | \`${t.value}\` | ${esc(t.description) || '—'} |`,
-    );
+  // Columns are declared once; the Dark column is spliced in for colour groups.
+  const headers = ['Token', 'CSS variable', 'Tailwind',
+    ...(isColor ? ['Light', 'Dark'] : ['Value']), 'Use for'];
+
+  lines.push(`### \`${g}\``, '', row(headers), row(headers.map(() => '---')));
+
+  for (const t of byGroup.get(g)) {
+    lines.push(row([
+      `\`${t.path}\``,
+      `\`${t.cssVar}\``,
+      tailwindHint(t),
+      `\`${t.value}\``,
+      ...(isColor ? [`\`${darkByPath.get(t.path)?.value ?? '—'}\``] : []),
+      esc(t.description) || '—',
+    ]));
   }
   lines.push('');
 }
@@ -207,6 +232,11 @@ const banned = {
   primitiveHexes,
   space: dimsFor('space'),
   radius: dimsFor('radius'),
+  // Derived rather than hardcoded in validate.mjs, so a breakpoint change flows
+  // through to the validator instead of needing a parallel manual edit.
+  breakpoints: light
+    .filter((t) => t.path.startsWith('breakpoint.'))
+    .map((t) => String(t.value).replace(/px$/, '')),
   legacyDecoratorClasses: [
     'panel', 'panel-body', 'panel-heading', 'panel-default',
     'btn-default', 'glyphicon', 'img-responsive', 'hidden-xs', 'visible-xs',

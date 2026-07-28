@@ -67,12 +67,12 @@ if (problems.length) {
 
 // --- write -------------------------------------------------------------------
 
-for (const [file, tree] of files) {
+await Promise.all([...files].map(async ([file, tree]) => {
   const dest = path.join(TOKENS, file);
   await fs.mkdir(path.dirname(dest), { recursive: true });
   await fs.writeFile(dest, JSON.stringify(sortDeep(tree), null, 2) + '\n', 'utf8');
   console.log(`wrote tokens/${file}`);
-}
+}));
 
 const count = Object.keys(meta.variables).length;
 console.log(`\nSynced ${count} variables into ${files.size} file(s). Review the diff, then commit.`);

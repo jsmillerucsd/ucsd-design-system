@@ -21,7 +21,11 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const BANNED = path.join(HERE, '..', 'references', 'generated', 'banned.json');
 
-let banned = { colors: {}, primitiveHexes: [], space: {}, radius: {}, legacyDecoratorClasses: [] };
+let banned = {
+  colors: {}, primitiveHexes: [], space: {}, radius: {},
+  breakpoints: ['576', '768', '992', '1200', '1400'],
+  legacyDecoratorClasses: [],
+};
 try {
   banned = JSON.parse(await fs.readFile(BANNED, 'utf8'));
 } catch {
@@ -75,6 +79,9 @@ for (const file of files) {
     continue;
   }
   if (isTokenSource(file)) continue;
+
+  // Whole-file facts, computed once rather than re-scanning `src` per line.
+  const hasFocusVisible = /focus-visible/.test(src);
 
   src.split(/\r?\n/).forEach((raw, i) => {
     const n = i + 1;
@@ -131,16 +138,16 @@ for (const file of files) {
     }
 
     // 5. Focus suppressed with no replacement
-    if (/outline\s*:\s*(none|0)\b/.test(raw) && !/focus-visible/.test(src)) {
+    if (/outline\s*:\s*(none|0)\b/.test(raw) && !hasFocusVisible) {
       add(file, n, 'error', 'focus-visible',
         'outline removed with no :focus-visible replacement — fails WCAG 2.4.11.');
     }
 
     // 6. Invented breakpoints
     for (const m of raw.matchAll(/@media[^{]*?(\d{3,4})px/g)) {
-      if (!['576', '768', '992', '1200', '1400'].includes(m[1])) {
+      if (!banned.breakpoints.includes(m[1])) {
         add(file, n, 'warn', 'nonstandard-breakpoint',
-          `${m[1]}px is not a UCSD breakpoint (576/768/992/1200/1400).`);
+          `${m[1]}px is not a UCSD breakpoint (${banned.breakpoints.join('/')}).`);
       }
     }
 
