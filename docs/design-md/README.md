@@ -19,7 +19,7 @@ Filename order is the [DESIGN.md spec's](https://github.com/google-labs-code/des
 
 **Prose names tokens. It never contains their values.**
 
-No hex colors. No `px` / `rem` / `em` dimensions. No numeric font sizes. Write "the `color.action.primary` fill" or "the widest step of the type ramp" — never the number.
+No hex colors. No `px` / `rem` / `em` dimensions. No numeric font sizes. Write "the `color.component.btn-primary` fill" or "the largest type role" — never the number.
 
 This is enforced: `scripts/generate-design-md.mjs` scans these files for literal values outside fenced code blocks and fails the build. Fenced code blocks are exempt, so usage examples still work.
 

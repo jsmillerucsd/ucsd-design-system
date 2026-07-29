@@ -126,12 +126,26 @@ The format's authors say the same thing. Its [PHILOSOPHY.md](https://github.com/
 
 ---
 
+## D11. The designer's token names win
+
+**Decision.** The sync adopts the Figma file's structure and names as-is. Normalisation is mechanical only: lowercase, spaces to hyphens, and collapsing a leaf that repeats its group (`navy/navy-500` → `navy.500`).
+
+**Context.** This repo was scaffolded with an invented vocabulary — `color.action.primary`, `space.4`, `text.md` — before anyone had seen the real Figma file. The real file turned out to be *more* structured than the guess: four colour tiers rather than three (`colors-brand` → `colors-primitive` ramps → `colors-semantic` light/dark), and a full 50–900 ramp per hue.
+
+**Rejected: a translation layer** mapping his names onto ours (`foreground/body-text` → `color.text.default`). It reads better in the abstract and is a liability in practice — every rename is a place the two vocabularies can drift, and the mapping has to be maintained by whoever least understands both sides. Figma is the source of truth; a source of truth you rename on the way in isn't one.
+
+**Rejected: asking him to rename in Figma.** His component library is already bound to these names. The cost is a rebinding project; the benefit is cosmetic.
+
+**Consequence.** Some names are not what an engineer would choose. Typography is role-based (`type.h1`) rather than scale-based, which this document's own naming contract calls an anti-pattern; spacing is t-shirt sized rather than numeric. Both are coherent, both are what the design library is built on, and `_bridge.scss` absorbs the mismatch where Bootstrap needs numeric keys. The placeholder values that shipped before the first sync were also simply wrong — the real palette has colours we never had (`core/gold`, `accent/magenta`, `accent/citron`) and our `gold` was in fact his `yellow`.
+
+---
+
 ## Open questions
 
 | # | Question | Blocks | Default if unanswered |
 |---|---|---|---|
 | 1 | Which **CMS**? (Drupal / headless / other) | `layouts/` content-model mapping | Write layouts CMS-agnostically with a mapping table per platform |
-| 2 | ~~Figma plan tier?~~ **Answered: Professional.** | — | Settled. Variable modes work (10 per collection; we need 2). Sync is Tokens Studio, not the REST API — still needs one Tokens Studio Pro seat, and the file in a Project rather than Drafts. **Code Connect is Organization/Enterprise-only, so it is off the table**; the component naming convention carries that weight instead ([figma.md §5.1](figma.md)). |
+| 2 | ~~Figma plan tier?~~ **Answered: Professional.** | — | Settled. Variable modes work, and Figma's native DTCG export handles the sync with no plugin or licence ([figma.md §3](figma.md)). The file must sit in a Project, not Drafts. **Code Connect is Organization/Enterprise-only, so it is off the table**; the component naming convention carries that weight instead. |
 | 3 | Keep **Teko** as the display face? | `font.family.display` | Carry it forward from Decorator V5 |
 | 4 | Icon strategy — Glyphicons are dead | Icon tokens + component | Bootstrap Icons (BS5-native, MIT, ~2,000 glyphs) |
 | 5 | Where does this repo live — new GitHub repo, or inside the Skills Library? | CI publish target | Standalone repo; CI copies `skills/` into the Skills Library on release |

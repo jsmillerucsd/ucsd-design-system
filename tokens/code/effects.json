@@ -1,0 +1,23 @@
+{
+  "$description": "CODE-OWNED. Not in Figma, and not overwritten by `npm run sync:figma`. Figma Variables support only Color, Number, String and Boolean — there is no shadow type and no easing type, so these cannot be design variables. Shadows exist in the Figma file as EFFECT STYLES; if the designer changes them, transcribe the change here by hand.",
+  "elevation": {
+    "$description": "Navy-tinted rather than neutral gray, so shadows sit in the palette instead of muddying it. Short ladder on purpose: a long one gets used decoratively.",
+    "0": { "$value": "none", "$type": "shadow" },
+    "1": { "$value": "0 1px 2px 0 rgba(24, 43, 73, 0.08)",  "$type": "shadow" },
+    "2": { "$value": "0 2px 6px 0 rgba(24, 43, 73, 0.10)",  "$type": "shadow" },
+    "3": { "$value": "0 6px 16px 0 rgba(24, 43, 73, 0.12)", "$type": "shadow" },
+    "4": { "$value": "0 12px 32px 0 rgba(24, 43, 73, 0.16)","$type": "shadow" }
+  },
+  "motion": {
+    "duration": {
+      "fast": { "$value": "120ms", "$type": "duration" },
+      "base": { "$value": "200ms", "$type": "duration" },
+      "slow": { "$value": "320ms", "$type": "duration" }
+    },
+    "easing": {
+      "standard": { "$value": "cubic-bezier(0.2, 0, 0, 1)", "$type": "cubicBezier" },
+      "enter":    { "$value": "cubic-bezier(0, 0, 0, 1)",   "$type": "cubicBezier" },
+      "exit":     { "$value": "cubic-bezier(0.3, 0, 1, 1)", "$type": "cubicBezier" }
+    }
+  }
+}

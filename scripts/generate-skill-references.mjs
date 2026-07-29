@@ -208,8 +208,18 @@ lines.push(
 // Suggesting the wrong one is worse than suggesting nothing, so the map is
 // keyed by CATEGORY and each entry keeps ranked candidates.
 
-/** Preferred order when several semantic colours share a value. Brand last: it is rarely what you want. */
-const COLOR_RANK = ['color.action', 'color.surface', 'color.text', 'color.border', 'color.status', 'color.brand'];
+/**
+ * Preferred order when several semantic colours share a value.
+ *
+ * `theme.*` first because a raw brand hex in someone's CSS is almost always
+ * reaching for the brand colour itself; `component.*` next because those are what
+ * a control is actually made of. `status.*` last — it is a narrow signalling set
+ * and suggesting it for a general colour would be misleading.
+ */
+const COLOR_RANK = [
+  'color.theme', 'color.component', 'color.foreground', 'color.surface',
+  'color.system', 'color.status',
+];
 const rankOf = (t) => {
   const i = COLOR_RANK.findIndex((p) => t.path.startsWith(p));
   return i === -1 ? COLOR_RANK.length : i;

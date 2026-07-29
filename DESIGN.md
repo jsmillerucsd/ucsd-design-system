@@ -9,121 +9,140 @@ colors:
   # Semantic roles only. Primitives are withheld deliberately — components must
   # never bind to a raw palette value. Dark mode is a re-alias of these same
   # tokens; see `modes` at the end of this block.
-  primary: "{colors.action-primary}"
-  surface-default: "#ffffff"
-  surface-subtle: "#f7f7f8"
-  surface-raised: "#ffffff"
-  surface-sunken: "#eeeef0"
-  surface-inverse: "#182b49"
-  text-default: "#1a1a1d"
-  text-muted: "#5a5a63"
-  text-subtle: "#75757f"
-  text-inverse: "#ffffff"
-  text-link: "#00629b"
-  text-link-hover: "#003d62"
-  border-default: "#c4c4ca"
-  border-subtle: "#dddde1"
-  border-strong: "#75757f"
-  border-focus: "#00629b"
-  action-primary: "#00629b"
-  action-primary-hover: "#00507f"
-  action-primary-active: "#003d62"
-  action-secondary: "#182b49"
-  action-secondary-hover: "#0f1b2e"
-  action-secondary-active: "#0f1b2e"
-  action-disabled: "#c4c4ca"
-  status-info: "#00629b"
-  status-info-subtle: "#e6f0f6"
-  status-info-strong: "#003d62"
-  status-success: "#007a33"
-  status-success-subtle: "#e3f1e8"
-  status-success-strong: "#005b26"
-  status-warning: "#e8a200"
-  status-warning-subtle: "#fdf3e0"
-  status-warning-strong: "#8a6100"
-  status-danger: "#c8102e"
-  status-danger-subtle: "#fbe7ea"
-  status-danger-strong: "#960c22"
-  brand-navy: "#182b49"
-  brand-blue: "#00629b"
-  brand-gold: "#ffcd00"
+  primary: "{colors.theme-primary}"
+  component-bg-progress-bar: "#d4d5d5"
+  component-btn-label-primary: "#182b49"
+  component-btn-label-secondary: "#ffffff"
+  component-btn-label-tertiary: "#ffffff"
+  component-btn-primary: "#ffcd00"
+  component-btn-secondary: "#00629b"
+  component-btn-tertiary: "#182b49"
+  component-icon: "#182b49"
+  component-link: "#00629b"
+  component-menu: "#747678"
+  component-menu-bottom-nav: "#6a6b6d"
+  foreground-body-text: "#6a6b6d"
+  foreground-body-text-focus: "#182b49"
+  foreground-card-border: "rgba(255, 255, 255, 0)"
+  foreground-divider: "#647185"
+  foreground-eyebrow: "#182b49"
+  foreground-heading-1: "#182b49"
+  foreground-heading-2: "#182b49"
+  foreground-heading-3: "#182b49"
+  foreground-heading-light: "#ffffff"
+  foreground-subcard-border: "#182b49"
+  foreground-subheading: "#182b49"
+  foreground-surface-text-bg: "#f3f4f6"
+  status-critical: "#bd1900"
+  status-good: "#109b00"
+  status-warning: "#fc8900"
+  surface-1: "#ffffff"
+  surface-2: "#fbf9f5"
+  surface-background: "#182b49"
+  system-bg-error: "#f8e8e6"
+  system-bg-information: "#e6eff5"
+  system-bg-success: "#e7f5e6"
+  system-bg-warning: "#fff3e6"
+  system-error: "#bd1900"
+  system-foreground-error: "#ac1700"
+  system-foreground-information: "#00629b"
+  system-foreground-success: "#0b6e00"
+  system-foreground-warning: "#975200"
+  system-information: "#00629b"
+  system-success: "#109b00"
+  system-success-small-text: "#0a8902"
+  system-warning: "#fc8900"
+  theme-accent: "#ffcd00"
+  theme-primary: "#182b49"
+  theme-secondary: "#00629b"
 typography:
-  "xs":
-    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-    fontSize: "12px"
-    lineHeight: "16px"
-  "sm":
-    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-    fontSize: "14px"
-    lineHeight: "20px"
-  "md":
-    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-    fontSize: "16px"
-    lineHeight: "24px"
-  "lg":
-    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-    fontSize: "18px"
-    lineHeight: "28px"
-  "xl":
-    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-    fontSize: "20px"
-    lineHeight: "28px"
-  "2xl":
-    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+  "body":
+    fontFamily: "Brix Sans"
+  "body-large":
     fontSize: "24px"
-    lineHeight: "32px"
-  "3xl":
-    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-    fontSize: "30px"
-    lineHeight: "36px"
-  "4xl":
-    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-    fontSize: "36px"
-    lineHeight: "40px"
-  "5xl":
-    fontFamily: "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
-    fontSize: "48px"
-    lineHeight: "52px"
+    lineHeight: "29px"
+    letterSpacing: "0px"
+  "body-medium":
+    fontSize: "18px"
+    lineHeight: "23px"
+    letterSpacing: "0px"
+  "body-small":
+    fontSize: "12px"
+    lineHeight: "17px"
+    letterSpacing: "0px"
+  "button":
+    fontFamily: "Brix Sans"
+    fontSize: "14px"
+    lineHeight: "17px"
+    fontWeight: 700
+    letterSpacing: "0px"
+  "eyebrow":
+    fontFamily: "Refrigerator Deluxe"
+    fontSize: "8px"
+    lineHeight: "10px"
+    fontWeight: 800
+    letterSpacing: "0.800000011920929px"
+  "h1":
+    fontFamily: "Refrigerator Deluxe"
+    fontSize: "24px"
+    lineHeight: "29px"
+    fontWeight: 800
+    letterSpacing: "-0.20000000298023224px"
+  "h2":
+    fontFamily: "Brix Sans"
+    fontSize: "18px"
+    lineHeight: "22px"
+    fontWeight: 500
+    letterSpacing: "0px"
+  "h2-small":
+    fontFamily: "Brix Sans"
+    fontSize: "12px"
+    lineHeight: "18px"
+    fontWeight: 700
+    letterSpacing: "0px"
+  "h3":
+    fontFamily: "Refrigerator Deluxe"
+    fontSize: "14px"
+    lineHeight: "17px"
+    fontWeight: 800
+    letterSpacing: "0.800000011920929px"
+  "subheading":
+    fontFamily: "Brix Sans"
+    fontSize: "12px"
+    lineHeight: "15px"
+    fontWeight: 700
+    letterSpacing: "1.75px"
 spacing:
-  "0": "0px"
-  "1": "4px"
-  "2": "8px"
-  "3": "12px"
-  "4": "16px"
-  "5": "20px"
-  "6": "24px"
-  "7": "28px"
-  "8": "32px"
-  "10": "40px"
-  "12": "48px"
-  "16": "64px"
-  "20": "80px"
-  "24": "96px"
+  "2x-large": "32px"
+  "3x-large": "40px"
+  "4x-large": "48px"
+  extra-large: "24px"
+  extra-small: "4px"
+  large: "16px"
+  medium: "12px"
+  small: "8px"
 rounded:
+  default: "12px"
   none: "0px"
-  sm: "2px"
-  md: "4px"
-  lg: "8px"
-  xl: "16px"
+  sm: "4px"
+  lg: "16px"
   pill: "999px"
 components:
   button-primary:
-    backgroundColor: "{colors.action-primary}"
-    textColor: "{colors.text-inverse}"
-    rounded: "{rounded.md}"
-    height: "44px"
-    padding: "8px 16px"
-  button-primary-hover:
-    backgroundColor: "{colors.action-primary-hover}"
+    backgroundColor: "{colors.component-btn-primary}"
+    textColor: "{colors.component-btn-label-primary}"
+    rounded: "{rounded.default}"
+    typography: "{typography.button}"
   button-secondary:
-    backgroundColor: "{colors.surface-default}"
-    textColor: "{colors.action-secondary}"
-    borderColor: "{colors.border-strong}"
-    rounded: "{rounded.md}"
-    height: "44px"
-    padding: "8px 16px"
-  button-secondary-hover:
-    backgroundColor: "{colors.surface-subtle}"
+    backgroundColor: "{colors.component-btn-secondary}"
+    textColor: "{colors.component-btn-label-secondary}"
+    rounded: "{rounded.default}"
+    typography: "{typography.button}"
+  button-tertiary:
+    backgroundColor: "{colors.component-btn-tertiary}"
+    textColor: "{colors.component-btn-label-tertiary}"
+    rounded: "{rounded.default}"
+    typography: "{typography.button}"
 breakpoints:
   sm: "576px"
   md: "768px"
@@ -153,43 +172,51 @@ motion:
 modes:
   dark:
     colors:
-      surface-default: "#0f1b2e"
-      surface-subtle: "#182b49"
-      surface-raised: "#1d3153"
-      surface-sunken: "#000000"
-      surface-inverse: "#f7f7f8"
-      text-default: "#f7f7f8"
-      text-muted: "#c4c4ca"
-      text-subtle: "#9a9aa3"
-      text-inverse: "#0f1b2e"
-      text-link: "#66a3c9"
-      text-link-hover: "#99c1db"
-      border-default: "#243a54"
-      border-subtle: "#1d3153"
-      border-strong: "#75757f"
-      border-focus: "#ffcd00"
-      action-primary: "#66a3c9"
-      action-primary-hover: "#99c1db"
-      action-primary-active: "#cce0ed"
-      action-secondary: "#dddde1"
-      action-secondary-hover: "#ffffff"
-      action-secondary-active: "#ffffff"
-      action-disabled: "#243a54"
-      status-info: "#66a3c9"
-      status-info-subtle: "#001827"
-      status-info-strong: "#cce0ed"
-      status-success: "#007a33"
-      status-success-subtle: "#005b26"
-      status-success-strong: "#e3f1e8"
-      status-warning: "#e8a200"
-      status-warning-subtle: "#8a6100"
-      status-warning-strong: "#fdf3e0"
-      status-danger: "#c8102e"
-      status-danger-subtle: "#960c22"
-      status-danger-strong: "#fbe7ea"
-      brand-navy: "#182b49"
-      brand-blue: "#3384b7"
-      brand-gold: "#ffcd00"
+      component-bg-progress-bar: "#d4d5d5"
+      component-btn-label-primary: "#182b49"
+      component-btn-label-secondary: "#162742"
+      component-btn-label-tertiary: "#ffffff"
+      component-btn-primary: "#ffcd00"
+      component-btn-secondary: "#5496bc"
+      component-btn-tertiary: "#5496bc"
+      component-icon: "#f5f0e6"
+      component-link: "#5496bc"
+      component-menu: "#747678"
+      component-menu-bottom-nav: "#909193"
+      foreground-body-text: "#a1a2a4"
+      foreground-body-text-focus: "#f5f0e6"
+      foreground-card-border: "#747678"
+      foreground-divider: "#959dab"
+      foreground-eyebrow: "#f5f0e6"
+      foreground-heading-1: "#f5f0e6"
+      foreground-heading-2: "#f5f0e6"
+      foreground-heading-3: "#f5f0e6"
+      foreground-heading-light: "#f5f0e6"
+      foreground-subcard-border: "#747678"
+      foreground-subheading: "#f5f0e6"
+      foreground-surface-text-bg: "#ffffff"
+      status-critical: "#bd1900"
+      status-good: "#109b00"
+      status-warning: "#fc8900"
+      surface-1: "#1d1d1d"
+      surface-2: "#404142"
+      surface-background: "#182b49"
+      system-bg-error: "#ac1700"
+      system-bg-information: "#5496bc"
+      system-bg-success: "#0b6e00"
+      system-bg-warning: "#975200"
+      system-error: "#d77566"
+      system-foreground-error: "#f8e8e6"
+      system-foreground-information: "#e6eff5"
+      system-foreground-success: "#e7f5e6"
+      system-foreground-warning: "#fff3e6"
+      system-information: "#5496bc"
+      system-success: "#40af33"
+      system-success-small-text: "#40af33"
+      system-warning: "#fc8900"
+      theme-accent: "#ffcd00"
+      theme-primary: "#182b49"
+      theme-secondary: "#00629b"
 ---
 
 <!--
@@ -232,12 +259,12 @@ The palette is navy and blue carried forward from the university's identity, wit
 
 Colors are organised by **role, not by hue**. Bind to what a color is *for*, never to what it looks like.
 
-- **`color.surface.*`** — container backgrounds, from the page canvas through raised and sunken variants. `surface.default` is the page.
-- **`color.text.*`** — foreground text, from `default` through `muted` and `subtle`, plus the link pair. Reach down the ramp for de-emphasis; never reach for a lower-contrast surface color to fake it.
-- **`color.border.*`** — strokes and dividers. `border.focus` is reserved for the focus ring and must never be repurposed as a decorative stroke.
-- **`color.action.*`** — interactive fills and their hover/active states. This is what a button is.
-- **`color.status.*`** — feedback only: info, success, warning, danger. Each has a `-subtle` background and a `-strong` foreground, designed to be used as a pair. Status colors carry meaning; using danger as an accent because it looks good is a bug.
-- **`color.brand.*`** — deliberately tiny, and reserved for immovable brand marks: logo, wordmark, seal. If you are reaching for a brand token to style a button, you want `color.action.primary`.
+- **`color.theme.*`** — the brand marks themselves: primary, secondary, accent. Reserved for identity. If you are reaching for one to style a button, you want `color.component.*`.
+- **`color.surface.*`** — what sits behind content. `surface.background` is the outer chrome band, `surface.1` is the content surface, `surface.2` is raised.
+- **`color.foreground.*`** — text, rules and borders: the heading roles, body text, dividers and card borders. Reach down the ramp for de-emphasis; never fake it with a lower-contrast surface.
+- **`color.component.*`** — what a control is actually made of. Each button fill has a matching label token, and the two are designed to be used as a pair.
+- **`color.system.*`** — feedback messaging: success, warning, error, information. Each has a `bg-` and a `foreground-` half, again meant as a pair. These carry meaning; using error as an accent because it looks good is a bug.
+- **`color.status.*`** — standalone state marks: good, warning, critical.
 
 **Gold is an accent, not a surface.** It carries the least text-legible contrast in the palette and reads as emphasis precisely because it is scarce. Large gold fields cheapen it and usually fail contrast. It earns its place on a focus ring against dark surfaces, and in small marks of emphasis.
 
@@ -251,21 +278,24 @@ Two roles are deliberately *not* symmetrical between modes — links and primary
 
 ## Typography
 
-Two faces, carried forward from the previous system.
+Two faces, both from the UCSD brand library.
 
-- **`font.family.sans`** (Roboto) is the working face. All body copy, all UI, all labels, nearly all headings. Neutral, high legibility at small sizes, unremarkable in the way a working face should be.
-- **`font.family.display`** (Teko) is condensed and tall-and-narrow. **Headings and hero type only — never body copy, never UI labels, never anything set at a reading size.** Its whole value is scale contrast; used small it is simply hard to read.
-- **`font.family.mono`** for code, identifiers, and technical metadata.
+- **Brix Sans** is the working face, carried by `type.body.*`, `type.h2` and `type.button`. All body copy, all UI, all labels. Neutral, high legibility at small sizes, unremarkable in the way a working face should be.
+- **Refrigerator Deluxe** is the display face, carried by `type.h1`, `type.h3` and `type.eyebrow`. Condensed and tall. **Headings and hero type only — never body copy, never anything set at a reading size.** Its whole value is scale contrast; used small it is simply hard to read.
 
-### The ramp
+Both are licensed faces, not open webfonts. Confirm the web licence before shipping either.
 
-The type ramp is named by **scale**, not by HTML tag: steps run from the smallest through the largest, and an `<h1>` is not automatically the largest step on the page. A section heading on a dense listing page may sit mid-ramp; a landing page hero may sit at the top. Choose the step by the visual weight the content needs, then use the correct heading *element* for the document outline independently.
+### The roles
 
-Every step carries its size **and** its line height as one token. They cannot be mismatched, and you should never set a line height by hand.
+Type is organised by **role**, not by an abstract scale: `type.h1`, `type.h2`, `type.h2-small`, `type.h3`, `type.subheading`, `type.eyebrow`, `type.button`, and `type.body` at small, medium and large.
+
+The role names echo HTML tags, but the mapping is not automatic. Pick the role by the visual weight the content needs, then choose the heading *element* for the document outline independently — a section heading on a dense listing page may want `h3` styling under an `<h2>`.
+
+Every role carries its size **and** its line height. They cannot be mismatched, and you should never set a line height by hand.
 
 **Trust modest steps.** The ramp is close-spaced by design. A section heading roughly half again the size of body text is doing enough work; the pull toward a hero heading several times body size is a marketing-site reflex that reads as loud here.
 
-**Weight does the rest.** `font.weight.*` runs regular through bold. Use at most two weights in a single view — typically regular for body and semibold for headings. Bold is an emphasis tool, not a heading default.
+**Weight does the rest.** Each role carries its own weight, running regular through heavy. Use at most two weights in a single view. Bold is an emphasis tool, not a heading default.
 
 ### Reading
 
@@ -275,7 +305,7 @@ Long-form content is constrained to `container.prose`, a measure chosen for read
 
 One spacing scale, based on a four-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
 
-Spacing steps are named by their position on the scale, not by t-shirt size. `space.4` sorts and interpolates; `space.medium` invites an argument about what medium means.
+Spacing steps are t-shirt sized — `space.small` through `space.4x-large`. Bootstrap's numeric utilities map onto them, so `.p-4` and `space.large` are the same value reached two ways.
 
 **Breakpoints are Bootstrap 5's**, matched exactly by `breakpoint.*`. This is not a preference — Bootstrap utilities and Tailwind variants both compile from these values, and a mismatch produces bugs that take days to find. Never invent a breakpoint, and never write a media query against a value that isn't in the scale.
 
@@ -333,7 +363,9 @@ Write idiomatic code for whichever stack you are in. Correctness comes from bind
 
 One primary action per screen. `button-primary` is the affirmative action; `button-secondary` carries everything else; a third, quieter treatment handles tertiary actions. A screen with three primary buttons has no primary button.
 
-Every interactive control has a visible hover state, a visible focus ring drawn from `color.border.focus`, and a disabled state that is legibly disabled rather than merely faded. Button height is floored at `button.min-height`, which is the WCAG target-size minimum — never reduce it to fit a layout.
+Every button fill has a matching label token — `color.component.btn-primary` with `color.component.btn-label-primary`, and the same for secondary and tertiary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
+
+Every interactive control has a visible hover state, a visible focus ring drawn from `color.theme.secondary`, and a disabled state that is legibly disabled rather than merely faded. Interactive controls meet the WCAG target-size minimum — never reduce it to fit a layout.
 
 Label buttons with the verb for what happens: "Apply now", "Download the form". Never "Click here", never "Learn more" as the only label on a page with several of them.
 
@@ -341,7 +373,7 @@ Label buttons with the verb for what happens: "Apply now", "Download the form". 
 
 Every input has a visible, persistent label. Placeholder text is not a label — it disappears exactly when the user needs it, and it fails contrast at the sizes it is typically used.
 
-Errors appear next to the field they concern, in text, using the `color.status.danger` pair. Color alone never carries the message: a red border with no text is invisible to a screen reader and to a red-green colorblind user. Validate on blur and on submit, not on every keystroke.
+Errors appear next to the field they concern, in text, using the `color.system.bg-error` and `color.system.foreground-error` pair. Color alone never carries the message: a red border with no text is invisible to a screen reader and to a red-green colorblind user. Validate on blur and on submit, not on every keystroke.
 
 Help text sits below the field, in a muted text token, and stays visible.
 

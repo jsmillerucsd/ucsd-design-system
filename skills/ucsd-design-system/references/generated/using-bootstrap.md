@@ -29,12 +29,12 @@ To trim the bundle, copy `packages/bootstrap/scss/ucsd-bootstrap.scss` and delet
 
 | Bootstrap default | UCSD |
 |---|---|
-| `$primary` #0d6efd | `color.action.primary` (UCSD Blue) |
-| `$secondary` grey | `color.action.secondary` (UCSD Navy) |
-| System font stack | Roboto; headings in Teko (`font.family.display`) |
-| `$spacer` 1rem, keys 0–5 | UCSD `space` scale, keys 0–24 — `.p-4` is 16px |
-| `$border-radius` .375rem | `radius.md` (4px) |
-| `$focus-ring-width` .25rem | 3px, colour `color.border.focus` |
+| `$primary` #0d6efd | `color.component.btn-secondary` (UCSD Blue) |
+| `$secondary` grey | `color.theme.primary` (UCSD Navy) |
+| System font stack | Brix Sans; headings in Refrigerator Deluxe (`type.h1.font-family`) |
+| `$spacer` 1rem, keys 0–5 | UCSD `space` scale mapped to keys 0–8 — `.p-4` is 16px |
+| `$border-radius` .375rem | `radius.default` (12px) |
+| `$focus-ring-width` .25rem | 3px, colour `color.theme.secondary` |
 | Link decoration on hover | Always underlined — a policy choice, don't remove |
 
 Breakpoints are unchanged: 576 / 768 / 992 / 1200 / 1400.
@@ -47,7 +47,7 @@ Native Bootstrap 5.3 colour modes, wired to UCSD tokens:
 <html data-bs-theme="dark">
 ```
 
-Use Bootstrap's semantic utilities (`bg-body`, `text-body-secondary`, `border-secondary`) or UCSD tokens (`var(--ucsd-color-surface-default)`). Both follow the mode. **Hard-coded colours will not** — that's the main reason the no-literal-colour rule exists.
+Use Bootstrap's semantic utilities (`bg-body`, `text-body-secondary`, `border-secondary`) or UCSD tokens (`var(--ucsd-color-surface-1)`). Both follow the mode. **Hard-coded colours will not** — that's the main reason the no-literal-colour rule exists.
 
 ## UCSD-only classes
 

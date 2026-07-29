@@ -25,19 +25,20 @@ That's the whole configuration. No `tailwind.config.js` — Tailwind v4 reads th
 
 | Token | Utility |
 |---|---|
-| `color.action.primary` | `bg-action-primary` `text-action-primary` `border-action-primary` |
-| `color.surface.default` | `bg-surface-default` |
-| `color.text.muted` | `text-text-muted` |
-| `space.4` | `p-4` `m-4` `gap-4` |
-| `radius.md` | `rounded-md` |
+| `color.theme.primary` | `bg-theme-primary` `text-theme-primary` `border-theme-primary` |
+| `color.surface.1` | `bg-surface-1` |
+| `color.foreground.body-text` | `text-foreground-body-text` |
+| `color.component.btn-primary` | `bg-component-btn-primary` |
+| `space.large` | `p-large` `m-large` `gap-large` |
+| `radius.default` | `rounded-default` |
 | `elevation.2` | `shadow-2` |
-| `text.lg` | `text-lg` (size **and** line-height together) |
+| `type.h1` | `text-h1` (size **and** line-height together) |
 
 The values are `var(--ucsd-*)` references, not literals. That's deliberate: utilities resolve through the token layer at runtime, so **dark mode works with no `dark:` variants**.
 
 ```html
 <!-- correct: follows light/dark automatically -->
-<div class="bg-surface-default text-text-default">…</div>
+<div class="bg-surface-1 text-foreground-body-text">…</div>
 
 <!-- wrong: fights the token layer -->
 <div class="bg-white text-black dark:bg-slate-900 dark:text-white">…</div>
@@ -56,7 +57,7 @@ Enabling dark mode is a class or attribute on a wrapper — `.dark`, `[data-them
 ## Component conventions
 
 - Keep the `cva` variant structure. Add UCSD variants rather than replacing the base.
-- Variant names match the design system, not Tailwind: `variant="primary" | "secondary" | "ghost" | "danger"`.
+- Variant names match the design system, not Tailwind: `variant="primary" | "secondary" | "tertiary" | "danger"`.
 - Keep the Radix primitive underneath. It carries focus management, keyboard handling and ARIA that hand-rolled replacements reliably lose.
 - Keep `focus-visible:ring-*`. Focus styling is a requirement, not decoration.
 
@@ -64,14 +65,14 @@ Enabling dark mode is a class or attribute on a wrapper — `.dark`, `[data-them
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 rounded-md text-sm font-semibold " +
   "transition-colors focus-visible:outline-none focus-visible:ring-[3px] " +
-  "focus-visible:ring-border-focus disabled:pointer-events-none disabled:opacity-50",
+  "focus-visible:ring-theme-secondary disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary:   "bg-action-primary text-text-inverse hover:bg-action-primary-hover",
-        secondary: "border border-border-strong bg-surface-default text-action-secondary hover:bg-surface-subtle",
-        ghost:     "text-action-primary hover:bg-surface-subtle",
-        danger:    "bg-status-danger text-text-inverse hover:bg-status-danger-strong",
+        primary:   "bg-component-btn-primary text-component-btn-label-primary",
+        secondary: "bg-component-btn-secondary text-component-btn-label-secondary",
+        tertiary:  "bg-component-btn-tertiary text-component-btn-label-tertiary",
+        danger:    "bg-system-error text-surface-1",
       },
       size: { sm: "h-9 px-3", md: "h-11 px-4", lg: "h-12 px-6" },
     },
@@ -85,7 +86,7 @@ const buttonVariants = cva(
 ## Next.js notes
 
 - Import `@ucsd/tokens/css` once in the root layout's global stylesheet, not per route.
-- Self-host Roboto and Teko via `next/font` rather than a Google Fonts link — avoids a render-blocking third-party request and the layout shift.
+- Self-host Brix Sans and Refrigerator Deluxe via `next/font`. Both are **licensed** faces, not Google Fonts — confirm the web licence before shipping.
 - Server Components by default; `"use client"` only where you need interactivity. Most primitives need it, most layout does not.
 - Set the initial theme before paint (an inline script in `<head>`) or you get a flash of the wrong mode.
 

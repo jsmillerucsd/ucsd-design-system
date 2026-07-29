@@ -9,26 +9,26 @@
 // Required on every page (WCAG 2.4.1). Visible only on focus.
 .ucsd-skip-link {
   position: absolute;
-  inset-inline-start: $ucsd-space-2;
+  inset-inline-start: $ucsd-space-small;
   inset-block-start: -100%;
   z-index: 1080;
-  padding: $ucsd-space-2 $ucsd-space-4;
-  background: $ucsd-color-surface-default;
-  color: $ucsd-color-text-link;
-  border: 2px solid $ucsd-color-border-focus;
-  border-radius: $ucsd-radius-md;
+  padding: $ucsd-space-small $ucsd-space-large;
+  background: $ucsd-color-surface-1;
+  color: $ucsd-color-component-link;
+  border: 2px solid $ucsd-color-theme-secondary;
+  border-radius: $ucsd-radius-default;
 
   &:focus-visible {
-    inset-block-start: $ucsd-space-2;
+    inset-block-start: $ucsd-space-small;
   }
 }
 
 // --- Masthead ----------------------------------------------------------------
 // The UCSD identity band. Sits above any site navigation.
 .ucsd-masthead {
-  background: $ucsd-color-brand-navy;
-  color: $ucsd-color-text-inverse;
-  padding-block: $ucsd-space-3;
+  background: $ucsd-color-theme-primary;
+  color: $ucsd-color-foreground-heading-light;
+  padding-block: $ucsd-space-medium;
 
   a { color: inherit; }
 
@@ -43,9 +43,9 @@
 // NOTE: Decorator V5's footer used UCSD Blue (#00629b), not navy. Carried
 // forward deliberately — verify with brand before changing.
 .ucsd-footer {
-  background: $ucsd-color-brand-blue;
-  color: $ucsd-color-text-inverse;
-  padding-block: $ucsd-space-12;
+  background: $ucsd-color-theme-secondary;
+  color: $ucsd-color-foreground-heading-light;
+  padding-block: $ucsd-space-4x-large;
 
   a {
     color: inherit;
@@ -57,9 +57,9 @@
 // White band beneath the masthead. No gold rule — that was a persistent
 // misreading of Decorator V5 and is called out in the old branding skill.
 .ucsd-page-title {
-  background: $ucsd-color-surface-default;
-  padding-block: $ucsd-space-8;
-  border-bottom: 1px solid $ucsd-color-border-subtle;
+  background: $ucsd-color-surface-1;
+  padding-block: $ucsd-space-2x-large;
+  border-bottom: 1px solid $ucsd-color-foreground-divider;
 }
 
 // --- Prose ------------------------------------------------------------------
@@ -68,29 +68,29 @@
 .ucsd-prose {
   max-width: $ucsd-container-prose;
 
-  > * + * { margin-block-start: $ucsd-space-4; }
+  > * + * { margin-block-start: $ucsd-space-large; }
 
   h2, h3, h4 {
-    margin-block-start: $ucsd-space-10;
-    margin-block-end: $ucsd-space-3;
+    margin-block-start: $ucsd-space-3x-large;
+    margin-block-end: $ucsd-space-medium;
   }
 
-  ul, ol { padding-inline-start: $ucsd-space-6; }
-  li + li { margin-block-start: $ucsd-space-2; }
+  ul, ol { padding-inline-start: $ucsd-space-extra-large; }
+  li + li { margin-block-start: $ucsd-space-small; }
 
-  img, figure { margin-block: $ucsd-space-8; }
+  img, figure { margin-block: $ucsd-space-2x-large; }
 
   blockquote {
-    border-inline-start: 4px solid $ucsd-color-brand-gold;
-    padding-inline-start: $ucsd-space-4;
-    color: $ucsd-color-text-muted;
+    border-inline-start: 4px solid $ucsd-color-theme-accent;
+    padding-inline-start: $ucsd-space-large;
+    color: $ucsd-color-component-menu;
   }
 }
 
 // --- Section rhythm ----------------------------------------------------------
 // Landing-page section spacing. Two sizes only, on purpose.
-.ucsd-section    { padding-block: $ucsd-space-16; }
-.ucsd-section--sm { padding-block: $ucsd-space-10; }
+.ucsd-section    { padding-block: $ucsd-space-4x-large; }
+.ucsd-section--sm { padding-block: $ucsd-space-3x-large; }
 
 // --- Reduced motion ----------------------------------------------------------
 @media (prefers-reduced-motion: reduce) {

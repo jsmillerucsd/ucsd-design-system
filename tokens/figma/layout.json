@@ -1,0 +1,42 @@
+{
+  "radius": {
+    "default": {
+      "$type": "dimension",
+      "$value": "12px"
+    }
+  },
+  "space": {
+    "2x-large": {
+      "$type": "dimension",
+      "$value": "32px"
+    },
+    "3x-large": {
+      "$type": "dimension",
+      "$value": "40px"
+    },
+    "4x-large": {
+      "$type": "dimension",
+      "$value": "48px"
+    },
+    "extra-large": {
+      "$type": "dimension",
+      "$value": "24px"
+    },
+    "extra-small": {
+      "$type": "dimension",
+      "$value": "4px"
+    },
+    "large": {
+      "$type": "dimension",
+      "$value": "16px"
+    },
+    "medium": {
+      "$type": "dimension",
+      "$value": "12px"
+    },
+    "small": {
+      "$type": "dimension",
+      "$value": "8px"
+    }
+  }
+}

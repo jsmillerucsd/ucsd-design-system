@@ -1,0 +1,25 @@
+{
+  "$description": "CODE-OWNED. Not in Figma, and not overwritten by `npm run sync:figma`. Breakpoints are a Bootstrap contract, not a design decision; containers are a code concern the Figma file has no equivalent for.",
+  "breakpoint": {
+    "$description": "MUST match Bootstrap 5 exactly (576/768/992/1200/1400) so Bootstrap utilities and Tailwind variants agree. A mismatch here produces bugs that take days to find. Figma has no breakpoint variables, so this stays here by design.",
+    "sm":  { "$value": "576px",  "$type": "dimension" },
+    "md":  { "$value": "768px",  "$type": "dimension" },
+    "lg":  { "$value": "992px",  "$type": "dimension" },
+    "xl":  { "$value": "1200px", "$type": "dimension" },
+    "xxl": { "$value": "1400px", "$type": "dimension" }
+  },
+  "container": {
+    "$description": "Max content widths used by docs/layouts/. 'prose' is the readable measure for long-form content (~70ch).",
+    "prose":  { "$value": "70ch",   "$type": "dimension" },
+    "narrow": { "$value": "768px",  "$type": "dimension" },
+    "base":   { "$value": "1140px", "$type": "dimension" },
+    "wide":   { "$value": "1320px", "$type": "dimension" }
+  },
+  "radius": {
+    "$description": "Figma defines a single radius (radius.default, 12px). Bootstrap's component API needs a small scale around it, so the derived steps live here. If the designer adds a radius scale in Figma, delete these and let the sync own them.",
+    "none": { "$value": "0",     "$type": "dimension" },
+    "sm":   { "$value": "4px",   "$type": "dimension" },
+    "lg":   { "$value": "16px",  "$type": "dimension" },
+    "pill": { "$value": "999px", "$type": "dimension" }
+  }
+}

@@ -51,13 +51,13 @@ describe('noncompliant fixture', async () => {
   }
 
   test('suggests the spacing token for padding, not the type token', () => {
-    // 16px is both space.4 and text.md.size — the suggestion must be category-aware.
-    assert.match(out, /padding: 16px .*--ucsd-space-4/);
-    assert.doesNotMatch(out, /padding: 16px .*--ucsd-text-md-size/);
+    // 16px is both space.large and radius.lg — the suggestion must be category-aware.
+    assert.match(out, /padding: 16px .*--ucsd-space-large/);
+    assert.doesNotMatch(out, /padding: 16px .*--ucsd-radius-lg/);
   });
 
   test('suggests the radius token for border-radius', () => {
-    assert.match(out, /border-radius: 8px .*--ucsd-radius-lg/);
+    assert.match(out, /border-radius: 12px .*--ucsd-radius-default/);
   });
 
   test('does not match a legacy class name inside a longer hyphenated class', () => {
@@ -65,8 +65,10 @@ describe('noncompliant fixture', async () => {
     assert.doesNotMatch(out, /"panel".*custom/);
   });
 
-  test('ranks action-primary above brand-blue for #00629b', () => {
-    assert.match(out, /#00629b is a token value — use var\(--ucsd-color-action-primary\)/);
+  test('ranks the brand colour above its narrower uses for #00629b', () => {
+    // #00629b is theme.secondary, btn-secondary, link and two system tokens. A raw
+    // hex in someone's CSS is almost always reaching for the brand colour itself.
+    assert.match(out, /#00629b is a token value — use var\(--ucsd-color-theme-secondary\)/);
   });
 
   test('reports every legacy class on a line, not just the first', () => {

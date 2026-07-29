@@ -1,78 +1,316 @@
 /**
- * Figma Variables -> tokens/*.json
+ * figma-export/ -> tokens/figma/
  *
- * One-way sync, Figma to git, landing as a pull request. See docs/figma.md §3.
+ * Ingests Figma's NATIVE variable export ("right-click a collection -> Export
+ * modes"), which lands as one DTCG-ish file per mode, in a folder per collection.
+ * See docs/figma.md §3.
  *
- *   FIGMA_TOKEN=figd_...  FIGMA_FILE_KEY=abc123  node scripts/sync-figma.mjs
+ *   npm run sync:figma
  *
- * This file is only I/O: fetch, report, write. The mapping logic lives in
- * scripts/lib/figma-transform.mjs so it can be tested without a Figma account.
+ * WHY THIS SHAPE. Figma resolves every `$value` to a literal and records the alias
+ * separately under `$extensions["com.figma.aliasData"]`. A naive reader would
+ * therefore flatten the whole system into hex codes and destroy the ability to
+ * rebrand or theme. This script reads the alias data back and reconstructs real
+ * DTCG references, so `tokens/` keeps the tier structure the designer authored.
  *
- * STATUS: written against the documented shape of the Figma Variables REST API,
- * but NOT yet run against the real UCSD file — no file key or token exists yet.
- * Expect to adjust collection names in COLLECTIONS on first run.
- *
- * Requires the Figma Enterprise plan (the /variables/local endpoint is gated).
- * If UCSD is not on Enterprise, delete this script and use Tokens Studio instead
- * — everything downstream is unaffected, because both produce the same DTCG files.
+ * The designer never runs this. He exports from Figma and hands over the files;
+ * a maintainer drops them in figma-export/ and runs the command.
  */
 
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { transform, sortDeep } from './lib/figma-transform.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const TOKENS = path.join(REPO, 'tokens');
+const IN = path.join(REPO, 'figma-export');
+const OUT = path.join(REPO, 'tokens', 'figma');
 
-const { FIGMA_TOKEN, FIGMA_FILE_KEY } = process.env;
-if (!FIGMA_TOKEN || !FIGMA_FILE_KEY) {
-  console.error(`
-Figma sync is not configured.
+// ---------------------------------------------------------------------------
+// The contract with the Figma file
+// ---------------------------------------------------------------------------
 
-  FIGMA_TOKEN     personal access token with the file_variables:read scope
-  FIGMA_FILE_KEY  from the file URL: figma.com/design/<FILE_KEY>/...
+/**
+ * Figma collection -> where its tokens land and what they are called.
+ *
+ * `root` namespaces each collection so the tiers cannot collide. They otherwise
+ * would: `colors-brand` and `colors-primitive` both define `neutral/black`, and
+ * Style Dictionary merges every source into one tree.
+ */
+const COLLECTIONS = {
+  'colors-brand':     { file: 'brand.json',      root: 'brand',   tier: 'brand' },
+  'colors-primitive': { file: 'primitive.json',  root: 'palette', tier: 'primitive' },
+  'colors-semantic':  { file: null,              root: 'color',   tier: 'semantic', byMode: true },
+  'layout':           { file: 'layout.json',     root: null,      tier: 'semantic' },
+  'typography':       { file: 'typography.json', root: 'type',    tier: 'semantic' },
+};
 
-Set both and re-run. Until then, tokens/ holds placeholder values.
-See docs/figma.md §3 for the plan, including the Tokens Studio fallback.
-`);
-  process.exit(1);
+/** Mode name -> the suffix used in tokens/figma/semantic.<mode>.json. */
+const MODES = { 'light mode': 'light', 'dark mode': 'dark' };
+
+/**
+ * The `layout` collection has no group of its own — `border-radius` sits at the
+ * root next to `spacing/*`. Renaming here keeps the emitted CSS variables reading
+ * like the rest of the system (`--ucsd-space-large`, not `--ucsd-spacing-large`).
+ */
+const LAYOUT_RENAME = { 'border-radius': ['radius', 'default'], spacing: ['space'] };
+
+/**
+ * Figma stores font weight as the typeface's style name. CSS needs a number.
+ * Unmapped names are an error rather than a guess — shipping the wrong weight
+ * silently is worse than failing the sync.
+ */
+const FONT_WEIGHTS = {
+  thin: 100, extralight: 200, light: 300, regular: 400, normal: 400, book: 400,
+  medium: 500, semibold: 600, demibold: 600, bold: 700, heavy: 800, extrabold: 800,
+  black: 900, ultra: 900,
+};
+
+/** Typography leaves that are ratios or offsets, not lengths. */
+const UNITLESS = new Set(['font-weight']);
+
+/** Leaf renames. Figma has `fontsize` next to `line-height`; pick one convention. */
+const LEAF_RENAME = { fontsize: 'font-size' };
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Lowercase, spaces to hyphens, drop anything that is not [a-z0-9-]. */
+const slug = (s) =>
+  String(s).trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+/**
+ * `navy/navy-500` -> `navy/500`, `gray/Gray-50` -> `gray/50`.
+ *
+ * Figma repeats the group name in each leaf. Carried through verbatim it produces
+ * `--ucsd-palette-primary-navy-navy-500`, which is nobody's idea of a public API.
+ * Stripping a leaf's redundant group prefix is purely mechanical and reversible.
+ */
+function collapseRepeats(segs) {
+  return segs.map((seg, i) => {
+    const parent = segs[i - 1];
+    return parent && seg.startsWith(`${parent}-`) ? seg.slice(parent.length + 1) : seg;
+  });
 }
 
-const res = await fetch(
-  `https://api.figma.com/v1/files/${FIGMA_FILE_KEY}/variables/local`,
-  { headers: { 'X-Figma-Token': FIGMA_TOKEN } },
-);
-if (!res.ok) {
-  console.error(`Figma API ${res.status}: ${await res.text()}`);
-  if (res.status === 403) {
-    console.error('\n403 usually means the file is not on an Enterprise plan, or the token lacks file_variables:read.');
+const segmentsOf = (figmaName) => collapseRepeats(figmaName.split('/').map(slug));
+
+const setDeep = (obj, segs, value) => {
+  let node = obj;
+  for (const s of segs.slice(0, -1)) node = node[s] ??= {};
+  node[segs.at(-1)] = value;
+};
+
+/** Stable key order so a re-sync produces a readable diff, not a reshuffle. */
+export const sortDeep = (o) =>
+  o && typeof o === 'object' && !Array.isArray(o)
+    ? Object.fromEntries(Object.keys(o).sort().map((k) => [k, sortDeep(o[k])]))
+    : o;
+
+/** Walk a DTCG tree, yielding [pathSegments, tokenObject] for every leaf. */
+function* leaves(node, trail = []) {
+  for (const [key, value] of Object.entries(node)) {
+    if (key.startsWith('$')) continue;
+    if (value && typeof value === 'object') {
+      if ('$value' in value) yield [[...trail, key], value];
+      else yield* leaves(value, [...trail, key]);
+    }
   }
-  process.exit(1);
 }
 
-const { meta } = await res.json();
-const { files, problems } = transform(meta);
+// ---------------------------------------------------------------------------
+// Transform (pure — exported for tests)
+// ---------------------------------------------------------------------------
 
-// --- validate BEFORE writing -------------------------------------------------
-// Nothing touches tokens/ unless the whole file is sound. Writing first and
-// failing afterwards would leave an invalid, half-synced working tree behind.
+/**
+ * @param {Array<{collection: string, mode: string, tree: object}>} inputs
+ * @returns {{files: Map<string, object>, problems: string[], warnings: string[]}}
+ *
+ * Two classes, deliberately separated:
+ *
+ *   problems  the export cannot be read at all (unknown collection or mode, an
+ *             alias into a collection that was not exported). Nothing is written,
+ *             because a half-synced tokens/ is harder to recover from than none.
+ *   warnings  the export is readable but the Figma file has a defect. These are
+ *             printed loudly and the sync still writes, because POLICY is
+ *             scripts/validate-tokens.mjs's job — it already gates the PR on
+ *             aliasing, mode parity and contrast. Duplicating the rule here would
+ *             mean a designer's mistake blocks the pipeline instead of failing the
+ *             check that exists to describe it.
+ */
+export function transform(inputs) {
+  const files = new Map();
+  const problems = [];
+  const warnings = [];
 
-if (problems.length) {
-  console.error(`\n${problems.length} problem(s) in the Figma file — nothing was written:`);
-  for (const p of problems) console.error(`  - ${p}`);
-  console.error('\nFix these in Figma. See docs/figma.md §2 for the authoring contract.');
-  process.exit(1);
+  /** Rewrite a Figma alias target into a DTCG reference in our namespace. */
+  const referenceTo = (alias) => {
+    const spec = COLLECTIONS[alias.targetVariableSetName];
+    if (!spec) return null;
+    const segs = segmentsOf(alias.targetVariableName);
+    return `{${[spec.root, ...segs].filter(Boolean).join('.')}}`;
+  };
+
+  for (const { collection, mode, tree } of inputs) {
+    const spec = COLLECTIONS[collection];
+    if (!spec) {
+      problems.push(`Unknown collection "${collection}". Add it to COLLECTIONS in scripts/sync-figma.mjs.`);
+      continue;
+    }
+
+    let file = spec.file;
+    if (spec.byMode) {
+      const key = MODES[mode.trim().toLowerCase()];
+      if (!key) {
+        problems.push(
+          `Collection "${collection}" has mode "${mode}", which the build has no home for. ` +
+          `Expected "Light mode" or "Dark mode".`,
+        );
+        continue;
+      }
+      file = `semantic.${key}.json`;
+    }
+
+    const out = files.get(file) ?? {};
+    files.set(file, out);
+
+    for (const [rawSegs, token] of leaves(tree)) {
+      let segs = collapseRepeats(rawSegs.map(slug)).map((s) => LEAF_RENAME[s] ?? s);
+
+      if (collection === 'layout') {
+        const rename = LAYOUT_RENAME[segs[0]];
+        if (rename) segs = [...rename, ...segs.slice(1)];
+      } else if (spec.root) {
+        segs = [spec.root, ...segs];
+      }
+
+      const name = segs.join('.');
+      const alias = token.$extensions?.['com.figma.aliasData'];
+      const reference = alias ? referenceTo(alias) : null;
+
+      if (alias && !reference) {
+        problems.push(`"${name}" aliases collection "${alias.targetVariableSetName}", which was not exported. Export it too.`);
+        continue;
+      }
+
+      let value;
+      let type;
+
+      if (token.$type === 'color') {
+        type = 'color';
+        value = reference ?? String(token.$value?.hex ?? token.$value).toLowerCase();
+        // Figma drops alpha from `hex`; preserve it so translucent tokens survive.
+        if (!reference && token.$value?.alpha != null && token.$value.alpha < 1) {
+          const a = Math.round(token.$value.alpha * 255).toString(16).padStart(2, '0');
+          value = `${value}${a}`;
+        }
+      } else if (token.$type === 'number') {
+        type = 'dimension';
+        value = reference ?? (token.$value === 0 ? '0' : `${token.$value}px`);
+      } else if (token.$type === 'string') {
+        const leaf = segs.at(-1);
+        if (leaf === 'font-weight') {
+          const weight = FONT_WEIGHTS[slug(token.$value).replace(/-/g, '')];
+          if (!weight) {
+            // Skipped rather than guessed: shipping the wrong weight silently is
+            // worse than the token being absent, and absent is visible downstream.
+            warnings.push(
+              `"${name}" has font weight "${token.$value}", which is not a recognised weight — ` +
+              `token skipped. Fix it in Figma.`,
+            );
+            continue;
+          }
+          type = 'fontWeight';
+          value = weight;
+        } else {
+          type = leaf === 'font-family' ? 'fontFamily' : 'string';
+          value = reference ?? token.$value;
+        }
+      } else {
+        problems.push(`"${name}" has unsupported $type "${token.$type}".`);
+        continue;
+      }
+
+      if (UNITLESS.has(segs.at(-1)) && type === 'dimension') value = token.$value;
+
+      setDeep(out, segs, { $value: value, $type: type });
+    }
+  }
+
+  // A semantic colour that is a literal rather than an alias breaks theming — the
+  // designer bound a layer straight to a hex instead of to a primitive. Surfaced
+  // here because this script is what reads the Figma file, but not enforced here:
+  // validate-tokens.mjs owns that rule and blocks the PR on it.
+  for (const [file, tree] of files) {
+    if (!file.startsWith('semantic.')) continue;
+    for (const [segs, token] of leaves(tree)) {
+      if (token.$type === 'color' && !/^\{.+\}$/.test(token.$value)) {
+        warnings.push(
+          `${file}: "${segs.join('.')}" is the literal ${token.$value} — it should alias a primitive.`,
+        );
+      }
+    }
+  }
+
+  return { files, problems: [...new Set(problems)], warnings: [...new Set(warnings)] };
 }
 
-// --- write -------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// I/O
+// ---------------------------------------------------------------------------
 
-await Promise.all([...files].map(async ([file, tree]) => {
-  const dest = path.join(TOKENS, file);
-  await fs.mkdir(path.dirname(dest), { recursive: true });
-  await fs.writeFile(dest, JSON.stringify(sortDeep(tree), null, 2) + '\n', 'utf8');
-  console.log(`wrote tokens/${file}`);
-}));
+if (import.meta.url === `file://${process.argv[1]}`.replace(/\\/g, '/') ||
+    process.argv[1]?.endsWith('sync-figma.mjs')) {
+  const collections = await fs.readdir(IN, { withFileTypes: true }).catch(() => {
+    console.error(
+      `\nsync-figma: figma-export/ not found.\n\n` +
+      `  Ask the designer to right-click each variable collection in Figma and choose\n` +
+      `  "Export modes", then drop the folders here. See docs/figma.md §3.\n`,
+    );
+    process.exit(1);
+  });
 
-const count = Object.keys(meta.variables).length;
-console.log(`\nSynced ${count} variables into ${files.size} file(s). Review the diff, then commit.`);
+  const inputs = [];
+  for (const dir of collections.filter((d) => d.isDirectory())) {
+    for (const entry of await fs.readdir(path.join(IN, dir.name))) {
+      if (!entry.endsWith('.json')) continue;
+      const tree = JSON.parse(await fs.readFile(path.join(IN, dir.name, entry), 'utf8'));
+      // The mode name is inside the file, so a renamed download still syncs correctly.
+      const mode = tree.$extensions?.['com.figma.modeName'] ?? entry.replace(/\.tokens\.json$/, '');
+      inputs.push({ collection: dir.name, mode, tree });
+    }
+  }
+
+  if (!inputs.length) {
+    console.error('\nsync-figma: figma-export/ has no collection folders.\n');
+    process.exit(1);
+  }
+
+  const { files, problems, warnings } = transform(inputs);
+
+  if (problems.length) {
+    console.error(`\n${problems.length} problem(s) — the export could not be read, nothing was written:\n`);
+    for (const p of problems) console.error(`  - ${p}`);
+    console.error('\nSee docs/figma.md §3.\n');
+    process.exit(1);
+  }
+
+  if (warnings.length) {
+    console.warn(`\n${warnings.length} defect(s) in the Figma file — synced anyway, but these need fixing:\n`);
+    for (const w of warnings) console.warn(`  ! ${w}`);
+    console.warn('\n  `npm run test:tokens` will fail on these until they are fixed in Figma.\n');
+  }
+
+  await fs.mkdir(OUT, { recursive: true });
+  await Promise.all(
+    [...files].map(([file, tree]) =>
+      fs.writeFile(path.join(OUT, file), JSON.stringify(sortDeep(tree), null, 2) + '\n', 'utf8'),
+    ),
+  );
+
+  const count = [...files.values()].reduce((n, t) => n + [...leaves(t)].length, 0);
+  console.log(
+    `sync-figma: ${count} tokens from ${inputs.length} mode file(s) -> ${files.size} file(s) in tokens/figma/`,
+  );
+  console.log('Review the diff, then commit.');
+}

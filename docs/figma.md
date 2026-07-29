@@ -2,7 +2,7 @@
 
 How a design decision made in Figma becomes working code in Bootstrap 5, Tailwind/shadcn, the CMS, and `DESIGN.md` — repeatably, without anyone retyping a hex code.
 
-> **Status:** plan of record. The build and validation are wired; the sync itself is not. Decision gates are marked **⟡ DECIDE**.
+> **Status:** live. The sync runs against the designer's real Figma export; `tokens/` holds real UCSD values.
 >
 > **Designers:** [§2](#2-the-figma-authoring-contract) is written for you and stands alone. The rest is engineering plumbing.
 
@@ -12,9 +12,9 @@ How a design decision made in Figma becomes working code in Bootstrap 5, Tailwin
 
 1. **One-way sync.** Figma → git. Never git → Figma, never bidirectional. Bidirectional token sync is the single most common way these systems rot.
 2. **Figma owns *values*. Code owns *implementations*.** The boundary is absolute (§1).
-3. **Every sync is a pull request.** A token change is a reviewable diff with a version bump, not a live CDN mutation. This is the biggest single improvement over Decorator V5.
-4. **Generated artifacts are never hand-edited.** If you find yourself editing `packages/tokens/dist/`, `DESIGN.md`'s frontmatter, or `references/generated/`, the generator is wrong — fix the generator.
-5. **Design system code is boring on purpose.** A new engineer should be able to trace a hex value from Figma to a rendered pixel in five minutes.
+3. **Every sync is a pull request.** A token change is a reviewable diff, not a live CDN mutation. This is the biggest single improvement over Decorator V5.
+4. **Generated artifacts are never hand-edited.** If you find yourself editing `tokens/figma/`, `packages/tokens/dist/`, or `DESIGN.md`'s frontmatter, the generator is wrong — fix the generator.
+5. **The designer never touches git.** He exports from Figma and hands over files. Everything after that is a maintainer's job.
 
 ---
 
@@ -22,205 +22,133 @@ How a design decision made in Figma becomes working code in Bootstrap 5, Tailwin
 
 This table is the most important thing in this document. Most design-system failures are boundary failures.
 
-| Artifact | Owner | Source of truth | Sync mechanism |
+| Artifact | Owner | Source of truth | Mechanism |
 |---|---|---|---|
-| Color / space / type / radius / elevation / motion **values** | Designer | Figma Variables | Automated (§3) |
-| Token **names** | Joint contract | [`token-naming-contract.md`](token-naming-contract.md) | Reviewed in PR |
+| Colour / spacing / radius / type **values** | Designer | Figma Variables | Automated (§3) |
+| Token **names** | Designer, adopted as-is | The Figma file | Normalised mechanically by the sync |
+| Breakpoints, shadows, easings, containers | Engineer | `tokens/code/` | Hand-written — Figma cannot express them |
 | Design **intent** — what the brand should feel like | Joint | [`design-md/`](design-md/README.md) → `DESIGN.md` prose | Hand-written |
-| Component **visual spec** (anatomy, variants, states) | Designer | Figma component set | Manual, spec-driven (§5) |
-| Component **implementation** (HTML/CSS/JSX) | Engineer | `packages/` | Hand-written, reviewed |
-| Component **a11y contract** (roles, focus, keyboard) | Engineer | [`accessibility.md`](accessibility.md) | Hand-written |
+| Component **visual spec** | Designer | Figma component set | Manual, spec-driven (§5) |
+| Component **implementation** | Engineer | `packages/` | Hand-written, reviewed |
+| Component **a11y contract** | Engineer | [`accessibility.md`](accessibility.md) | Hand-written |
 | Page **layouts / CMS patterns** | Joint | [`layouts/`](layouts/README.md) | Hand-written spec |
-| Content model / field names | CMS team | [`layouts/`](layouts/README.md) | Hand-written spec |
 
-**Corollary:** we do *not* generate components from Figma. Generated components leak absolute positioning, magic numbers, and no accessibility. Figma tells us *what it should look like*; a human writes the component once, correctly, and Code Connect (§5) makes Figma point at that human-written code forever after.
+**Corollary:** we do *not* generate components from Figma. Generated components leak absolute positioning, magic numbers, and no accessibility. Figma tells us *what it should look like*; a human writes the component once, correctly.
 
 ---
 
 ## 2. The Figma authoring contract
 
-**For the designer.** The pipeline is only as good as the file hygiene upstream. These are requirements, not suggestions — and they have to happen **before** the component library is finished. Restructuring 300 variables after the fact is days of work; doing it right the first time is close to free.
+**For the designer.** The pipeline reads the file as it is, so file hygiene upstream is the whole game.
 
-**The one-line version:** name things by *what they're for*, not *what they look like*, and bind every component to those names.
+### 2.1 The collections
 
-### 2.1 Three variable collections
+Five, and this is the structure the sync expects:
 
-| # | Collection | Publish? | What goes in it |
-|---|---|---|---|
-| 1 | `1. Primitives` | **Hidden** | The raw palette and raw scale. Every actual colour value lives here — and *only* here. |
-| 2 | `2. Semantic` | **Published** | What components bind to. Every value is an alias pointing at a primitive. |
-| 3 | `3. Component` | Published | Rare. Only when one component needs a knob that doesn't belong in the semantic layer. |
+| Collection | Modes | Contains |
+|---|---|---|
+| `colors-brand` | Value | The raw UCSD palette — `core/navy`, `core/blue`, `core/yellow`, `core/gold`, accents, neutrals. **Hidden from publishing.** |
+| `colors-primitive` | Mode 1 | 50–900 ramps per hue. The `-500` step of each aliases its `colors-brand` colour. **Hidden.** |
+| `colors-semantic` | **Light mode / Dark mode** | What components bind to: `theme/*`, `surface/*`, `foreground/*`, `component/*`, `system/*`, `status/*`. Every value aliases `colors-primitive`. **Published.** |
+| `layout` | Mode 1 | `border-radius`, `spacing/*` |
+| `typography` | Mode 1 | One group per role — `h1`, `body/small`, `button` — each with size, line-height, tracking, weight, family |
 
-> **The rule everything depends on: a component layer may only bind to `2. Semantic` or `3. Component`. Never to `1. Primitives`.**
+> **The rule everything depends on: a component layer binds only to `colors-semantic`. Never to `colors-primitive` or `colors-brand`.**
 
-If a button's fill points at `blue/500`, a brand decision is hard-coded into that button, and dark mode, a rebrand and a high-contrast theme each require touching every component. If it points at `color/action/primary`, all three are a one-line change. Primitives are the paint box; semantics are the decision about where paint goes.
+If a button's fill points at `blue/500`, a brand decision is hard-coded into that button, and dark mode, a rebrand and a high-contrast theme each require touching every component. If it points at `component/btn-primary`, all three are a one-line change.
 
-The sync script flags a primitive binding as an error (§3.3).
+The sync reports a semantic colour bound to a raw value, and `npm run test:tokens` fails on it.
 
 ### 2.2 Naming
 
-Slash-delimited, lowercase, hyphens between words: `color/action/primary-hover`. State goes **last**.
+Slash-delimited: `component/btn-label-primary`. The sync lowercases, turns spaces into hyphens, and collapses a leaf that repeats its group (`navy/navy-500` → `navy.500`).
 
-Primitives describe appearance — `palette/blue/50…900` (500 is brand blue), `palette/navy/500…950` (900 is brand navy), `palette/gold/100…700` (500 is brand gold), plus `neutral`, `green`, `amber`, `red`, `white`, `black`. Higher number = darker.
+That means **spaces and stray capitals are tolerated but not encouraged** — `neutral/cool gray` and `Gray-950` both sync fine, they just read inconsistently next to their siblings. Renaming is cheap while the library is young.
 
-Semantics describe purpose, and are a **closed set**:
-
-| Group | Members |
-|---|---|
-| `color/surface/…` | `default` `subtle` `raised` `sunken` `inverse` |
-| `color/text/…` | `default` `muted` `subtle` `inverse` `link` `link-hover` |
-| `color/border/…` | `default` `subtle` `strong` `focus` |
-| `color/action/…` | `primary` `primary-hover` `primary-active` `secondary` `secondary-hover` `secondary-active` `disabled` |
-| `color/status/…` | `info` `success` `warning` `danger` — each with `-subtle` (backgrounds) and `-strong` (text/icons) |
-| `color/brand/…` | `navy` `blue` `gold` — **logo, wordmark and seal only** |
-| `space/…` | `0 1 2 3 4 5 6 7 8 10 12 16 20 24` (multiples of 4, so `space/4` = 16px) |
-| `radius/…` | `none sm md lg xl pill circle` |
-| `elevation/…` | `0 1 2 3 4` |
-| `font/family/…` · `font/weight/…` | `sans display mono` · `regular medium semibold bold` |
-| `text/…` | `xs sm md lg xl 2xl 3xl 4xl 5xl` — each with a size **and** a line-height |
-| `breakpoint/…` | `sm md lg xl xxl` — **576 / 768 / 992 / 1200 / 1400, fixed** |
-
-Three worth flagging: `color/brand/*` is tiny on purpose (reaching for it to style a button means you want `color/action/primary`); breakpoints must match Bootstrap's exactly or utilities and layouts disagree in ways that take days to debug; and adding a semantic category is a real conversation, because each one multiplies across every framework.
-
-Avoid: `color/blue` as a semantic (the name becomes a lie after a rebrand), `space/small` (relative to what? doesn't sort), `text/h1` (an `<h1>` isn't always the biggest text), `color/button/blue/bg/hover/dark` (five things in one name — use a semantic plus a mode).
-
-Full rationale and the validation regex: [`token-naming-contract.md`](token-naming-contract.md).
+The full vocabulary, and what each group is for, is in [`token-naming-contract.md`](token-naming-contract.md).
 
 ### 2.3 Light and dark mode
 
-Two modes — `Light` and `Dark` — **on the `2. Semantic` collection only**. Primitives have one mode.
-
-Dark mode is done by **re-pointing aliases**, never by adding tokens:
+Two modes on `colors-semantic` only. Dark mode is done by **re-pointing aliases**, never by adding tokens:
 
 | Token | Light points at | Dark points at |
 |---|---|---|
-| `color/surface/default` | `palette/white` | `palette/navy/950` |
-| `color/text/default` | `palette/neutral/900` | `palette/neutral/50` |
-| `color/text/link` | `palette/blue/500` | `palette/blue/300` ← lightened, or it fails contrast |
+| `surface/surface-1` | `neutral/white` | `neutral/gray/Gray-950` |
+| `foreground/body-text` | `neutral/gray/gray-600` | `neutral/gray/gray-350` |
 
-**Every semantic token needs a value in both modes** — the build fails if one is missing, so sweep for gaps before handing off. This is genuinely new capability: Decorator V5 cannot express dark mode at all.
-
-⟡ **DECIDE:** a `Density: Comfortable | Compact` mode? Real value for data-dense admin apps, real cost on every token. Recommendation: **not in v1** — modes are additive and non-breaking, so it can come later.
+**Every semantic token needs a value in both modes** — the build fails if one is missing.
 
 ### 2.4 Component hygiene
 
-These five habits are what let a coding agent turn a frame into decent code instead of absolutely-positioned divs.
+These habits are what let a coding agent turn a frame into decent code instead of absolutely-positioned divs.
 
-1. **Semantic layer names.** `CardHeader`, not `Frame 74`. Layer names become the vocabulary in generated code and the prop names Code Connect infers.
-2. **Auto Layout everywhere.** It translates directly to flexbox — direction, gap, alignment, padding. Absolute positioning translates to nothing useful and forces the tool to guess.
+1. **Semantic layer names.** `CardHeader`, not `Frame 74`.
+2. **Auto Layout everywhere.** It translates directly to flexbox. Absolute positioning translates to nothing useful.
 3. **Flat hierarchy.** Every gratuitous wrapper frame becomes a gratuitous `<div>`.
-4. **Variants for states,** named to match code: `State = Default | Hover | Focus | Active | Disabled`. Don't skip **Focus** — it's an accessibility requirement and the state most often missing from design files.
-5. **Boolean properties for optional parts:** `hasIcon`, `hasDescription`. These become props one-to-one.
-
-Component set names match the code name exactly: Figma `Button` ↔ `<Button>` ↔ `.btn`.
+4. **Variants for states**, including **Focus** — an accessibility requirement and the state most often missing from design files.
+5. **Component set names match the code name exactly.** Figma `Button` ↔ `<Button>` ↔ `.btn`. Code Connect would normally automate this mapping, but it needs an Organization plan we do not have (§5.1) — so this convention is the *only* signal an agent gets. It is load-bearing.
 
 ### 2.5 Definition of done
 
-Before engineering picks up a component:
-
-- [ ] Every fill, stroke, radius and spacing value **bound to a semantic variable** — zero raw hex, zero raw px
-- [ ] Nothing bound directly to `1. Primitives`
+- [ ] Every fill, stroke, radius and spacing value **bound to a `colors-semantic` variable** — zero raw hex, zero raw px
+- [ ] Nothing bound directly to `colors-primitive` or `colors-brand`
 - [ ] Full variant matrix, **including focus and disabled**
 - [ ] Renders correctly in **both** Light and Dark
 - [ ] Auto Layout throughout, layers named semantically
-- [ ] A Dev Mode annotation for anything a static frame can't show — submit behaviour, empty state, what animates
-
-### 2.6 To start, we need three things
-
-1. **Confirmation of the Figma plan tier and where the file lives.** Professional or higher, and in a Project rather than Drafts — otherwise variable modes are unavailable and dark mode cannot be built (§3.1). Check this before anything else; it is the only genuinely blocking item.
-2. **The `2. Semantic` collection populated**, even if component designs aren't finished. Tokens unblock all the engineering work; components can follow. Start from the seed package in [`tokens-studio/`](../tokens-studio/README.md) rather than hand-typing names.
-3. **The Figma file key** — the string in the URL: `figma.com/design/`**`THIS_PART`**`/File-Name`.
-
-Open questions for design — display face, density mode, icon set, sub-brand scope — are tracked in [`architecture.md`](architecture.md) so there is one list rather than two.
 
 ---
 
-## 3. Getting variables out of Figma
+## 3. The sync
 
-### 3.1 The export mechanism
+### 3.1 How values leave Figma
 
-UCSD is on **Figma Professional**. That settles two things: variable modes work (10 per collection; we need 2), and the Variables REST API is out — `GET /v1/files/:key/variables/local` is Enterprise-gated and 403s on every other plan. `scripts/sync-figma.mjs` is kept for the day that changes.
+UCSD is on **Figma Professional**, which rules out the Variables REST API (Enterprise-gated) but includes everything we need. Figma's **native DTCG export** does the whole job:
 
-That leaves two candidates, and **the first is dramatically simpler if it is available**.
+> Right-click a variable collection → **Export modes**. One JSON file per mode, in the same DTCG format `tokens/` already uses.
 
-#### Option A — Figma's native DTCG import/export ⟡ CHECK THIS FIRST
+No plugin, no licence, no recurring cost. This is the payoff from choosing DTCG in [D3](architecture.md) — Figma converged on the same standard, so there is nothing in between.
 
-Figma shipped native variable import/export conforming to the **DTCG spec** — the same format `tokens/` already uses. Announced at Schema 2025 and rolled out gradually through late 2025.
+**Requirements:** Professional or higher (variable modes do not exist on Free/Starter), and the file in a **Project**, not Drafts — Figma refuses a second mode for Drafts files even on a paid plan.
 
-- **Export:** right-click a collection → **Export modes** (or a single mode → *Export mode*).
-- **Import:** drag a DTCG JSON onto the Variables view; it can create a new collection or update existing modes.
+### 3.2 The handoff
 
-No plugin, no licence, no recurring cost. The only documented plan gate on the surrounding feature is *modes themselves*, which Professional has.
+```
+DESIGNER (Figma only — no git, no terminal)
+  right-click each collection → Export modes → send the files
 
-**The check that decides everything:** open the Figma file, right-click a variable collection, and see whether **Export modes** appears. It rolled out gradually and some accounts got it later than others.
+MAINTAINER
+  drop them in figma-export/<collection>/<Mode>.tokens.json
+  npm run sync:figma
+  review the diff, commit, open a PR
+```
 
-> This is the payoff from [D3](architecture.md) — choosing DTCG over Style Dictionary's legacy format or Tokens Studio's dialect. Figma converged on the same standard, so the boundary is a file format both sides already speak, with nothing in between.
+`figma-export/` is committed, so a PR shows exactly what Figma said alongside what we derived from it.
 
-**Known wrinkle:** aliases resolve only against collections that already exist, so import **primitives first, semantics second**. Importing semantics alone yields variables with unresolved references.
-
-#### Option B — Tokens Studio plugin (fallback)
-
-If native export hasn't reached the account, Tokens Studio writes the same DTCG files. It costs **one Tokens Studio Pro seat**: creating Themes is Pro-only, and Themes are the only route to a multi-mode Variable Collection — the free tier maps each token set to a collection with exactly one mode, leaving dark mode nowhere to live.
-
-Free community plugins (tokenhaus, HaKa, TokensBrücke) also export Figma variables to DTCG and are worth trying before paying for anything.
-
-#### Regardless of option
-
-| Requirement | Why it bites |
-|---|---|
-| The file lives in a **Project**, not Drafts | Figma refuses a second mode for files in Drafts *even on a paid plan* — `Your Figma plan only allows for the creation of 1 mode`, on an otherwise-correct setup. |
-| Import **primitives before semantics** | Aliases resolve against existing collections only. |
-
-#### The seed package
-
-`npm run build:figma-seed` generates [`tokens-studio/`](../tokens-studio/README.md) from `tokens/` so the designer never hand-types ~175 variable names. It is currently in **Tokens Studio format** (`$metadata.json` + `$themes.json`); if Option A is available, the same script should emit plain per-collection DTCG instead.
-
-It is a **one-time seed, not a sync**. After import, Figma is upstream and this output is reference only. `elevation` and `motion` are deliberately excluded: Figma Variables have no shadow or easing type, so they cannot be variables at all (shadows are effect styles, authored by hand). They still reach code normally.
-
-**The import creates variables; it does not rebind components.** Swapping an existing component library's raw fills onto the new semantic variables is manual work on the designer's side, and it is the real cost of adoption.
-
-### 3.2 What the sync script does
+### 3.3 What the sync does
 
 `scripts/sync-figma.mjs`:
 
-1. Fetch local variables, collections and modes.
-2. Filter to published collections (skip `1. Primitives` from semantic output, keep them as a resolvable alias target).
-3. Map Figma types → DTCG `$type` (`COLOR`→`color`, `FLOAT`→`dimension`/`number`, `STRING`→`fontFamily`, `BOOLEAN`→ rejected; booleans are not tokens).
-4. Convert Figma aliases (`VARIABLE_ALIAS`) → DTCG references (`{palette.blue.500}`). **Preserve the alias — never resolve it to a literal.** A flattened token file destroys the ability to rebrand or theme.
-5. Convert Figma RGBA floats → hex.
-6. Emit one file per concern into `tokens/`, stably key-sorted so diffs are readable.
-7. Run validation (§3.3) and fail the job on error.
+1. Reads every mode file, taking the mode name from `$extensions["com.figma.modeName"]` inside the file rather than the filename.
+2. **Reconstructs aliases.** Figma resolves every `$value` to a literal and records the alias separately under `$extensions["com.figma.aliasData"]`. A naive reader would flatten the whole system into hex codes and destroy theming; this reads the alias data back into real DTCG references.
+3. Normalises names (§2.2) and namespaces each collection by tier, so `colors-brand` and `colors-primitive` can both define `neutral/black` without colliding.
+4. Maps Figma's types: `number` → dimension in px, `string` → font family, and font-weight style names (`Heavy`, `bold`) → numeric CSS weights.
+5. Writes `tokens/figma/`. Nothing is written if the export cannot be read.
 
-Output is plain [W3C DTCG](https://tr.designtokens.org/) — `$value` / `$type` / `$description` — chosen because Style Dictionary, Tokens Studio and Figma tooling all read it, so no one vendor is load-bearing.
+**Defects are reported, not enforced.** An unrecognised font weight is skipped with a warning; a semantic colour bound to a raw hex is flagged. Policy lives in the validation gate, so a designer's mistake surfaces in the check built to describe it rather than blocking the pipeline.
 
-```jsonc
-// tokens/semantic/color/light.json
-{
-  "color": {
-    "action": {
-      "primary": {
-        "$value": "{palette.blue.500}",   // alias, not #00629b
-        "$type": "color",
-        "$description": "Primary interactive fill: buttons, active nav, links."
-      }
-    }
-  }
-}
-```
-
-### 3.3 Validation gate (blocks the PR)
+### 3.4 Validation gate (blocks the PR)
 
 `scripts/validate-tokens.mjs`:
 
-- Every semantic token resolves to a primitive, in ≤3 hops, with no cycles.
-- Every semantic token exists in **both** Light and Dark modes.
-- Naming matches the contract regex.
-- Text/background pairs meet **WCAG 2.2 AA** (4.5:1 body, 3:1 large text and UI boundaries) in both modes.
-- Token removals and renames are flagged as breaking → forces a major version bump.
+- Semantic colours alias a primitive; primitives may alias brand; brand holds literals.
+- Aliases resolve, ≤3 hops, no cycles.
+- **Mode parity** — every semantic token in both Light and Dark.
+- Names match the contract regex.
+- **WCAG 2.2 AA contrast** on defined text/background pairs, in both modes.
 
-The contrast check earns its keep. It caught a real defect on first run: dark-mode `text.inverse` on `action.primary` was 4.21:1, under the 4.5:1 minimum. That would have shipped and surfaced in an audit months later.
+Accepted defects live in `tokens/known-issues.json` with an owner and a reason. That list is self-cleaning: an entry that stops matching is itself an error, so a fixed issue must be deleted.
 
----
+The contrast check earns its keep — on the first real sync it found four dark-mode failures in the Figma file, including a 2.79:1 information pair.
 
 ## 4. One source, N targets
 
@@ -318,12 +246,12 @@ If Dev Mode output shows a **primitive** binding (`blue/500`, `palette/*`), that
 | Docs drift from tokens; an agent emits last quarter's hex | `DESIGN.md` and `references/generated/` are build artifacts; CI fails if regenerating produces a diff |
 | Prose restates a token value, then the value changes | Prose in `design-md/` names tokens but never carries values; the generator fails the build on a literal hex or dimension outside a code fence |
 | A rule gets copied to a second surface and the two disagree | Rules live once, in `design-md/08-dos-and-donts.md`; `llms.txt` and the skill extract them |
-| Designer binds to primitives; dark mode breaks | Validation gate §3.3 |
+| Designer binds to primitives; dark mode breaks | Validation gate §3.4 |
 | Someone hand-edits `dist/` | `dist/` is generated; CI diff check |
 | Bidirectional sync fight | One-way by construction; no write scope on the Figma token |
 | Bootstrap and React drift apart visually | Both compile from the same `tokens.json`; contract tests pin the shared values |
 | Token sprawl (400 tokens nobody uses) | Semantic layer is a curated closed set; primitives stay hidden |
-| Figma plan change kills the API path | DTCG is vendor-neutral; swapping to Tokens Studio replaces only §3.1 |
+| Figma plan change kills the API path | DTCG is vendor-neutral; a plugin or the REST API would replace only §3.1 |
 
 ---
 

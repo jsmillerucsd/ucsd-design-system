@@ -4,12 +4,12 @@ The palette is navy and blue carried forward from the university's identity, wit
 
 Colors are organised by **role, not by hue**. Bind to what a color is *for*, never to what it looks like.
 
-- **`color.surface.*`** — container backgrounds, from the page canvas through raised and sunken variants. `surface.default` is the page.
-- **`color.text.*`** — foreground text, from `default` through `muted` and `subtle`, plus the link pair. Reach down the ramp for de-emphasis; never reach for a lower-contrast surface color to fake it.
-- **`color.border.*`** — strokes and dividers. `border.focus` is reserved for the focus ring and must never be repurposed as a decorative stroke.
-- **`color.action.*`** — interactive fills and their hover/active states. This is what a button is.
-- **`color.status.*`** — feedback only: info, success, warning, danger. Each has a `-subtle` background and a `-strong` foreground, designed to be used as a pair. Status colors carry meaning; using danger as an accent because it looks good is a bug.
-- **`color.brand.*`** — deliberately tiny, and reserved for immovable brand marks: logo, wordmark, seal. If you are reaching for a brand token to style a button, you want `color.action.primary`.
+- **`color.theme.*`** — the brand marks themselves: primary, secondary, accent. Reserved for identity. If you are reaching for one to style a button, you want `color.component.*`.
+- **`color.surface.*`** — what sits behind content. `surface.background` is the outer chrome band, `surface.1` is the content surface, `surface.2` is raised.
+- **`color.foreground.*`** — text, rules and borders: the heading roles, body text, dividers and card borders. Reach down the ramp for de-emphasis; never fake it with a lower-contrast surface.
+- **`color.component.*`** — what a control is actually made of. Each button fill has a matching label token, and the two are designed to be used as a pair.
+- **`color.system.*`** — feedback messaging: success, warning, error, information. Each has a `bg-` and a `foreground-` half, again meant as a pair. These carry meaning; using error as an accent because it looks good is a bug.
+- **`color.status.*`** — standalone state marks: good, warning, critical.
 
 **Gold is an accent, not a surface.** It carries the least text-legible contrast in the palette and reads as emphasis precisely because it is scarce. Large gold fields cheapen it and usually fail contrast. It earns its place on a focus ring against dark surfaces, and in small marks of emphasis.
 

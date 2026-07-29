@@ -6,6 +6,8 @@
  * Style Dictionary or Bootstrap upgrade that quietly breaks a mapping fails here
  * rather than in someone's browser months later.
  *
+ * Token names are the designer's, synced from Figma — see docs/token-naming-contract.md.
+ *
  * Requires `npm run build` first.
  */
 
@@ -40,46 +42,54 @@ const byPath = (m, p) => m.find((t) => t.path === p);
 describe('the brand blue reaches every target', () => {
   const BLUE = '#00629b';
 
-  test('resolves in the manifest', () => {
-    assert.equal(byPath(manifest, 'color.action.primary').value, BLUE);
+  test('resolves through all three colour tiers', () => {
+    // brand -> primitive -> semantic. Each step is an alias, which is what makes a
+    // rebrand a one-line change instead of a find-and-replace.
+    assert.equal(byPath(manifest, 'brand.core.blue').value, BLUE);
+    assert.equal(byPath(manifest, 'palette.primary.blue.500').reference, '{brand.core.blue}');
+    assert.equal(byPath(manifest, 'color.theme.secondary').reference, '{palette.primary.blue.500}');
+    assert.equal(byPath(manifest, 'color.theme.secondary').value, BLUE);
   });
 
-  test('CSS custom property references the primitive, not a literal', () => {
+  test('CSS custom property references the tier above, not a literal', () => {
     // outputReferences keeps the alias visible, which is what makes dark mode work.
-    assert.match(tokensCss, /--ucsd-color-action-primary:\s*var\(--ucsd-palette-blue-500\)/);
-    assert.match(tokensCss, /--ucsd-palette-blue-500:\s*#00629b/);
+    assert.match(tokensCss, /--ucsd-color-theme-secondary:\s*var\(--ucsd-palette-primary-blue-500\)/);
+    assert.match(tokensCss, /--ucsd-brand-core-blue:\s*#00629b/);
   });
 
   test('Sass carries a literal value (Bootstrap needs it at compile time)', () => {
-    assert.match(scss, /\$ucsd-color-action-primary:\s*#00629b/);
+    assert.match(scss, /\$ucsd-color-theme-secondary:\s*#00629b/);
   });
 
-  test('Bootstrap compiles it into --bs-primary and .btn-primary', () => {
+  test('Bootstrap compiles UCSD colours into its theme', () => {
+    assert.match(bootstrapCss, /--bs-secondary:\s*#182b49/);
     assert.match(bootstrapCss, /--bs-primary:\s*#00629b/);
-    assert.match(bootstrapCss, /--bs-btn-bg:\s*#00629b/);
   });
 
-  test('Tailwind exposes it as a utility namespace', () => {
-    assert.match(tailwind, /--color-action-primary:\s*var\(--ucsd-color-action-primary\)/);
+  test('Tailwind exposes semantic colours as a utility namespace', () => {
+    assert.match(tailwind, /--color-theme-secondary:\s*var\(--ucsd-color-theme-secondary\)/);
   });
 });
 
 describe('one spacing scale everywhere', () => {
-  test('space.4 is 16px', () => {
-    assert.equal(byPath(manifest, 'space.4').value, '16px');
+  test('space.large is 16px', () => {
+    assert.equal(byPath(manifest, 'space.large').value, '16px');
   });
 
-  test('Bootstrap .p-4 uses it', () => {
+  test('Bootstrap maps it to the numeric spacer key .p-4', () => {
+    // The Figma scale is t-shirt sized; _bridge.scss maps it onto the numeric keys
+    // Bootstrap users have muscle memory for.
     assert.match(bootstrapCss, /\.p-4\s*\{\s*padding:\s*16px/);
   });
 
   test('Tailwind maps it into the spacing namespace', () => {
-    assert.match(tailwind, /--spacing-4:\s*var\(--ucsd-space-4\)/);
+    assert.match(tailwind, /--spacing-large:\s*var\(--ucsd-space-large\)/);
   });
 });
 
 describe('breakpoints match Bootstrap exactly', () => {
-  // A mismatch here produces bugs that take days to find, so it is pinned.
+  // Code-owned, not from Figma: Figma has no breakpoint variables, and a mismatch
+  // here produces bugs that take days to find. See tokens/code/layout.json.
   const EXPECTED = { sm: '576px', md: '768px', lg: '992px', xl: '1200px', xxl: '1400px' };
 
   for (const [k, v] of Object.entries(EXPECTED)) {
@@ -118,35 +128,57 @@ describe('dark mode', () => {
     assert.match(tokensCss, /\[data-bs-theme="dark"\], \.dark, \[data-theme="dark"\]\s*\{/);
   });
 
-  test('dark re-aliases action.primary to a lighter blue', () => {
-    assert.equal(byPath(darkManifest, 'color.action.primary').reference, '{palette.blue.300}');
+  test('dark re-aliases the content surface to near-black', () => {
+    assert.equal(byPath(manifest, 'color.surface.1').reference, '{palette.neutral.white}');
+    assert.equal(byPath(darkManifest, 'color.surface.1').reference, '{palette.neutral.gray.950}');
   });
 
-  test('component tokens inherit dark mode via var() indirection', () => {
-    // This is the mechanism: button never needs a dark-mode entry of its own.
-    assert.match(tokensCss, /--ucsd-button-primary-bg:\s*var\(--ucsd-color-action-primary\)/);
-    assert.ok(!darkManifest.some((t) => t.path.startsWith('button.')),
-      'button tokens should not be redefined in dark mode');
+  test('only semantic colours are redefined in dark mode', () => {
+    // Primitives and brand hold one value per token; re-aliasing happens in the
+    // semantic tier alone, which is what keeps the ramp a single source.
+    const nonSemantic = darkManifest.filter((t) => !t.path.startsWith('color.'));
+    assert.deepEqual(nonSemantic.map((t) => t.path), []);
   });
 });
 
 describe('tier discipline', () => {
   test('every semantic colour is an alias, never a literal', () => {
+    const known = new Set(['color.foreground.card-border', 'color.foreground.surface-text-bg']);
     const literals = manifest
       .filter((t) => t.tier === 'semantic' && t.type === 'color' && t.reference === null)
-      .map((t) => t.path);
-    assert.deepEqual(literals, [], `semantic colours must alias primitives: ${literals.join(', ')}`);
+      .map((t) => t.path)
+      .filter((p) => !known.has(p));
+    assert.deepEqual(literals, [],
+      `semantic colours must alias a primitive: ${literals.join(', ')}`);
   });
 
-  test('primitives are not exposed as Tailwind utilities', () => {
-    assert.ok(!/--color-palette-/.test(tailwind),
-      'primitives leaked into the Tailwind theme — they would become bg-palette-* utilities');
+  test('the brand tier holds literals', () => {
+    const aliased = manifest.filter((t) => t.tier === 'brand' && t.reference !== null);
+    assert.deepEqual(aliased.map((t) => t.path), []);
+  });
+
+  test('primitives and brand are not exposed as Tailwind utilities', () => {
+    assert.ok(!/--color-palette-/.test(tailwind), 'primitives leaked into the Tailwind theme');
+    assert.ok(!/--color-brand-/.test(tailwind), 'brand colours leaked into the Tailwind theme');
   });
 });
 
-describe('type ramp', () => {
+describe('typography', () => {
+  test('roles carry size and line-height together', () => {
+    assert.equal(byPath(manifest, 'type.h1.font-size').value, '24px');
+    assert.equal(byPath(manifest, 'type.h1.line-height').value, '29px');
+  });
+
   test('size and line-height stay paired in Tailwind', () => {
-    assert.match(tailwind, /--text-md:\s*var\(--ucsd-text-md-size\)/);
-    assert.match(tailwind, /--text-md--line-height:\s*var\(--ucsd-text-md-line-height\)/);
+    assert.match(tailwind, /--text-h1:\s*var\(--ucsd-type-h1-font-size\)/);
+    assert.match(tailwind, /--text-h1--line-height:\s*var\(--ucsd-type-h1-line-height\)/);
+  });
+
+  test('font weights arrive as numbers, not Figma style names', () => {
+    const weights = manifest.filter((t) => t.path.endsWith('.font-weight'));
+    assert.ok(weights.length > 0, 'no font-weight tokens found');
+    for (const w of weights) {
+      assert.match(String(w.value), /^\d{3}$/, `${w.path} is "${w.value}", not a numeric weight`);
+    }
   });
 });

@@ -1,0 +1,66 @@
+{
+  "brand": {
+    "accent": {
+      "citron": {
+        "$type": "color",
+        "$value": "#f3e500"
+      },
+      "green": {
+        "$type": "color",
+        "$value": "#6e963b"
+      },
+      "magenta": {
+        "$type": "color",
+        "$value": "#d462ad"
+      },
+      "orange": {
+        "$type": "color",
+        "$value": "#fc8900"
+      },
+      "sand": {
+        "$type": "color",
+        "$value": "#f5f0e6"
+      },
+      "turquoise": {
+        "$type": "color",
+        "$value": "#00c6d7"
+      }
+    },
+    "core": {
+      "blue": {
+        "$type": "color",
+        "$value": "#00629b"
+      },
+      "gold": {
+        "$type": "color",
+        "$value": "#c69214"
+      },
+      "navy": {
+        "$type": "color",
+        "$value": "#182b49"
+      },
+      "yellow": {
+        "$type": "color",
+        "$value": "#ffcd00"
+      }
+    },
+    "neutral": {
+      "black": {
+        "$type": "color",
+        "$value": "#000000"
+      },
+      "cool-gray": {
+        "$type": "color",
+        "$value": "#747678"
+      },
+      "stone": {
+        "$type": "color",
+        "$value": "#b6b1a9"
+      },
+      "white": {
+        "$type": "color",
+        "$value": "#ffffff"
+      }
+    }
+  }
+}

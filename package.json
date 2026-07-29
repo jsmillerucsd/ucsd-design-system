@@ -12,12 +12,11 @@
     "packages/bootstrap"
   ],
   "scripts": {
-    "build": "npm run build:tokens && npm run build:bootstrap && npm run build:designmd && npm run build:skill && npm run build:figma-seed",
+    "build": "npm run build:tokens && npm run build:bootstrap && npm run build:designmd && npm run build:skill",
     "build:tokens": "npm run build --workspace @ucsd/tokens",
     "build:bootstrap": "npm run build --workspace @ucsd/bootstrap",
     "build:designmd": "node scripts/generate-design-md.mjs",
     "build:skill": "node scripts/generate-skill-references.mjs",
-    "build:figma-seed": "node scripts/export-tokens-studio.mjs",
     "sync:figma": "node scripts/sync-figma.mjs",
     "test": "node --test test/*.test.mjs",
     "test:tokens": "node scripts/validate-tokens.mjs",

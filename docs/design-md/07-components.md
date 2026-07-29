@@ -8,7 +8,9 @@ Write idiomatic code for whichever stack you are in. Correctness comes from bind
 
 One primary action per screen. `button-primary` is the affirmative action; `button-secondary` carries everything else; a third, quieter treatment handles tertiary actions. A screen with three primary buttons has no primary button.
 
-Every interactive control has a visible hover state, a visible focus ring drawn from `color.border.focus`, and a disabled state that is legibly disabled rather than merely faded. Button height is floored at `button.min-height`, which is the WCAG target-size minimum — never reduce it to fit a layout.
+Every button fill has a matching label token — `color.component.btn-primary` with `color.component.btn-label-primary`, and the same for secondary and tertiary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
+
+Every interactive control has a visible hover state, a visible focus ring drawn from `color.theme.secondary`, and a disabled state that is legibly disabled rather than merely faded. Interactive controls meet the WCAG target-size minimum — never reduce it to fit a layout.
 
 Label buttons with the verb for what happens: "Apply now", "Download the form". Never "Click here", never "Learn more" as the only label on a page with several of them.
 
@@ -16,7 +18,7 @@ Label buttons with the verb for what happens: "Apply now", "Download the form". 
 
 Every input has a visible, persistent label. Placeholder text is not a label — it disappears exactly when the user needs it, and it fails contrast at the sizes it is typically used.
 
-Errors appear next to the field they concern, in text, using the `color.status.danger` pair. Color alone never carries the message: a red border with no text is invisible to a screen reader and to a red-green colorblind user. Validate on blur and on submit, not on every keystroke.
+Errors appear next to the field they concern, in text, using the `color.system.bg-error` and `color.system.foreground-error` pair. Color alone never carries the message: a red border with no text is invisible to a screen reader and to a red-green colorblind user. Validate on blur and on submit, not on every keystroke.
 
 Help text sits below the field, in a muted text token, and stays visible.
 

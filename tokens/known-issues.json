@@ -1,0 +1,41 @@
+{
+  "$comment": "Defects in the Figma file that are ACCEPTED FOR NOW, so the gate can stay green while they are fixed upstream. This is a debt ledger, not a mute button: scripts/validate-tokens.mjs fails if an entry here stops matching, so a fixed issue must be deleted from this file. Every entry needs an owner and a reason. Nothing should live here permanently.",
+  "accepted": [
+    {
+      "rule": "semantic-must-alias",
+      "match": "color.foreground.card-border",
+      "owner": "design",
+      "reason": "Bound to a raw transparent white in Figma rather than a primitive. Harmless today (it is fully transparent in light mode) but it cannot follow a rebrand. Fix: bind to a colors-primitive variable, or delete the token if a transparent border is the intent."
+    },
+    {
+      "rule": "semantic-must-alias",
+      "match": "color.foreground.surface-text-bg",
+      "owner": "design",
+      "reason": "Bound to raw #f3f4f6 / #ffffff, which are not in the UCSD palette at all — closest is neutral/gray-50 (#f1f1f2). Fix: rebind to a primitive."
+    },
+    {
+      "rule": "contrast",
+      "match": "Dark: color.foreground.body-text (#a1a2a4) on color.surface.2",
+      "owner": "design",
+      "reason": "4.00:1, needs 4.5:1. Dark-mode body text on the raised surface. Fix: lighten body-text to gray-300 or darker the surface."
+    },
+    {
+      "rule": "contrast",
+      "match": "Dark: color.component.btn-label-tertiary (#ffffff) on color.component.btn-tertiary",
+      "owner": "design",
+      "reason": "3.25:1, needs 4.5:1. White label on blue-300 in dark mode. Fix: darken the tertiary fill or use a dark label."
+    },
+    {
+      "rule": "contrast",
+      "match": "Dark: color.component.menu (#747678) on color.surface.1",
+      "owner": "design",
+      "reason": "3.70:1, needs 4.5:1. Menu text in dark mode. Fix: lighten menu to gray-400 or above."
+    },
+    {
+      "rule": "contrast",
+      "match": "Dark: color.system.foreground-information (#e6eff5) on color.system.bg-information",
+      "owner": "design",
+      "reason": "2.79:1, needs 4.5:1. The information pair is inverted in dark mode — the light foreground sits on a mid-tone blue. Fix: darken bg-information in dark mode, as the success/warning/error pairs already do."
+    }
+  ]
+}

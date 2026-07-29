@@ -34,7 +34,7 @@ Then use them anywhere CSS reaches:
 }
 ```
 
-Naming is mechanical: token path `color.action.primary` → `--ucsd-color-action-primary`. Dark mode comes along for free — the stylesheet defines both modes, activated by `.dark`, `[data-theme="dark"]` or `[data-bs-theme="dark"]` on any ancestor.
+Naming is mechanical: token path `color.component.btn-primary` → `--ucsd-color-component-btn-primary`. Dark mode comes along for free — the stylesheet defines both modes, activated by `.dark`, `[data-theme="dark"]` or `[data-bs-theme="dark"]` on any ancestor.
 
 Scoped styles work as-is. Vue SFC `<style scoped>`, Svelte `<style>`, and Shadow DOM all inherit custom properties from the host document, so a web component picks up UCSD theming without importing anything itself.
 
@@ -55,7 +55,7 @@ Fully typed — `tokens.d.ts` ships with the package, so the key list autocomple
 
 ```js
 const primary = getComputedStyle(document.documentElement)
-  .getPropertyValue("--ucsd-color-action-primary").trim();
+  .getPropertyValue("--ucsd-color-theme-primary").trim();
 ```
 
 ## HTML email

@@ -98,6 +98,20 @@ const colorKey = (p) => p.slice('color.'.length).replaceAll('.', '-');
 const semanticColors = light.filter((t) => t.tier === 'semantic' && t.path.startsWith('color.'));
 
 /**
+ * The typography collection is a set of named roles, each carrying several
+ * properties. Group them so each role becomes one DESIGN.md typography entry.
+ */
+const typeRoles = new Map();
+for (const t of light.filter((x) => x.path.startsWith('type.'))) {
+  const segs = t.path.split('.');
+  const role = segs.slice(1, -1).join('-');
+  const leaf = segs.at(-1);
+  if (!role) continue;
+  if (!typeRoles.has(role)) typeRoles.set(role, {});
+  typeRoles.get(role)[leaf] = t.value;
+}
+
+/**
  * A DTCG reference (`{color.action.primary}`) rewritten into a DESIGN.md
  * reference (`{colors.action-primary}`), or null if the group has no DESIGN.md
  * equivalent. Null callers fall back to the resolved literal.
@@ -120,47 +134,31 @@ const colors = [
   // `missing-primary` warns that agents "will auto-generate one" when no bare
   // `primary` exists. Our palette is role-named, so alias it rather than let an
   // agent invent a brand colour. This key exists only in DESIGN.md.
-  ['primary', q('{colors.action-primary}')],
+  ['primary', q('{colors.theme-primary}')],
   ...semanticColors.map((t) => [colorKey(t.path), q(t.value)]),
 ];
 
 // --- typography --------------------------------------------------------------
 
-// Each ramp step carries size and line-height as a pair in the token source, so
-// the two can never be mismatched. Family is the sans face for every step: there
-// is no per-step family binding in the tokens, and inventing one here would be a
-// fact the design system does not actually assert. When to reach for the display
-// face is prose, in docs/design-md/03-typography.md.
-const sans = val('font.family.sans');
+// The spec's Dimension type wants a unit suffix; the token source carries a bare
+// `0` for zero steps and zero tracking, which is correct CSS but not a Dimension.
+const dimension = (v) => (String(v) === '0' ? '0px' : v);
 
-const steps = new Map();
-for (const [rest, t] of under('text')) {
-  const [step, prop] = rest.split('.');
-  if (!prop) continue;
-  if (!steps.has(step)) steps.set(step, {});
-  steps.get(step)[prop] = t.value;
-}
-
-// Step keys are quoted: `2xl` and friends are strings, but leaving a key that
-// opens with a digit unquoted invites a YAML parser to guess.
-const typography = [...steps].flatMap(([step, { size, 'line-height': lh }]) => [
-  `  ${q(step)}:`,
-  ...emit(
-    [
-      ['fontFamily', q(sans)],
-      ['fontSize', q(size)],
-      ...(lh ? [['lineHeight', q(lh)]] : []),
-    ],
-    4,
-  ),
-]);
+// One entry per role, carrying whichever properties the Figma file defines for it.
+// Roles are quoted: `h2-small` is fine bare, but a key that opens with a digit
+// invites a YAML parser to guess, and the role set is the designer's to change.
+const typography = [...typeRoles].flatMap(([role, props]) => {
+  const pairs = [
+    ...(props['font-family'] ? [['fontFamily', q(props['font-family'])]] : []),
+    ...(props['font-size'] ? [['fontSize', q(props['font-size'])]] : []),
+    ...(props['line-height'] ? [['lineHeight', q(props['line-height'])]] : []),
+    ...(props['font-weight'] ? [['fontWeight', props['font-weight']]] : []),
+    ...(props['tracking'] != null ? [['letterSpacing', q(dimension(props['tracking']))]] : []),
+  ];
+  return pairs.length ? [`  ${q(role)}:`, ...emit(pairs, 4)] : [];
+});
 
 // --- spacing / rounded -------------------------------------------------------
-
-// The spec's Dimension type wants a unit suffix; the token source carries a bare
-// `0` for the zero steps of both scales, which is correct CSS but not a Dimension.
-// Normalising here keeps the tokens honest and the emitted file conformant.
-const dimension = (v) => (String(v) === '0' ? '0px' : v);
 
 const spacing = under('space').map(([k, t]) => [k, q(dimension(t.value))]);
 
@@ -182,41 +180,29 @@ const rounded = under('radius')
 // use is visible in the file — and so the linter's contrast-ratio rule can check
 // the background/text pairs it resolves.
 //
-// `padding` is emitted as a resolved two-value shorthand: the spec's Dimension is
-// a single value, so a `{spacing.2} {spacing.4}` reference pair would not resolve.
-// Being generated, the literal cannot drift.
-const shorthandPadding = () => {
-  const y = val('button.padding-y');
-  const x = val('button.padding-x');
-  return y && x ? [['padding', q(`${y} ${x}`)]] : [];
-};
+// The Figma file pairs each button fill with its own label colour
+// (`component/btn-primary` + `component/btn-label-primary`), which maps exactly onto
+// the spec's backgroundColor/textColor pair. Radius and typography come from the
+// shared scale, since the Figma file has no per-button values for them.
+const BUTTONS = ['primary', 'secondary', 'tertiary'];
 
-function buttonVariant(variant) {
-  const t = (leaf) => byPath.get(`button.${variant}.${leaf}`);
-  const base = [
-    ...(t('bg') ? [['backgroundColor', refOrValue(t('bg'))]] : []),
-    ...(t('fg') ? [['textColor', refOrValue(t('fg'))]] : []),
-    // `borderColor` is not one of the spec's eight component properties, so this
-    // draws an "unknown component property" warning. Emitted anyway — a secondary
-    // button without its border colour is materially less useful to an agent, and
-    // the consumer contract for unknown properties is "accept with warning".
-    ...(t('border') ? [['borderColor', refOrValue(t('border'))]] : []),
-    ...(byPath.get('button.radius') ? [['rounded', refOrValue(byPath.get('button.radius'))]] : []),
-    ...(val('button.min-height') ? [['height', q(val('button.min-height'))]] : []),
-    ...shorthandPadding(),
-  ];
-  const hover = t('bg-hover') ? [['backgroundColor', refOrValue(t('bg-hover'))]] : [];
-  return { base, hover };
-}
+const components = BUTTONS.flatMap((variant) => {
+  const fill = byPath.get(`color.component.btn-${variant}`);
+  const label = byPath.get(`color.component.btn-label-${variant}`);
+  if (!fill) return [];
 
-const components = ['primary', 'secondary'].flatMap((variant) => {
-  const { base, hover } = buttonVariant(variant);
-  if (!base.length) return [];
-  return [
-    `  button-${variant}:`,
-    ...emit(base, 4),
-    ...(hover.length ? [`  button-${variant}-hover:`, ...emit(hover, 4)] : []),
+  // Reference the semantic colour by its DESIGN.md key rather than following the
+  // token's own alias: `{palette.secondary.yellow.500}` has no meaning in this file
+  // (primitives are deliberately absent), so it would silently fall back to a hex
+  // and the binding would be lost.
+  const pairs = [
+    ['backgroundColor', q(`{colors.${colorKey(fill.path)}}`)],
+    ...(label ? [['textColor', q(`{colors.${colorKey(label.path)}}`)]] : []),
+    ...(byPath.get('radius.default') ? [['rounded', q('{rounded.default}')]] : []),
+    ...(typeRoles.get('button')?.['font-size']
+      ? [['typography', q('{typography.button}')]] : []),
   ];
+  return [`  button-${variant}:`, ...emit(pairs, 4)];
 });
 
 // --- custom keys -------------------------------------------------------------
@@ -357,5 +343,5 @@ await fs.writeFile(
 
 console.log(
   `DESIGN.md: ${semanticColors.length} colours (+${darkColors.length} dark), ` +
-    `${steps.size} type steps, ${spacing.length} spacing, ${SECTIONS.length} prose sections`,
+    `${typeRoles.size} type roles, ${spacing.length} spacing, ${SECTIONS.length} prose sections`,
 );

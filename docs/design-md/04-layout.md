@@ -2,7 +2,7 @@
 
 One spacing scale, based on a four-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
 
-Spacing steps are named by their position on the scale, not by t-shirt size. `space.4` sorts and interpolates; `space.medium` invites an argument about what medium means.
+Spacing steps are t-shirt sized — `space.small` through `space.4x-large`. Bootstrap's numeric utilities map onto them, so `.p-4` and `space.large` are the same value reached two ways.
 
 **Breakpoints are Bootstrap 5's**, matched exactly by `breakpoint.*`. This is not a preference — Bootstrap utilities and Tailwind variants both compile from these values, and a mismatch produces bugs that take days to find. Never invent a breakpoint, and never write a media query against a value that isn't in the scale.
 

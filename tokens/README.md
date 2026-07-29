@@ -1,35 +1,39 @@
 # tokens/ — source of truth
 
-**Do not hand-edit these files.** They are written by `npm run sync:figma` from Figma Variables. A hand edit will be silently overwritten by the next sync, and will have already caused Figma and code to disagree in the meantime.
+Two halves, and the split is the point.
 
-To change a value: change it in Figma, run the sync, review the PR.
+## `figma/` — owned by the designer
 
-## Layout
+**Do not hand-edit.** Written by `npm run sync:figma` from the Figma export in `figma-export/`. A hand edit is silently overwritten by the next sync, and will have caused Figma and code to disagree in the meantime.
+
+To change a value: change it in Figma, export, sync, review the PR.
+
+| File | Figma collection | Tier |
+|---|---|---|
+| `brand.json` | `colors-brand` | The raw brand palette. Literal values; the bottom of the stack. |
+| `primitive.json` | `colors-primitive` | 50–900 ramps. The `-500` steps alias `brand`. |
+| `semantic.light.json` / `semantic.dark.json` | `colors-semantic` | What components bind to. Every value aliases a primitive. |
+| `layout.json` | `layout` | Radius and the spacing scale. |
+| `typography.json` | `typography` | Type roles — h1, body/small, button — with size, line-height, weight, family. |
+
+## `code/` — owned by engineering
+
+Hand-written, and the sync never touches it. These exist because **Figma Variables support only Color, Number, String and Boolean** — there is no shadow type and no easing type, so they cannot be design variables at all.
+
+| File | Why it is here |
+|---|---|
+| `layout.json` | Breakpoints are a Bootstrap contract, not a design decision. Containers have no Figma equivalent. The derived radius steps Bootstrap's component API needs sit here too. |
+| `effects.json` | Shadows live in Figma as **effect styles**, not variables; easings have no variable type at all. If the designer changes a shadow, transcribe it here by hand. |
+
+## `known-issues.json`
+
+Defects in the Figma file that are accepted for now, so the gate can stay green while design fixes them upstream. A debt ledger, not a mute button — `scripts/validate-tokens.mjs` fails if an entry stops matching, so a fixed issue must be deleted from the file.
+
+## The tier rule
 
 ```
-tokens/
-├── primitive/          Tier 1 — the paint box. Never referenced by a component.
-│   └── color.json
-├── semantic/           Tier 2 — what components bind to. Always aliases.
-│   ├── color/
-│   │   ├── light.json     ← Light mode
-│   │   └── dark.json      ← Dark mode, same paths re-aliased
-│   ├── space.json
-│   ├── typography.json
-│   └── layout.json        radius · elevation · motion · breakpoint · container
-└── component/          Tier 3 — per-component knobs. Add only on demonstrated need.
-    └── button.json
+brand  →  primitive  →  semantic  →  your component
+         (ramps)      (light/dark)
 ```
 
-Format is [W3C DTCG](https://tr.designtokens.org/) — `$value` / `$type` / `$description`.
-
-## The two rules CI enforces
-
-1. **Semantic tokens are aliases, never literals.** `"{palette.blue.500}"`, not `"#00629b"`. Flattening a token file destroys the ability to theme or rebrand.
-2. **Every semantic token exists in both modes.** A token present in `light.json` and absent from `dark.json` fails the build.
-
-Full rules: [`../docs/token-naming-contract.md`](../docs/token-naming-contract.md).
-
-## Current values are placeholders
-
-Everything here is a reasonable-looking placeholder so the build and the docs have something to chew on. `palette.blue.500` (`#00629b`) is the one value confirmed against Decorator V5. **Verify the rest against `brand.ucsd.edu`, and expect the first Figma sync to replace all of it.**
+Components bind to **semantic** only. A component pointing at `palette.*` or `brand.*` hard-codes a brand decision and breaks dark mode, and the validation gate rejects it. See [`../docs/token-naming-contract.md`](../docs/token-naming-contract.md).

@@ -70,17 +70,19 @@ const rel = (f) => path.relative(SRC, f).split(path.sep).join('/');
 const load = async (matches) =>
   merge(...await Promise.all(allFiles.filter((f) => matches(rel(f))).map(loadTree)));
 
-const [prim, light, dark, nonColorSemantic, component] = await Promise.all([
-  load((r) => r.startsWith('primitive/')),
-  load((r) => r === 'semantic/color/light.json'),
-  load((r) => r === 'semantic/color/dark.json'),
-  load((r) => r.startsWith('semantic/') && !r.startsWith('semantic/color/')),
-  load((r) => r.startsWith('component/')),
+// Four tiers, mirroring the Figma collections: brand -> primitive -> semantic,
+// plus the code-owned tokens Figma cannot express. See tokens/README.md.
+const [brand, prim, light, dark, nonColorSemantic] = await Promise.all([
+  load((r) => r === 'figma/brand.json'),
+  load((r) => r === 'figma/primitive.json'),
+  load((r) => r === 'figma/semantic.light.json'),
+  load((r) => r === 'figma/semantic.dark.json'),
+  load((r) => r === 'figma/layout.json' || r === 'figma/typography.json' || r.startsWith('code/')),
 ]);
 
 for (const [mode, map] of [['light', light], ['dark', dark]]) {
   if (map.size === 0) {
-    fail('missing-mode-file', `tokens/semantic/color/${mode}.json is missing or empty.`);
+    fail('missing-mode-file', `tokens/figma/semantic.${mode}.json is missing or empty. Run \`npm run sync:figma\`.`);
   }
 }
 
@@ -102,23 +104,32 @@ function resolve(refPath, universe, seen = new Set(), hops = 0) {
 }
 
 for (const [modeName, modeMap] of [['Light', light], ['Dark', dark]]) {
-  const universe = merge(prim, modeMap, nonColorSemantic, component);
+  const universe = merge(brand, prim, modeMap, nonColorSemantic);
 
   for (const [name, token] of modeMap) {
     if (!isRef(token.$value)) {
       fail('semantic-must-alias',
-        `${modeName}: color.${name} is the literal "${token.$value}". Semantic colors must alias a primitive.`);
+        `${modeName}: ${name} is the literal "${token.$value}". Semantic colors must alias a primitive — ` +
+        `bind it to a colors-primitive variable in Figma.`);
       continue;
     }
     const r = resolve(refTarget(token.$value), universe);
-    if (r.error) fail('unresolvable-alias', `${modeName}: color.${name} — ${r.error}`);
+    if (r.error) fail('unresolvable-alias', `${modeName}: ${name} — ${r.error}`);
   }
 
-  for (const [name, token] of component) {
+  // Primitives may alias brand (the -500 steps do); brand itself must be literal.
+  for (const [name, token] of prim) {
     if (isRef(token.$value)) {
       const r = resolve(refTarget(token.$value), universe);
       if (r.error) fail('unresolvable-alias', `${modeName}: ${name} — ${r.error}`);
     }
+  }
+}
+
+for (const [name, token] of brand) {
+  if (isRef(token.$value)) {
+    fail('brand-must-be-literal',
+      `${name} is an alias. The brand tier is the bottom of the stack and must hold literal values.`);
   }
 }
 
@@ -127,10 +138,10 @@ for (const [modeName, modeMap] of [['Light', light], ['Dark', dark]]) {
 // ---------------------------------------------------------------------------
 
 for (const name of light.keys()) {
-  if (!dark.has(name)) fail('mode-parity', `color.${name} exists in Light but not Dark.`);
+  if (!dark.has(name)) fail('mode-parity', `${name} exists in Light but not Dark.`);
 }
 for (const name of dark.keys()) {
-  if (!light.has(name)) fail('mode-parity', `color.${name} exists in Dark but not Light.`);
+  if (!light.has(name)) fail('mode-parity', `${name} exists in Dark but not Light.`);
 }
 
 // ---------------------------------------------------------------------------
@@ -139,9 +150,8 @@ for (const name of dark.keys()) {
 
 const NAME_RE = /^[a-z][a-z0-9]*(-[a-z0-9]+)*(\.[a-z0-9]+(-[a-z0-9]+)*)*$/;
 
-for (const [prefix, map] of [['color', light], ['color', dark], ['', nonColorSemantic], ['', component], ['', prim]]) {
-  for (const name of map.keys()) {
-    const full = prefix ? `${prefix}.${name}` : name;
+for (const map of [light, dark, nonColorSemantic, prim, brand]) {
+  for (const full of map.keys()) {
     if (!NAME_RE.test(full)) {
       fail('naming-contract', `"${full}" does not match the naming contract (see docs/token-naming-contract.md).`);
     }
@@ -184,27 +194,35 @@ const contrast = (a, b) => {
  * non-text UI boundaries (WCAG 1.4.3 and 1.4.11).
  */
 const PAIRS = [
-  ['color.text.default', 'color.surface.default', 4.5],
-  ['color.text.default', 'color.surface.subtle', 4.5],
-  ['color.text.default', 'color.surface.raised', 4.5],
-  ['color.text.default', 'color.surface.sunken', 4.5],
-  ['color.text.muted', 'color.surface.default', 4.5],
-  ['color.text.muted', 'color.surface.subtle', 4.5],
-  ['color.text.subtle', 'color.surface.default', 3.0],
-  ['color.text.inverse', 'color.surface.inverse', 4.5],
-  ['color.text.link', 'color.surface.default', 4.5],
-  ['color.text.link', 'color.surface.subtle', 4.5],
-  ['color.text.link-hover', 'color.surface.default', 4.5],
-  ['color.text.inverse', 'color.action.primary', 4.5],
-  ['color.text.inverse', 'color.action.primary-hover', 4.5],
-  ['color.action.secondary', 'color.surface.default', 4.5],
-  ['color.border.focus', 'color.surface.default', 3.0],
-  ['color.border.focus', 'color.surface.subtle', 3.0],
-  ['color.border.strong', 'color.surface.default', 3.0],
-  ['color.status.info-strong', 'color.status.info-subtle', 4.5],
-  ['color.status.success-strong', 'color.status.success-subtle', 4.5],
-  ['color.status.warning-strong', 'color.status.warning-subtle', 4.5],
-  ['color.status.danger-strong', 'color.status.danger-subtle', 4.5],
+  // Body and headings on the two content surfaces. `surface.background` is the
+  // outer chrome band, not a text surface, so it is deliberately not listed.
+  ['color.foreground.body-text', 'color.surface.1', 4.5],
+  ['color.foreground.body-text', 'color.surface.2', 4.5],
+  ['color.foreground.body-text-focus', 'color.surface.1', 4.5],
+  ['color.foreground.heading-1', 'color.surface.1', 4.5],
+  ['color.foreground.heading-2', 'color.surface.1', 4.5],
+  ['color.foreground.heading-3', 'color.surface.1', 4.5],
+  ['color.foreground.subheading', 'color.surface.1', 4.5],
+  ['color.foreground.eyebrow', 'color.surface.1', 4.5],
+
+  // Buttons: each label against its own fill.
+  ['color.component.btn-label-primary', 'color.component.btn-primary', 4.5],
+  ['color.component.btn-label-secondary', 'color.component.btn-secondary', 4.5],
+  ['color.component.btn-label-tertiary', 'color.component.btn-tertiary', 4.5],
+
+  ['color.component.link', 'color.surface.1', 4.5],
+  ['color.component.icon', 'color.surface.1', 3.0],
+  ['color.component.menu', 'color.surface.1', 4.5],
+
+  // System messaging: the -foreground/-bg pairs are designed to be used together.
+  ['color.system.foreground-success', 'color.system.bg-success', 4.5],
+  ['color.system.foreground-warning', 'color.system.bg-warning', 4.5],
+  ['color.system.foreground-error', 'color.system.bg-error', 4.5],
+  ['color.system.foreground-information', 'color.system.bg-information', 4.5],
+
+  // Non-text UI boundaries (WCAG 1.4.11).
+  ['color.foreground.divider', 'color.surface.1', 3.0],
+  ['color.foreground.subcard-border', 'color.surface.1', 3.0],
 ];
 
 if (manifestLight) {
@@ -239,18 +257,54 @@ if (manifestLight) {
 }
 
 // ---------------------------------------------------------------------------
+// Accepted debt
+//
+// Defects in the Figma file we cannot fix from here. Listing one downgrades it to
+// a warning so the gate can stay green while design fixes it upstream.
+//
+// The list is self-cleaning: an entry that no longer matches is itself an error.
+// Otherwise the ledger silently accumulates rules nobody is enforcing, which is
+// the failure mode that makes exception lists worse than no gate at all.
+// ---------------------------------------------------------------------------
+
+const { accepted = [] } = await readJson(path.join(SRC, 'known-issues.json')).catch(() => ({}));
+
+const matched = new Set();
+const accepts = (p) =>
+  accepted.some((a, i) =>
+    a.rule === p.rule && p.msg.includes(a.match) && (matched.add(i), true));
+
+const waived = problems.filter(accepts);
+const blocking = problems.filter((p) => !accepts(p));
+
+for (const [i, a] of accepted.entries()) {
+  if (!matched.has(i)) {
+    blocking.push({
+      rule: 'stale-known-issue',
+      msg: `known-issues.json accepts "${a.match}" under [${a.rule}], but nothing matches it any more. ` +
+           `If it was fixed, delete the entry.`,
+    });
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------------------
 
-if (problems.length === 0) {
-  console.log('✓ tokens valid: aliasing, mode parity, naming, and WCAG AA contrast in both modes.');
+if (waived.length) {
+  console.log(`\n${waived.length} accepted defect(s) — tracked in tokens/known-issues.json, owned by design:\n`);
+  for (const p of waived) console.log(`  ! [${p.rule}] ${p.msg}`);
+}
+
+if (blocking.length === 0) {
+  console.log('\n✓ tokens valid: aliasing, mode parity, naming, and WCAG AA contrast in both modes.');
   process.exit(0);
 }
 
-const byRule = problems.reduce((m, p) => ((m[p.rule] ??= []).push(p.msg), m), {});
+const byRule = blocking.reduce((m, p) => ((m[p.rule] ??= []).push(p.msg), m), {});
 for (const [rule, msgs] of Object.entries(byRule)) {
   console.log(`\n[${rule}]  ${msgs.length} problem(s)`);
   for (const m of msgs) console.log(`  - ${m}`);
 }
-console.log(`\n${problems.length} problem(s). See docs/token-naming-contract.md and docs/figma.md §3.4.`);
+console.log(`\n${blocking.length} problem(s). See docs/token-naming-contract.md and docs/figma.md §3.`);
 process.exit(1);

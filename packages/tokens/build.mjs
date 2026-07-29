@@ -36,18 +36,39 @@ const PREFIX = 'ucsd';
 /** Selectors that opt a subtree into dark mode. Bootstrap 5.3 native + shadcn + generic. */
 const DARK_SELECTOR = '[data-bs-theme="dark"], .dark, [data-theme="dark"]';
 
+/**
+ * Mode-invariant sources. `tokens/figma/` is written by the Figma sync;
+ * `tokens/code/` holds what Figma Variables cannot express (breakpoints, shadows,
+ * easings) and the sync never touches. See tokens/README.md.
+ */
 const COMMON_SOURCES = [
-  g('tokens', 'primitive', '**', '*.json'),
-  g('tokens', 'semantic', '*.json'),
-  g('tokens', 'component', '**', '*.json'),
+  g('tokens', 'figma', 'brand.json'),
+  g('tokens', 'figma', 'primitive.json'),
+  g('tokens', 'figma', 'layout.json'),
+  g('tokens', 'figma', 'typography.json'),
+  g('tokens', 'code', '*.json'),
 ];
 
-const sourcesFor = (mode) => [...COMMON_SOURCES, g('tokens', 'semantic', 'color', `${mode}.json`)];
+const sourcesFor = (mode) => [...COMMON_SOURCES, g('tokens', 'figma', `semantic.${mode}.json`)];
 
 /** Values are authored with units already (`16px`), so no size transforms are wanted. */
 const TRANSFORMS = ['attribute/cti', 'name/kebab', 'color/css'];
 
-const isDarkToken = (token) => posix(token.filePath).includes('/semantic/color/dark.json');
+const isDarkToken = (token) => posix(token.filePath).includes('/figma/semantic.dark.json');
+
+/**
+ * Which tier a token belongs to, derived from its source file.
+ *
+ * Four tiers, mirroring the Figma collections: brand (the raw brand palette),
+ * primitive (ramps derived from brand), semantic (light/dark, aliasing primitive),
+ * and code-owned tokens, which are semantic in nature.
+ */
+const tierOf = (filePath) => {
+  const p = posix(filePath);
+  if (p.includes('/figma/brand.json')) return 'brand';
+  if (p.includes('/figma/primitive.json')) return 'primitive';
+  return 'semantic';
+};
 
 /**
  * Every platform shares the same transforms and prefix; only the output directory
@@ -80,9 +101,7 @@ const manifest = {
         name: t.name,
         cssVar: `--${t.name}`,
         path: t.path.join('.'),
-        tier: t.filePath.includes('primitive') ? 'primitive'
-            : t.filePath.includes('component') ? 'component'
-            : 'semantic',
+        tier: tierOf(t.filePath),
         type: t.$type ?? t.type ?? null,
         value: t.$value ?? t.value,
         reference: asReference(t.original?.$value ?? t.original?.value),

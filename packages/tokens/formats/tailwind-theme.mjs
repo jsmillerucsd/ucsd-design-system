@@ -39,15 +39,33 @@ const RESET_NAMESPACES = ['color', 'breakpoint'];
 
 /** Token path prefix -> Tailwind namespace. Order matters: first match wins. */
 const NAMESPACE_MAP = [
-  { prefix: ['color'],          ns: 'color',       drop: 1 },
-  { prefix: ['space'],          ns: 'spacing',     drop: 1 },
-  { prefix: ['radius'],         ns: 'radius',      drop: 1 },
-  { prefix: ['elevation'],      ns: 'shadow',      drop: 1 },
-  { prefix: ['font', 'family'], ns: 'font',        drop: 2 },
-  { prefix: ['font', 'weight'], ns: 'font-weight', drop: 2 },
-  { prefix: ['breakpoint'],     ns: 'breakpoint',  drop: 1 },
-  { prefix: ['container'],      ns: 'container',   drop: 1 },
+  { prefix: ['color'],      ns: 'color',      drop: 1 },
+  { prefix: ['space'],      ns: 'spacing',    drop: 1 },
+  { prefix: ['radius'],     ns: 'radius',     drop: 1 },
+  { prefix: ['elevation'],  ns: 'shadow',     drop: 1 },
+  { prefix: ['breakpoint'], ns: 'breakpoint', drop: 1 },
+  { prefix: ['container'],  ns: 'container',  drop: 1 },
 ];
+
+/**
+ * Typography leaf -> Tailwind namespace.
+ *
+ * The Figma typography collection is a set of named roles (h1, body/small, button)
+ * each carrying several properties, so the mapping keys off the LAST segment and
+ * uses everything between `type` and it as the utility name: `type.body.small.font-size`
+ * becomes `--text-body-small`, pairing with `--text-body-small--line-height`.
+ *
+ * Properties with no Tailwind namespace — word-spacing, paragraph-spacing, and the
+ * per-role `background` colour — are intentionally absent. They still reach code as
+ * `var(--ucsd-type-*)`; they just do not generate utilities.
+ */
+const TYPE_LEAF = {
+  'font-size':   (n) => `--text-${n}`,
+  'line-height': (n) => `--text-${n}--line-height`,
+  'font-family': (n) => `--font-${n}`,
+  'font-weight': (n) => `--font-weight-${n}`,
+  'tracking':    (n) => `--tracking-${n}`,
+};
 
 const startsWith = (path, prefix) => prefix.every((seg, i) => path[i] === seg);
 
@@ -65,10 +83,10 @@ const startsWith = (path, prefix) => prefix.every((seg, i) => path[i] === seg);
 export function tailwindName(token) {
   const path = token.path;
 
-  if (path[0] === 'text' && path.length === 3) {
-    if (path[2] === 'size') return { name: `--text-${path[1]}`, literal: false };
-    if (path[2] === 'line-height') return { name: `--text-${path[1]}--line-height`, literal: false };
-    return null;
+  if (path[0] === 'type') {
+    const make = TYPE_LEAF[path.at(-1)];
+    const role = path.slice(1, -1).join('-');
+    return make && role ? { name: make(role), literal: false } : null;
   }
 
   for (const { prefix, ns, drop } of NAMESPACE_MAP) {
