@@ -24,6 +24,7 @@ const BANNED = path.join(HERE, '..', 'references', 'generated', 'banned.json');
 let banned = {
   colors: {}, primitiveHexes: [], space: {}, radius: {},
   breakpoints: ['576', '768', '992', '1200', '1400'],
+  tailwindClasses: {},
   legacyDecoratorClasses: [],
 };
 try {
@@ -151,7 +152,17 @@ for (const file of files) {
       }
     }
 
-    // 7. Images without alt
+    // 7. Tailwind classes that compile but resolve off-system. Unlike the Bootstrap 3
+    //    leftovers these produce no error anywhere in the toolchain — the class just
+    //    quietly means something other than the token it looks like.
+    for (const [cls, fix] of Object.entries(banned.tailwindClasses ?? {})) {
+      const re = new RegExp(`(?<![\\w-])${cls.replace(/[-:]/g, '\\$&')}${cls.endsWith(':') ? '' : '(?![\\w-])'}`);
+      if (re.test(raw)) {
+        add(file, n, 'error', 'off-system-tailwind', `"${cls}" does not do what it looks like. Use ${fix}.`);
+      }
+    }
+
+    // 8. Images without alt
     if (/<img\b/.test(raw) && !/\balt\s*=/.test(raw)) {
       add(file, n, 'error', 'img-alt', '<img> without alt attribute.');
     }

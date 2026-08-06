@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UC San Diego Design System — shadcn sidebar-08 block</title>
+
+  <!--
+    Built by `npm run demo`.
+
+    The page is shadcn's `sidebar-08` block, vendored whole from its own registry by
+    demo/vendor.mjs and rendered unmodified — layout, composition and every class
+    string are theirs. The stylesheet is the same dist/ chain a consumer imports:
+      @ucsd/tokens/css -> @ucsd/tokens/tailwind -> @ucsd/tokens/shadcn
+
+    Narrow the window below 768px to get the off-canvas sheet instead of the rail.
+  -->
+  <link rel="stylesheet" href="./dist/shadcn.css">
+</head>
+<body class="bg-background text-foreground">
+  <div id="root"></div>
+  <div id="controls"></div>
+
+  <noscript>
+    <p class="mx-auto max-w-base p-large text-body-md">
+      This demo renders real React components, so it needs JavaScript. The tokens
+      themselves do not — see <code>packages/bootstrap/kitchen-sink.html</code> for a
+      no-JavaScript page on the same token layer.
+    </p>
+  </noscript>
+
+  <script src="./dist/sidebar.js"></script>
+</body>
+</html>

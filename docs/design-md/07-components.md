@@ -1,6 +1,6 @@
 ## Components
 
-Component *implementations* are not shared across frameworks and are not described here — a `.btn` in Bootstrap 5 and a `<Button>` in the shadcn registry can never share code. What they share is the token binding below and the behaviour contract in the skill's accessibility reference.
+Component *implementations* are not shared across frameworks and are not described here — a `.btn` in Bootstrap 5 and a `<Button>` in a React app can never share code. What they share is the token binding below and the behaviour contract in the skill's accessibility reference.
 
 Write idiomatic code for whichever stack you are in. Correctness comes from binding to the right tokens, not from matching markup.
 
@@ -28,7 +28,7 @@ Navigation is a landmark, uses real links, and marks the current page programmat
 
 ### Status and feedback
 
-Status colors always appear as a `-subtle` background with its matching `-strong` foreground. Alerts carry an icon *and* text, never color alone. Toasts are for transient confirmations; anything the user must act on belongs on the page.
+Status colors always appear as a `color.system.bg-*` background with its matching `color.system.foreground-*` half. Alerts carry an icon *and* text, never color alone. Toasts are for transient confirmations; anything the user must act on belongs on the page.
 
 ### Adding a component
 

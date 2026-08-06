@@ -265,6 +265,21 @@ const banned = {
   breakpoints: light
     .filter((t) => t.path.startsWith('breakpoint.'))
     .map((t) => String(t.value).replace(/px$/, '')),
+  /**
+   * Tailwind classes that compile without complaint and are still wrong.
+   *
+   * Both are verified against the real compiler in test/tailwind-compile.test.mjs
+   * rather than assumed — they are exactly the kind of defect that reads as correct
+   * in review and only shows up as a few pixels of drift in the browser.
+   */
+  tailwindClasses: {
+    'max-w-prose':
+      'max-w-[--ucsd-container-prose] — Tailwind hard-codes max-w-prose to 65ch and it ' +
+      'wins over --container-prose (70ch); @utility cannot override it either',
+    '2xl:':
+      'xxl: — the UCSD scale names the widest breakpoint xxl, and 2xl is reset, so ' +
+      '2xl: utilities silently never generate',
+  },
   legacyDecoratorClasses: [
     'panel', 'panel-body', 'panel-heading', 'panel-default',
     'btn-default', 'glyphicon', 'img-responsive', 'hidden-xs', 'visible-xs',

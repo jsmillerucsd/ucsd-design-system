@@ -13,11 +13,14 @@ npm install @ucsd/tokens
 @import "tailwindcss";
 @import "@ucsd/tokens/css";       /* defines --ucsd-*, light and dark */
 @import "@ucsd/tokens/tailwind";  /* maps them into Tailwind utilities */
+@import "@ucsd/tokens/shadcn";    /* only if you use shadcn — see below */
 ```
 
 That's the whole configuration. No `tailwind.config.js` — Tailwind v4 reads the `@theme` block from the imported CSS.
 
-> **Components:** there is **no UCSD component package or shadcn registry yet.** `design.ucsd.edu/r/` does not resolve. The plan is a shadcn registry (see [architecture D4](../architecture.md)), sequenced as Phase 5 in [`../figma.md`](../figma.md). Until then: install shadcn's own components with `npx shadcn@latest add button`, then swap their default classes for the UCSD token utilities below. You own the code either way — that's the model.
+**The order is not cosmetic.** `@ucsd/tokens/tailwind` resets `--color-*` to `initial` so Tailwind's own palette cannot be used. Anything importing colours has to come after it, or the reset wipes it. This is asserted in `test/tailwind-compile.test.mjs`.
+
+> **Components:** there is **no UCSD React component package and no shadcn registry.** This is the design — not a gap. Install shadcn's own components with `npx shadcn@latest add button`. You own the code; we own the tokens. See [architecture D4](../architecture.md) for why a registry was rejected.
 
 ## How tokens become utilities
 
@@ -30,11 +33,21 @@ That's the whole configuration. No `tailwind.config.js` — Tailwind v4 reads th
 | `color.foreground.body-text` | `text-foreground-body-text` |
 | `color.component.btn-primary` | `bg-component-btn-primary` |
 | `space.large` | `p-large` `m-large` `gap-large` |
-| `radius.default` | `rounded-default` |
+| `radius.rounded-2` | `rounded-rounded-2`, or just `rounded-md` |
 | `elevation.2` | `shadow-2` |
-| `type.h1` | `text-h1` (size **and** line-height together) |
+| `type.h1` | `text-h1` — size, line-height **and** weight together |
+| `container.base` | `max-w-base` |
 
 The values are `var(--ucsd-*)` references, not literals. That's deliberate: utilities resolve through the token layer at runtime, so **dark mode works with no `dark:` variants**.
+
+### Tailwind's own scales are re-pointed, not left alone
+
+`p-4`, `rounded-md`, `h-9` and the rest still work, but they no longer mean what they mean in a stock Tailwind app:
+
+- **Spacing** is built on the 5px UCSD step, so `p-1`…`p-4` are the same values as Bootstrap's `.p-1`…`.p-4` (5/10/15/20px). Past 4 the two diverge — Bootstrap jumps to 30/45/60 while Tailwind keeps stepping by 5 — so use the named steps (`p-extra-large`, `p-2x-large`, `p-3x-large`) when you need those exactly.
+- **`rounded-sm` / `rounded-md` / `rounded-lg`** come from the UCSD radius scale and match `_bridge.scss`, so a card is the same shape in both frameworks.
+
+This is what makes an unmodified `npx shadcn add button` render on-system.
 
 ```html
 <!-- correct: follows light/dark automatically -->
@@ -46,13 +59,43 @@ The values are `var(--ucsd-*)` references, not literals. That's deliberate: util
 
 Enabling dark mode is a class or attribute on a wrapper — `.dark`, `[data-theme="dark"]` or `[data-bs-theme="dark"]` all work.
 
+## shadcn/ui
+
+`@ucsd/tokens/shadcn` binds shadcn's variable contract — `--background`, `--primary`, `--destructive`, `--ring`, `--radius`, the chart and sidebar slots — to UCSD semantic tokens. With it imported, components installed straight from shadcn render on UCSD colours in both modes, unedited.
+
+Do **not** keep the `:root` / `.dark` colour block `npx shadcn init` writes into your CSS. Delete it and import this instead. Every slot here points at a semantic token that already re-aliases in dark mode, so a second block would pin one mode in place.
+
+The mapping is hand-written in `packages/tokens/formats/shadcn-theme.mjs` — which UCSD token backs which shadcn slot is a design decision, the same way `_bridge.scss` is for Bootstrap. A few worth knowing:
+
+| shadcn slot | UCSD token | Why |
+|---|---|---|
+| `--primary` | `color.component.btn-secondary` | The default button fill. `color.theme.*` are brand marks and not all usable as interactive fills. |
+| `--secondary` | `color.component.btn-tertiary` | shadcn's secondary button is the quiet one, which is our tertiary treatment. |
+| `--card` | `color.surface.1` | A card is a border and a padding contract. shadcn's card already draws the border; `surface.2` would double the treatment. |
+| `--ring` | `color.theme.secondary` | Change the token if you must. Never remove the ring. |
+
+### The one class that doesn't survive
+
+shadcn hardcodes `text-white` in its **destructive** button and badge variants. Our theme removes Tailwind's palette, so that class compiles to nothing and the label falls back to inherited text on a red fill. Override it at the call site — `cn()` merges it away:
+
+```tsx
+<Button variant="destructive" className="text-destructive-foreground">Withdraw</Button>
+```
+
+`destructive-foreground` is also the *correct* value, not just the compiling one: it is white in light mode and near-black in dark, where shadcn's white would sit at about 2.7:1 on the lightened red.
+
+That is the complete list. `demo/` renders fourteen vendored components and `npm test` fails if any other class stops resolving, so if this section still says "one class", it is still one class.
+
 ## Rules specific to this stack
 
-1. **Don't use Tailwind's default palette.** `bg-blue-500`, `text-slate-700`, `bg-white` are not UCSD colours and don't respond to dark mode. Use the semantic utilities above.
+1. **Don't use Tailwind's default palette.** `bg-blue-500`, `text-slate-700`, `bg-white` are not UCSD colours. They don't merely look wrong — the colour namespace is reset, so they generate no CSS at all and the element is simply unstyled.
 2. **Don't use arbitrary values for colour or spacing** — `bg-[#00629b]`, `p-[17px]`. If no token fits, say so rather than inventing one.
 3. **Arbitrary values are fine for genuine one-offs** that aren't colour or spacing — `grid-cols-[200px_1fr]`, `max-w-[--ucsd-container-prose]`.
-4. **Breakpoints are UCSD's.** `sm: md: lg: xl: 2xl:` come from the `breakpoint.*` scale and match Bootstrap exactly. Never `min-[850px]:`.
-5. **Compose with `cn()`**, the standard `clsx` + `tailwind-merge` helper, so consumer classes can override.
+4. **Breakpoints are UCSD's.** `sm: md: lg: xl: xxl:` come from the `breakpoint.*` scale and match Bootstrap exactly. Note `xxl:`, not `2xl:` — Tailwind's name is reset, so `2xl:` utilities silently never generate. Never `min-[850px]:`.
+5. **Never write `max-w-prose`.** Tailwind hard-codes it to 65ch and that wins over `container.prose` (70ch) — `@utility` can't override it either. Write `max-w-[--ucsd-container-prose]`.
+6. **Compose with `cn()`**, the standard `clsx` + `tailwind-merge` helper, so consumer classes can override.
+
+Rules 1, 4 and 5 are caught by `npm run validate`.
 
 ## Component conventions
 
@@ -63,9 +106,9 @@ Enabling dark mode is a class or attribute on a wrapper — `.dark`, `[data-them
 
 ```tsx
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-md text-sm font-semibold " +
+  "inline-flex items-center justify-center gap-2 rounded-md text-button " +
   "transition-colors focus-visible:outline-none focus-visible:ring-[3px] " +
-  "focus-visible:ring-theme-secondary disabled:pointer-events-none disabled:opacity-50",
+  "focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -74,14 +117,16 @@ const buttonVariants = cva(
         tertiary:  "bg-component-btn-tertiary text-component-btn-label-tertiary",
         danger:    "bg-system-error text-surface-1",
       },
-      size: { sm: "h-9 px-3", md: "h-11 px-4", lg: "h-12 px-6" },
+      size: { sm: "h-8 px-3", md: "h-9 px-4", lg: "h-11 px-6" },
     },
     defaultVariants: { variant: "primary", size: "md" },
   },
 );
 ```
 
-`size.md` is `h-11` — the WCAG 2.2 minimum target size. Don't go below it for primary actions.
+`text-button` carries the role's size, line-height and weight together, so there is no `text-sm font-semibold` to keep in sync.
+
+`size.md` is `h-9` — 45px on the UCSD 5px step, just over the WCAG 2.2 target-size floor of 44px. Don't go below it for primary actions; `sm` (40px) is for dense secondary controls only.
 
 ## Next.js notes
 

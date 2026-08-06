@@ -53,10 +53,16 @@ jobs:
       - name: Validate DESIGN.md against the spec
         run: npm run lint:designmd
 
+      # The demos are included deliberately. They are the exemplars an agent is most
+      # likely to copy from, one per framework, so they are held to the published
+      # rules rather than exempted for being "just a demo".
       - name: Validate own source against the design system rules
         run: |
           node skills/ucsd-design-system/scripts/validate.mjs \
-            packages/bootstrap/scss/*.scss
+            packages/bootstrap/scss/*.scss \
+            packages/bootstrap/kitchen-sink.html \
+            demo/shadcn.html demo/sidebar.html \
+            demo/app.tsx demo/sidebar.tsx
 
       - name: Upload built CSS
         uses: actions/upload-artifact@v4

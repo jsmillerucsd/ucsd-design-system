@@ -5,7 +5,7 @@ The palette is navy and blue carried forward from the university's identity, wit
 Colors are organised by **role, not by hue**. Bind to what a color is *for*, never to what it looks like.
 
 - **`color.theme.*`** — the brand marks themselves: primary, secondary, accent. Reserved for identity. If you are reaching for one to style a button, you want `color.component.*`.
-- **`color.surface.*`** — what sits behind content. `surface.background` is the outer chrome band, `surface.1` is the content surface, `surface.2` is raised.
+- **`color.surface.*`** — what sits behind content, numbered `surface.1` through `surface.5`. `surface.1` is the content surface, `surface.2` is raised, and the darker steps are the chrome bands a page header or footer sits on.
 - **`color.foreground.*`** — text, rules and borders: the heading roles, body text, dividers and card borders. Reach down the ramp for de-emphasis; never fake it with a lower-contrast surface.
 - **`color.component.*`** — what a control is actually made of. Each button fill has a matching label token, and the two are designed to be used as a pair.
 - **`color.system.*`** — feedback messaging: success, warning, error, information. Each has a `bg-` and a `foreground-` half, again meant as a pair. These carry meaning; using error as an accent because it looks good is a bug.

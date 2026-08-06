@@ -7,6 +7,7 @@
  *   dist/css/tokens.css       :root + dark-mode block. The universal fallback.
  *   dist/scss/_tokens.scss    compile-time Sass values for Bootstrap 5.
  *   dist/tailwind/theme.css   Tailwind v4 @theme mapping.
+ *   dist/shadcn/theme.css     shadcn/ui variable bridge, layered on the above.
  *   dist/js/tokens.js|.d.ts   typed object for React / charts / canvas.
  *   dist/tokens.json          flat manifest -> feeds the docs + the Claude skill.
  *
@@ -21,6 +22,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tailwindTheme } from './formats/tailwind-theme.mjs';
+import { shadcnTheme } from './formats/shadcn-theme.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..');
@@ -33,8 +35,9 @@ const DIST_POSIX = posix(DIST);
 
 const PREFIX = 'ucsd';
 
-/** Selectors that opt a subtree into dark mode. Bootstrap 5.3 native + shadcn + generic. */
-const DARK_SELECTOR = '[data-bs-theme="dark"], .dark, [data-theme="dark"]';
+// Selectors that opt a subtree into dark mode. Shared with the Tailwind theme,
+// which has to publish the same thing as a `dark:` variant.
+import { DARK_SELECTOR } from './dark-selector.mjs';
 
 /**
  * Mode-invariant sources. `tokens/figma/` is written by the Figma sync;
@@ -44,6 +47,7 @@ const DARK_SELECTOR = '[data-bs-theme="dark"], .dark, [data-theme="dark"]';
 const COMMON_SOURCES = [
   g('tokens', 'figma', 'brand.json'),
   g('tokens', 'figma', 'primitive.json'),
+  g('tokens', 'figma', 'typography-weights.json'),
   g('tokens', 'figma', 'layout.json'),
   g('tokens', 'figma', 'typography.json'),
   g('tokens', 'code', '*.json'),
@@ -131,7 +135,7 @@ const jsTypes = {
   },
 };
 
-for (const f of [tailwindTheme, manifest, jsModule, jsTypes]) {
+for (const f of [tailwindTheme, shadcnTheme, manifest, jsModule, jsTypes]) {
   StyleDictionary.registerFormat(f);
 }
 
@@ -157,6 +161,9 @@ const lightPass = new StyleDictionary({
     }]),
     tailwind: platform('tailwind/', [
       { destination: 'theme.css', format: 'css/ucsd-tailwind-theme' },
+    ]),
+    shadcn: platform('shadcn/', [
+      { destination: 'theme.css', format: 'css/ucsd-shadcn-theme' },
     ]),
     js: platform('js/', [
       { destination: 'tokens.js',   format: 'javascript/ucsd-esm' },

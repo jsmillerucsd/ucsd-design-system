@@ -1,0 +1,69 @@
+{
+  "$description": "CODE-OWNED. Font families, sizes, and line heights that Figma no longer exports as variables. The designer moved font weights to Figma (typography-primitive + typography-semantic) but kept sizes and families as text styles, not variables. If the designer adds these back to Figma, delete this file and let the sync own them.",
+  "type": {
+    "fallback": {
+      "$description": "What renders when the UCSD faces are unavailable — which is EVERY machine that has not licensed them, including every developer's until the web licence is confirmed. Without a stack the browser falls back to its default serif, so a Tailwind page rendered in Times while the Bootstrap page beside it looked correct. Both targets now compile from these, so they degrade identically.",
+      "sans": {
+        "$type": "fontFamily",
+        "$description": "For roles set in the working face (Brix Sans).",
+        "$value": "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
+      },
+      "display": {
+        "$type": "fontFamily",
+        "$description": "For roles set in the condensed display face (Refrigerator Deluxe). Leads with a condensed face so headings keep roughly their intended width.",
+        "$value": "'Arial Narrow', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
+      }
+    },
+    "body": {
+      "font-family": { "$value": "'Brix Sans'", "$type": "fontFamily" }
+    },
+    "body-lg": {
+      "font-size": { "$value": "24px", "$type": "dimension" },
+      "line-height": { "$value": "29px", "$type": "dimension" }
+    },
+    "body-md": {
+      "font-size": { "$value": "18px", "$type": "dimension" },
+      "line-height": { "$value": "23px", "$type": "dimension" }
+    },
+    "body-sm": {
+      "font-size": { "$value": "12px", "$type": "dimension" },
+      "line-height": { "$value": "17px", "$type": "dimension" }
+    },
+    "button": {
+      "font-family": { "$value": "'Brix Sans'", "$type": "fontFamily" },
+      "font-size": { "$value": "14px", "$type": "dimension" },
+      "font-weight": { "$value": 700, "$type": "fontWeight" },
+      "line-height": { "$value": "17px", "$type": "dimension" }
+    },
+    "eyebrow": {
+      "font-family": { "$value": "'Refrigerator Deluxe'", "$type": "fontFamily" },
+      "font-size": { "$value": "8px", "$type": "dimension" },
+      "line-height": { "$value": "10px", "$type": "dimension" }
+    },
+    "h1": {
+      "font-family": { "$value": "'Refrigerator Deluxe'", "$type": "fontFamily" },
+      "font-size": { "$value": "24px", "$type": "dimension" },
+      "line-height": { "$value": "29px", "$type": "dimension" }
+    },
+    "h2": {
+      "font-family": { "$value": "'Brix Sans'", "$type": "fontFamily" },
+      "font-size": { "$value": "18px", "$type": "dimension" },
+      "line-height": { "$value": "22px", "$type": "dimension" }
+    },
+    "h2-small": {
+      "font-family": { "$value": "'Brix Sans'", "$type": "fontFamily" },
+      "font-size": { "$value": "12px", "$type": "dimension" },
+      "line-height": { "$value": "18px", "$type": "dimension" }
+    },
+    "h3": {
+      "font-family": { "$value": "'Refrigerator Deluxe'", "$type": "fontFamily" },
+      "font-size": { "$value": "14px", "$type": "dimension" },
+      "line-height": { "$value": "17px", "$type": "dimension" }
+    },
+    "subheading": {
+      "font-family": { "$value": "'Brix Sans'", "$type": "fontFamily" },
+      "font-size": { "$value": "12px", "$type": "dimension" },
+      "line-height": { "$value": "15px", "$type": "dimension" }
+    }
+  }
+}

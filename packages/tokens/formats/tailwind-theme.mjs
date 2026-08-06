@@ -11,6 +11,18 @@
  * through tokens.css at runtime, so Tailwind classes follow dark mode automatically
  * with no `dark:` variant and no second theme block. Breakpoints are the exception
  * — see LITERAL_NAMESPACES.
+ *
+ * Two things this file cannot express, documented here so nobody rediscovers them:
+ *
+ *   - `max-w-prose` is a STATIC Tailwind utility hard-coded to 65ch. It wins over
+ *     `--container-prose` no matter what we put in the theme, and `@utility` cannot
+ *     override it either (both rules emit; core comes last). So `container.prose`
+ *     (70ch) is unreachable through that class. `max-w-prose` is on the banned list;
+ *     the documented idiom is `max-w-[--ucsd-container-prose]`.
+ *   - Tailwind has ONE `font-*` utility fed by both `--font-*` (family) and
+ *     `--font-weight-*`. Emitting both for a role makes the family win and silently
+ *     strands the weight, so role weights ride along on `--text-<role>--font-weight`
+ *     instead — see TYPE_LEAF.
  */
 
 /**
@@ -21,6 +33,8 @@
  * invalid and never matches, which would silently break every `md:` / `lg:` utility.
  * Everything else lands in a property position, where var() is fine.
  */
+import { darkVariant } from '../dark-selector.mjs';
+
 const LITERAL_NAMESPACES = new Set(['breakpoint']);
 
 /**
@@ -34,8 +48,37 @@ const LITERAL_NAMESPACES = new Set(['breakpoint']);
  * Namespaces NOT listed here (spacing, radius, shadow, text, font) intentionally
  * keep Tailwind's defaults as a fallback, because our scales are deliberately
  * sparse and removing them would break common utilities like `rounded-full`.
+ * Those defaults are re-pointed at UCSD values instead — see BRIDGED_DEFAULTS.
  */
 const RESET_NAMESPACES = ['color', 'breakpoint'];
+
+/**
+ * Tailwind's own numeric/t-shirt scales, re-pointed at UCSD tokens.
+ *
+ * Without this, `p-4`, `rounded-md`, `h-9` and friends compile happily against
+ * Tailwind's stock 4px spacing base and 0.375rem radii — off-system values that
+ * look plausible and are invisible in review. Every stock shadcn component ships
+ * with exactly those classes, so leaving them unbridged is the single largest
+ * source of "the tokens aren't being applied".
+ *
+ * `--spacing` is the multiplier behind the whole numeric scale (`p-4` is
+ * `calc(var(--spacing) * 4)`). At 5px it makes Tailwind `p-1`…`p-4` identical to
+ * Bootstrap `.p-1`…`.p-4` — the claim DESIGN.md already makes. Beyond 4 the two
+ * diverge (Bootstrap jumps 20 -> 30 -> 45, Tailwind keeps stepping by 5), which is
+ * why the named steps (`p-large`, `p-2x-large`) remain the way to say it exactly.
+ *
+ * Radius follows _bridge.scss so a card is the same shape in both frameworks.
+ *
+ * Values are token PATHS, resolved against the dictionary at build time: rename a
+ * token and this throws rather than emitting a dangling var().
+ */
+const BRIDGED_DEFAULTS = [
+  ['--spacing',   'space.extra-small'],
+  ['--radius-sm', 'radius.rounded-1'],
+  ['--radius-md', 'radius.rounded-2'],
+  ['--radius-lg', 'radius.rounded-3'],
+  ['--radius-xl', 'radius.rounded-3'],
+];
 
 /** Token path prefix -> Tailwind namespace. Order matters: first match wins. */
 const NAMESPACE_MAP = [
@@ -58,13 +101,20 @@ const NAMESPACE_MAP = [
  * Properties with no Tailwind namespace — word-spacing, paragraph-spacing, and the
  * per-role `background` colour — are intentionally absent. They still reach code as
  * `var(--ucsd-type-*)`; they just do not generate utilities.
+ *
+ * Weight and tracking hang off `--text-<role>--*` rather than getting namespaces of
+ * their own. `--font-weight-h1` would generate `.font-h1`, the same class the family
+ * token generates, and the family would win — so the weight would silently never
+ * apply. Riding on the text namespace also matches the rule in DESIGN.md: a role
+ * carries its size, line height and weight together and they cannot be mismatched.
+ * One class, `text-h1`, now sets all three.
  */
 const TYPE_LEAF = {
   'font-size':   (n) => `--text-${n}`,
   'line-height': (n) => `--text-${n}--line-height`,
   'font-family': (n) => `--font-${n}`,
-  'font-weight': (n) => `--font-weight-${n}`,
-  'tracking':    (n) => `--tracking-${n}`,
+  'font-weight': (n) => `--text-${n}--font-weight`,
+  'tracking':    (n) => `--text-${n}--letter-spacing`,
 };
 
 const startsWith = (path, prefix) => prefix.every((seg, i) => path[i] === seg);
@@ -105,15 +155,64 @@ export const tailwindTheme = {
     const lines = [];
     const seen = new Set();
 
+    const val = (t) => t.$value ?? t.value;
+    const byPathValue = new Map(dictionary.allTokens.map((t) => [t.path.join('.'), t]));
+
+    /**
+     * Font families need a fallback stack appended, or a page renders in the
+     * browser's default SERIF on every machine that has not licensed the UCSD
+     * faces — which is all of them until the web licence is confirmed. Bootstrap
+     * has always appended one; Tailwind did not, so the two targets degraded
+     * completely differently.
+     *
+     * A role is "display" when its face is not the working body face. That is the
+     * definition rather than a guess about the name, so a face change in Figma
+     * carries through without editing this file.
+     */
+    const bodyFace = val(byPathValue.get('type.body.font-family') ?? {});
+    const fallbackFor = (token) => {
+      const kind = val(token) === bodyFace ? 'sans' : 'display';
+      const stack = byPathValue.get(`type.fallback.${kind}`);
+      if (!stack) {
+        throw new Error(
+          `tailwind-theme: type.fallback.${kind} is missing. Font stacks are defined ` +
+            `in tokens/code/typography.json and are required — without one, text renders in serif.`,
+        );
+      }
+      return `, var(--${stack.name})`;
+    };
+
     for (const token of dictionary.allTokens) {
       const mapped = tailwindName(token);
       if (!mapped || seen.has(mapped.name)) continue;
       seen.add(mapped.name);
 
       // token.name already carries the `ucsd` prefix from the platform config.
-      const value = mapped.literal ? (token.$value ?? token.value) : `var(--${token.name})`;
-      lines.push(`  ${mapped.name}: ${value};`);
+      const value = mapped.literal ? val(token) : `var(--${token.name})`;
+      const suffix = token.path.at(-1) === 'font-family' ? fallbackFor(token) : '';
+      lines.push(`  ${mapped.name}: ${value}${suffix};`);
+
+      // Tailwind's preflight sets the document font from --font-sans. Re-pointing it
+      // at the working face means <body> is correct with no class on it, matching
+      // Bootstrap, where $font-family-sans-serif does the same job.
+      if (token.path.join('.') === 'type.body.font-family') {
+        lines.push(`  --font-sans: ${value}${suffix};`);
+      }
     }
+
+    // Resolve BRIDGED_DEFAULTS against the dictionary so a token rename fails the
+    // build here instead of shipping a var() that resolves to nothing.
+    const byPath = new Map(dictionary.allTokens.map((t) => [t.path.join('.'), t]));
+    const bridged = BRIDGED_DEFAULTS.map(([twVar, tokenPath]) => {
+      const token = byPath.get(tokenPath);
+      if (!token) {
+        throw new Error(
+          `tailwind-theme: BRIDGED_DEFAULTS maps ${twVar} to the token "${tokenPath}", ` +
+            `which does not exist. Update the mapping in formats/tailwind-theme.mjs.`,
+        );
+      }
+      return `  ${twVar}: var(--${token.name});`;
+    });
 
     return [
       '/**',
@@ -130,8 +229,23 @@ export const tailwindTheme = {
       '  /* Drop Tailwind\'s own palette and breakpoints so only UCSD values exist. */',
       ...RESET_NAMESPACES.map((ns) => `  --${ns}-*: initial;`),
       '',
+      '  /* Re-point the scales we deliberately keep, so Tailwind\'s own numeric',
+      '     utilities (p-4, rounded-md, h-9) land on UCSD values instead of its. */',
+      ...bridged,
+      '',
       ...lines.sort(),
       '}',
+      '',
+      '/**',
+      ' * Point `dark:` at the same selector tokens.css uses.',
+      ' *',
+      " * Tailwind's own `dark:` keys off prefers-color-scheme, which our token layer",
+      ' * ignores entirely — so a component would style itself for the OS setting while',
+      ' * the colours under it switched on the class. UCSD code should not be writing',
+      ' * `dark:` colour variants at all (DESIGN.md), but third-party component source',
+      ' * is full of them, and it has to agree with us or it renders for the wrong mode.',
+      ' */',
+      `@custom-variant dark (&:where(${darkVariant()}));`,
       '',
     ].join('\n');
   },

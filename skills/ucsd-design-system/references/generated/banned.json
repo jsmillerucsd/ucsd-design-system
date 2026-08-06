@@ -1,29 +1,43 @@
 {
   "$comment": "GENERATED. Literal values that must not appear in source — a token exists for each.",
   "colors": {
+    "#fbf9f5": [
+      "--ucsd-color-component-btn-tertiary",
+      "--ucsd-color-surface-2"
+    ],
+    "#313232": [
+      "--ucsd-color-component-btn-label-tertiary",
+      "--ucsd-color-foreground-body-text"
+    ],
+    "#c69214": [
+      "--ucsd-color-component-btn-gold"
+    ],
+    "#000000": [
+      "--ucsd-color-component-btn-label-black"
+    ],
     "#182b49": [
       "--ucsd-color-theme-primary",
       "--ucsd-color-component-btn-label-primary",
-      "--ucsd-color-component-btn-tertiary",
+      "--ucsd-color-component-btn-navy",
       "--ucsd-color-component-icon",
       "--ucsd-color-foreground-body-text-focus",
       "--ucsd-color-foreground-eyebrow",
-      "--ucsd-color-foreground-heading-1",
-      "--ucsd-color-foreground-heading-2",
-      "--ucsd-color-foreground-heading-3",
+      "--ucsd-color-foreground-h2-heading",
+      "--ucsd-color-foreground-h3-heading",
       "--ucsd-color-foreground-subcard-border",
       "--ucsd-color-foreground-subheading",
-      "--ucsd-color-surface-background",
-      "--ucsd-type-h1-background"
-    ],
-    "#d4d5d5": [
-      "--ucsd-color-component-bg-progress-bar"
+      "--ucsd-color-surface-4"
     ],
     "#ffffff": [
       "--ucsd-color-component-btn-label-secondary",
-      "--ucsd-color-component-btn-label-tertiary",
+      "--ucsd-color-component-btn-label-white",
       "--ucsd-color-foreground-heading-light",
       "--ucsd-color-surface-1"
+    ],
+    "#fc8900": [
+      "--ucsd-color-component-btn-orange",
+      "--ucsd-color-system-warning",
+      "--ucsd-color-status-warning"
     ],
     "#ffcd00": [
       "--ucsd-color-theme-accent",
@@ -33,21 +47,22 @@
       "--ucsd-color-theme-secondary",
       "--ucsd-color-component-btn-secondary",
       "--ucsd-color-component-link",
+      "--ucsd-color-foreground-h1-heading",
+      "--ucsd-color-surface-3",
       "--ucsd-color-system-foreground-information",
       "--ucsd-color-system-information"
+    ],
+    "#00c6d7": [
+      "--ucsd-color-component-btn-turqoise"
     ],
     "#747678": [
       "--ucsd-color-component-menu"
     ],
-    "#6a6b6d": [
-      "--ucsd-color-component-menu-bottom-nav",
-      "--ucsd-color-foreground-body-text"
+    "#d4d5d5": [
+      "--ucsd-color-foreground-card-border"
     ],
     "#647185": [
       "--ucsd-color-foreground-divider"
-    ],
-    "#f3f4f6": [
-      "--ucsd-color-foreground-surface-text-bg"
     ],
     "#bd1900": [
       "--ucsd-color-system-error",
@@ -57,12 +72,8 @@
       "--ucsd-color-system-success",
       "--ucsd-color-status-good"
     ],
-    "#fc8900": [
-      "--ucsd-color-system-warning",
-      "--ucsd-color-status-warning"
-    ],
-    "#fbf9f5": [
-      "--ucsd-color-surface-2"
+    "#f8f8f9": [
+      "--ucsd-color-surface-5"
     ],
     "#f8e8e6": [
       "--ucsd-color-system-bg-error"
@@ -90,16 +101,55 @@
     ]
   },
   "primitiveHexes": [
-    "#000000",
+    "#fee7cc",
+    "#fed099",
+    "#fdb866",
+    "#fda133",
+    "#ca6e00",
+    "#653700",
+    "#321b00",
+    "#b0cee0",
+    "#8ab7d1",
+    "#5496bc",
+    "#3381af",
+    "#00598d",
+    "#00466e",
+    "#003655",
+    "#002941",
+    "#f9f4e8",
+    "#edddb6",
+    "#e5cd93",
+    "#d9b662",
+    "#d1a843",
+    "#b48512",
+    "#8d680e",
+    "#6d500b",
+    "#533d08",
+    "#e8eaed",
+    "#b7bdc7",
+    "#959dab",
+    "#46556d",
+    "#162742",
+    "#111f34",
+    "#0d1828",
+    "#0a121f",
+    "#fffae6",
+    "#fff0b0",
+    "#ffe88a",
+    "#ffde54",
+    "#ffd733",
+    "#e8bb00",
+    "#b59200",
+    "#8c7100",
+    "#6b5600",
     "#f1f1f2",
     "#bfc0c1",
     "#a2a3a5",
     "#a1a2a4",
     "#909193",
+    "#6a6b6d",
     "#525455",
     "#404142",
-    "#313232",
-    "#1d1d1d",
     "#fefefd",
     "#fdfcfa",
     "#f9f6f0",
@@ -119,41 +169,6 @@
     "#6d6a65",
     "#494744",
     "#242322",
-    "#b0cee0",
-    "#8ab7d1",
-    "#5496bc",
-    "#3381af",
-    "#00598d",
-    "#00466e",
-    "#003655",
-    "#002941",
-    "#e8eaed",
-    "#b7bdc7",
-    "#959dab",
-    "#46556d",
-    "#162742",
-    "#111f34",
-    "#0d1828",
-    "#0a121f",
-    "#f9f4e8",
-    "#edddb6",
-    "#e5cd93",
-    "#d9b662",
-    "#d1a843",
-    "#c69214",
-    "#b48512",
-    "#8d680e",
-    "#6d500b",
-    "#533d08",
-    "#fffae6",
-    "#fff0b0",
-    "#ffe88a",
-    "#ffde54",
-    "#ffd733",
-    "#e8bb00",
-    "#b59200",
-    "#8c7100",
-    "#6b5600",
     "#b5e0b0",
     "#91d18a",
     "#5fbc54",
@@ -161,13 +176,6 @@
     "#0f8d00",
     "#095500",
     "#161e0c",
-    "#fee7cc",
-    "#fed099",
-    "#fdb866",
-    "#fda133",
-    "#ca6e00",
-    "#653700",
-    "#321b00",
     "#f2d1cc",
     "#e5a399",
     "#d77566",
@@ -177,19 +185,20 @@
     "#4f0b00"
   ],
   "space": {
-    "32px": "--ucsd-space-2x-large",
-    "40px": "--ucsd-space-3x-large",
-    "48px": "--ucsd-space-4x-large",
-    "24px": "--ucsd-space-extra-large",
-    "4px": "--ucsd-space-extra-small",
-    "16px": "--ucsd-space-large",
-    "12px": "--ucsd-space-medium",
-    "8px": "--ucsd-space-small"
+    "45px": "--ucsd-space-2x-large",
+    "60px": "--ucsd-space-3x-large",
+    "30px": "--ucsd-space-extra-large",
+    "5px": "--ucsd-space-extra-small",
+    "20px": "--ucsd-space-large",
+    "15px": "--ucsd-space-medium",
+    "10px": "--ucsd-space-small"
   },
   "radius": {
-    "12px": "--ucsd-radius-default",
-    "4px": "--ucsd-radius-sm",
-    "16px": "--ucsd-radius-lg",
+    "5px": "--ucsd-radius-rounded-1",
+    "10px": "--ucsd-radius-rounded-2",
+    "15px": "--ucsd-radius-rounded-3",
+    "100px": "--ucsd-radius-rounded-circle",
+    "8px": "--ucsd-radius-ucsd-8px",
     "999px": "--ucsd-radius-pill"
   },
   "breakpoints": [
@@ -199,6 +208,10 @@
     "1200",
     "1400"
   ],
+  "tailwindClasses": {
+    "max-w-prose": "max-w-[--ucsd-container-prose] — Tailwind hard-codes max-w-prose to 65ch and it wins over --container-prose (70ch); @utility cannot override it either",
+    "2xl:": "xxl: — the UCSD scale names the widest breakpoint xxl, and 2xl is reset, so 2xl: utilities silently never generate"
+  },
   "legacyDecoratorClasses": [
     "panel",
     "panel-body",

@@ -11,3 +11,7 @@ Thumbs.db
 
 # NOTE: skills/ucsd-design-system/references/generated/ IS committed on purpose.
 # The skill must work for anyone who clones it, with no build step. See docs/architecture.md.
+
+# Local reference material (Decorator 5.5 site copy). 18MB, third-party assets
+# including font binaries — kept out of git deliberately.
+.reference/

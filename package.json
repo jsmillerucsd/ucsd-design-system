@@ -17,13 +17,26 @@
     "build:bootstrap": "npm run build --workspace @ucsd/bootstrap",
     "build:designmd": "node scripts/generate-design-md.mjs",
     "build:skill": "node scripts/generate-skill-references.mjs",
+    "demo": "node demo/build.mjs",
+    "demo:vendor": "node demo/vendor.mjs",
     "sync:figma": "node scripts/sync-figma.mjs",
     "test": "node --test test/*.test.mjs",
     "test:tokens": "node scripts/validate-tokens.mjs",
     "lint:designmd": "designmd lint DESIGN.md",
-    "validate": "node skills/ucsd-design-system/scripts/validate.mjs"
+    "validate": "node skills/ucsd-design-system/scripts/validate.mjs",
+    "release:tokens": "npm run build:tokens && npm publish --workspace @ucsd/tokens",
+    "release:bootstrap": "npm run build:bootstrap && npm publish --workspace @ucsd/bootstrap"
   },
   "devDependencies": {
-    "@google/design.md": "0.4.0"
+    "@google/design.md": "0.4.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "esbuild": "^0.28.1",
+    "lucide-react": "^1.28.0",
+    "radix-ui": "^1.6.7",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "recharts": "^3.10.1",
+    "tailwind-merge": "^3.6.0"
   }
 }

@@ -49,9 +49,13 @@ $focus-ring-color:   $ucsd-color-theme-secondary;
 // --- Typography --------------------------------------------------------------
 // Refrigerator Deluxe (display) and Brix Sans (text) are licensed faces. Confirm
 // the web licence before shipping the CDN bundle — see docs/figma.md §2.
-$font-family-sans-serif: #{$ucsd-type-body-font-family}, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+// The fallback stacks are tokens (tokens/code/typography.json), not literals here.
+// They used to be hardcoded in this file and absent from the Tailwind target, so a
+// machine without the licensed faces rendered Bootstrap in system-ui and Tailwind in
+// Times. Both targets now degrade identically because both compile from these.
+$font-family-sans-serif: #{$ucsd-type-body-font-family}, #{$ucsd-type-fallback-sans};
 $font-family-monospace:  ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-$headings-font-family:   #{$ucsd-type-h1-font-family}, #{$ucsd-type-body-font-family}, sans-serif;
+$headings-font-family:   #{$ucsd-type-h1-font-family}, #{$ucsd-type-fallback-display};
 
 $font-weight-medium:   500;
 $font-weight-semibold: 600;
@@ -70,7 +74,7 @@ $h5-font-size: $ucsd-type-h2-small-font-size;
 $h6-font-size: $ucsd-type-eyebrow-font-size;
 
 $headings-font-weight: $ucsd-type-h1-font-weight;
-$headings-color:       $ucsd-color-foreground-heading-1;
+$headings-color:       $ucsd-color-foreground-h1-heading;
 
 // --- Spacing -----------------------------------------------------------------
 // Bootstrap's $spacers map drives every .m-*/.p-*/.gap-* utility. The Figma scale
@@ -79,22 +83,22 @@ $headings-color:       $ucsd-color-foreground-heading-1;
 $spacer: $ucsd-space-large;
 $spacers: (
   0: 0,
-  1: $ucsd-space-extra-small,  //  4px
-  2: $ucsd-space-small,        //  8px
-  3: $ucsd-space-medium,       // 12px
-  4: $ucsd-space-large,        // 16px
-  5: $ucsd-space-extra-large,  // 24px
-  6: $ucsd-space-2x-large,     // 32px
-  7: $ucsd-space-3x-large,     // 40px
-  8: $ucsd-space-4x-large,     // 48px
+  1: $ucsd-space-extra-small,  //  5px
+  2: $ucsd-space-small,        // 10px
+  3: $ucsd-space-medium,       // 15px
+  4: $ucsd-space-large,        // 20px
+  5: $ucsd-space-extra-large,  // 30px
+  6: $ucsd-space-2x-large,     // 45px
+  7: $ucsd-space-3x-large,     // 60px
 );
 
 // --- Radius ------------------------------------------------------------------
-// Figma defines one radius; the rest are code-owned. See tokens/code/layout.json.
-$border-radius:      $ucsd-radius-default;
-$border-radius-sm:   $ucsd-radius-sm;
-$border-radius-lg:   $ucsd-radius-lg;
-$border-radius-xl:   $ucsd-radius-lg;
+// Figma exports a radius scale (rounded-0 through rounded-3, rounded-circle).
+// Only pill is code-owned. See tokens/code/layout.json.
+$border-radius:      $ucsd-radius-rounded-2;
+$border-radius-sm:   $ucsd-radius-rounded-1;
+$border-radius-lg:   $ucsd-radius-rounded-3;
+$border-radius-xl:   $ucsd-radius-rounded-3;
 $border-radius-pill: $ucsd-radius-pill;
 
 // --- Elevation ---------------------------------------------------------------
@@ -126,19 +130,19 @@ $container-max-widths: (
 $grid-gutter-width: $ucsd-space-extra-large;
 
 // --- Components --------------------------------------------------------------
-$btn-border-radius: $ucsd-radius-default;
+$btn-border-radius: $ucsd-radius-rounded-2;
 $btn-font-weight:   $ucsd-type-button-font-weight;
 $btn-font-size:     $ucsd-type-button-font-size;
 
-$card-border-radius: $ucsd-radius-default;
+$card-border-radius: $ucsd-radius-rounded-2;
 $card-border-color:  $ucsd-color-foreground-card-border;
 $card-cap-bg:        $ucsd-color-surface-2;
 
 $input-border-color:       $ucsd-color-foreground-subcard-border;
 $input-focus-border-color: $ucsd-color-theme-secondary;
-$input-border-radius:      $ucsd-radius-default;
+$input-border-radius:      $ucsd-radius-rounded-2;
 
-$progress-bg: $ucsd-color-component-bg-progress-bar;
+$progress-bg: $ucsd-color-surface-2;
 
 // Enable Bootstrap's CSS-variable output so consumers can retheme at runtime.
 $enable-cssgrid: true;

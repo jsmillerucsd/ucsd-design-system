@@ -12,7 +12,19 @@ npm test               # contract tests + link check
 npm run lint:designmd  # DESIGN.md against the format spec
 ```
 
-Then open `packages/bootstrap/kitchen-sink.html` to see it rendered.
+Then look at the two demos — one per framework, because they exercise genuinely different chains:
+
+```bash
+npm run demo           # compiles demo/dist/shadcn.css with the real Tailwind compiler
+```
+
+- `packages/bootstrap/kitchen-sink.html` — Bootstrap 5, straight off the compiled `dist/`. No JavaScript.
+- `demo/shadcn.html` — a tour of **unmodified shadcn/ui components**: buttons, alerts, cards, a Recharts chart, tabs, table, dialog, form controls.
+- `demo/sidebar.html` — shadcn's **`sidebar-08` block**, rendered whole. Stronger evidence than the tour, because the layout and every class in it are shadcn's rather than ours, and it exercises the `--sidebar-*` slot family the tour never touches.
+
+Everything under `demo/` is vendored from shadcn's own registry by `npm run demo:vendor`, which resolves `registryDependencies` recursively. Stylesheets are compiled from the same `dist/` files a consumer imports, in the order the docs prescribe. Nothing uses inline styles or hand-written component classes — a demo that renders from its own CSS can look perfect while the pipeline behind it is broken, which is exactly what happened to the first version of the shadcn page.
+
+**Never edit anything under `demo/components/`, `demo/blocks/` or `demo/hooks/`.** If a component looks wrong, the token bridge is wrong. `npm test` renders both pages and fails if any class they emit compiles to nothing, if a vendored file loses its provenance banner, or if one acquires a UCSD token name.
 
 ## What CI enforces
 
@@ -29,7 +41,7 @@ Then open `packages/bootstrap/kitchen-sink.html` to see it rendered.
 
 **1. Never hand-edit a generated file.** `packages/tokens/dist/`, `DESIGN.md`'s frontmatter, `llms.txt`, and `skills/**/references/generated/` are all build output. If one is wrong, the generator is wrong — fix the generator. CI will catch you either way.
 
-**2. Prose names tokens; it never carries their values.** In `docs/design-md/`, write "the `color.action.primary` fill", never the hex. The build fails on a literal hex or dimension outside a code fence. This is what makes `DESIGN.md` drift-proof — the generated half can't go stale and the written half has no numbers that could.
+**2. Prose names tokens; it never carries their values.** In `docs/design-md/`, write "the `color.component.btn-primary` fill", never the hex. The build fails on a literal hex or dimension outside a code fence. This is what makes `DESIGN.md` drift-proof: the generated half can't go stale and the written half has no numbers that could.
 
 **3. Every rule has exactly one home.** The design rules live in `docs/design-md/08-dos-and-donts.md` and reach `DESIGN.md`, `llms.txt` and the skill by extraction. If you're about to restate a rule in a second file, link instead.
 

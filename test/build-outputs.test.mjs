@@ -46,14 +46,14 @@ describe('the brand blue reaches every target', () => {
     // brand -> primitive -> semantic. Each step is an alias, which is what makes a
     // rebrand a one-line change instead of a find-and-replace.
     assert.equal(byPath(manifest, 'brand.core.blue').value, BLUE);
-    assert.equal(byPath(manifest, 'palette.primary.blue.500').reference, '{brand.core.blue}');
-    assert.equal(byPath(manifest, 'color.theme.secondary').reference, '{palette.primary.blue.500}');
+    assert.equal(byPath(manifest, 'palette.core.blue.500').reference, '{brand.core.blue}');
+    assert.equal(byPath(manifest, 'color.theme.secondary').reference, '{palette.core.blue.500}');
     assert.equal(byPath(manifest, 'color.theme.secondary').value, BLUE);
   });
 
   test('CSS custom property references the tier above, not a literal', () => {
     // outputReferences keeps the alias visible, which is what makes dark mode work.
-    assert.match(tokensCss, /--ucsd-color-theme-secondary:\s*var\(--ucsd-palette-primary-blue-500\)/);
+    assert.match(tokensCss, /--ucsd-color-theme-secondary:\s*var\(--ucsd-palette-core-blue-500\)/);
     assert.match(tokensCss, /--ucsd-brand-core-blue:\s*#00629b/);
   });
 
@@ -72,14 +72,14 @@ describe('the brand blue reaches every target', () => {
 });
 
 describe('one spacing scale everywhere', () => {
-  test('space.large is 16px', () => {
-    assert.equal(byPath(manifest, 'space.large').value, '16px');
+  test('space.large is 20px', () => {
+    assert.equal(byPath(manifest, 'space.large').value, '20px');
   });
 
   test('Bootstrap maps it to the numeric spacer key .p-4', () => {
     // The Figma scale is t-shirt sized; _bridge.scss maps it onto the numeric keys
     // Bootstrap users have muscle memory for.
-    assert.match(bootstrapCss, /\.p-4\s*\{\s*padding:\s*16px/);
+    assert.match(bootstrapCss, /\.p-4\s*\{\s*padding:\s*20px/);
   });
 
   test('Tailwind maps it into the spacing namespace', () => {
@@ -130,7 +130,7 @@ describe('dark mode', () => {
 
   test('dark re-aliases the content surface to near-black', () => {
     assert.equal(byPath(manifest, 'color.surface.1').reference, '{palette.neutral.white}');
-    assert.equal(byPath(darkManifest, 'color.surface.1').reference, '{palette.neutral.gray.950}');
+    assert.equal(byPath(darkManifest, 'color.surface.1').reference, '{palette.neutral.black}');
   });
 
   test('only semantic colours are redefined in dark mode', () => {

@@ -4,14 +4,28 @@
   "description": "UCSD design tokens compiled to CSS custom properties, Sass, Tailwind @theme, JS and JSON.",
   "type": "module",
   "license": "UNLICENSED",
-  "files": ["dist"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsmillerucsd/ucsd-design-system.git",
+    "directory": "packages/tokens"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "files": [
+    "dist"
+  ],
   "main": "./dist/js/tokens.js",
   "types": "./dist/js/tokens.d.ts",
   "exports": {
-    ".": { "types": "./dist/js/tokens.d.ts", "default": "./dist/js/tokens.js" },
+    ".": {
+      "types": "./dist/js/tokens.d.ts",
+      "default": "./dist/js/tokens.js"
+    },
     "./css": "./dist/css/tokens.css",
     "./scss": "./dist/scss/_tokens.scss",
     "./tailwind": "./dist/tailwind/theme.css",
+    "./shadcn": "./dist/shadcn/theme.css",
     "./json": "./dist/tokens.json"
   },
   "scripts": {
@@ -19,6 +33,8 @@
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "style-dictionary": "^4.3.0"
+    "@tailwindcss/cli": "^4.3.3",
+    "style-dictionary": "^4.3.0",
+    "tailwindcss": "^4.3.3"
   }
 }

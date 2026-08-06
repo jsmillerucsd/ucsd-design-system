@@ -133,6 +133,9 @@ describe('tier discipline survives the projection', () => {
   });
 
   test('components bind by reference, not by literal', () => {
+    // All three treatments DESIGN.md's prose specifies. The tertiary pair is
+    // code-owned (tokens/code/components.json) because Figma exports only the first
+    // two; it is listed here so dropping it is a deliberate act, not a silent one.
     assert.deepEqual([...ds.components.keys()].sort(), [
       'button-primary',
       'button-secondary',
@@ -142,6 +145,56 @@ describe('tier discipline survives the projection', () => {
     // and a rebrand would no longer reach the component.
     const componentsBlock = raw.slice(raw.indexOf('components:'), raw.indexOf('breakpoints:'));
     assert.doesNotMatch(componentsBlock, /(backgroundColor|textColor|borderColor):\s*"#/);
+  });
+});
+
+describe('the prose only names tokens that exist', () => {
+  // The prose is hand-written in docs/design-md/ while the tokens come from Figma,
+  // so the two drift silently. An agent reading `space.4x-large` or a tertiary
+  // button pair that was never exported will confidently emit a class that compiles
+  // to nothing — the exact failure mode this file is meant to prevent. Cheap to
+  // check, and it catches the drift the moment a Figma sync lands.
+  test('every token path in backticks resolves', () => {
+    const paths = new Set(manifest.map((t) => t.path));
+    const groups = new Set(
+      manifest.flatMap((t) => {
+        const segs = t.path.split('.');
+        return segs.map((_, i) => segs.slice(0, i + 1).join('.'));
+      }),
+    );
+
+    // Prose only — the generated front matter is the tokens by construction.
+    const prose = raw.slice(raw.indexOf('\n---', 3));
+
+    // Dotted lowercase identifiers. Filenames look the same, so drop the ones
+    // ending in an extension; a trailing `.*` is our own wildcard convention.
+    const FILE_EXT = /\.(md|json|mjs|js|css|scss|html|tsx|txt)$/;
+    // A `*` is our wildcard: `color.surface.*` and `color.system.bg-*` both mean
+    // "anything under this prefix", so they resolve if any real token starts there.
+    // Bare refs like `surface.1` are shorthand inside a section about `color.*`.
+    const known = (ref) => {
+      const prefixes = [ref, `color.${ref}`, `type.${ref}`];
+      if (ref.includes('*')) {
+        const stems = prefixes.map((p) => p.slice(0, p.indexOf('*')));
+        return [...paths].some((p) => stems.some((s) => p.startsWith(s)));
+      }
+      return prefixes.some((p) => paths.has(p) || groups.has(p));
+    };
+
+    const unknown = [
+      ...new Set(
+        [...prose.matchAll(/`([a-z][a-z0-9-]*(?:\.[a-z0-9*-]+)+)`/g)]
+          .map((m) => m[1])
+          .filter((ref) => !FILE_EXT.test(ref) && !known(ref)),
+      ),
+    ];
+
+    assert.deepEqual(
+      unknown,
+      [],
+      `DESIGN.md prose names token(s) that do not exist: ${unknown.join(', ')}. ` +
+        `Fix the prose in docs/design-md/, or add the token.`,
+    );
   });
 });
 

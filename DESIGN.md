@@ -10,35 +10,40 @@ colors:
   # never bind to a raw palette value. Dark mode is a re-alias of these same
   # tokens; see `modes` at the end of this block.
   primary: "{colors.theme-primary}"
-  component-bg-progress-bar: "#d4d5d5"
+  component-btn-tertiary: "#fbf9f5"
+  component-btn-label-tertiary: "#313232"
+  component-btn-gold: "#c69214"
+  component-btn-label-black: "#000000"
   component-btn-label-primary: "#182b49"
   component-btn-label-secondary: "#ffffff"
-  component-btn-label-tertiary: "#ffffff"
+  component-btn-label-white: "#ffffff"
+  component-btn-navy: "#182b49"
+  component-btn-orange: "#fc8900"
   component-btn-primary: "#ffcd00"
   component-btn-secondary: "#00629b"
-  component-btn-tertiary: "#182b49"
+  component-btn-turqoise: "#00c6d7"
   component-icon: "#182b49"
   component-link: "#00629b"
   component-menu: "#747678"
-  component-menu-bottom-nav: "#6a6b6d"
-  foreground-body-text: "#6a6b6d"
+  foreground-body-text: "#313232"
   foreground-body-text-focus: "#182b49"
-  foreground-card-border: "rgba(255, 255, 255, 0)"
+  foreground-card-border: "#d4d5d5"
   foreground-divider: "#647185"
   foreground-eyebrow: "#182b49"
-  foreground-heading-1: "#182b49"
-  foreground-heading-2: "#182b49"
-  foreground-heading-3: "#182b49"
+  foreground-h1-heading: "#00629b"
+  foreground-h2-heading: "#182b49"
+  foreground-h3-heading: "#182b49"
   foreground-heading-light: "#ffffff"
   foreground-subcard-border: "#182b49"
   foreground-subheading: "#182b49"
-  foreground-surface-text-bg: "#f3f4f6"
   status-critical: "#bd1900"
   status-good: "#109b00"
   status-warning: "#fc8900"
   surface-1: "#ffffff"
   surface-2: "#fbf9f5"
-  surface-background: "#182b49"
+  surface-3: "#00629b"
+  surface-4: "#182b49"
+  surface-5: "#f8f8f9"
   system-bg-error: "#f8e8e6"
   system-bg-information: "#e6eff5"
   system-bg-success: "#e7f5e6"
@@ -56,92 +61,83 @@ colors:
   theme-primary: "#182b49"
   theme-secondary: "#00629b"
 typography:
-  "body":
-    fontFamily: "Brix Sans"
-  "body-large":
+  "body-lg":
     fontSize: "24px"
     lineHeight: "29px"
-    letterSpacing: "0px"
-  "body-medium":
+    fontWeight: 400
+  "body-md":
     fontSize: "18px"
     lineHeight: "23px"
-    letterSpacing: "0px"
-  "body-small":
+    fontWeight: 400
+  "body-sm":
     fontSize: "12px"
     lineHeight: "17px"
-    letterSpacing: "0px"
-  "button":
-    fontFamily: "Brix Sans"
-    fontSize: "14px"
-    lineHeight: "17px"
-    fontWeight: 700
-    letterSpacing: "0px"
+    fontWeight: 400
   "eyebrow":
-    fontFamily: "Refrigerator Deluxe"
+    fontFamily: "'Refrigerator Deluxe'"
     fontSize: "8px"
     lineHeight: "10px"
-    fontWeight: 800
-    letterSpacing: "0.800000011920929px"
+    fontWeight: 700
   "h1":
-    fontFamily: "Refrigerator Deluxe"
+    fontFamily: "'Refrigerator Deluxe'"
     fontSize: "24px"
     lineHeight: "29px"
-    fontWeight: 800
-    letterSpacing: "-0.20000000298023224px"
+    fontWeight: 600
   "h2":
-    fontFamily: "Brix Sans"
+    fontFamily: "'Brix Sans'"
     fontSize: "18px"
     lineHeight: "22px"
-    fontWeight: 500
-    letterSpacing: "0px"
-  "h2-small":
-    fontFamily: "Brix Sans"
-    fontSize: "12px"
-    lineHeight: "18px"
-    fontWeight: 700
-    letterSpacing: "0px"
+    fontWeight: 600
   "h3":
-    fontFamily: "Refrigerator Deluxe"
+    fontFamily: "'Refrigerator Deluxe'"
     fontSize: "14px"
     lineHeight: "17px"
-    fontWeight: 800
-    letterSpacing: "0.800000011920929px"
+    fontWeight: 900
   "subheading":
-    fontFamily: "Brix Sans"
+    fontFamily: "'Brix Sans'"
     fontSize: "12px"
     lineHeight: "15px"
     fontWeight: 700
-    letterSpacing: "1.75px"
+  "body":
+    fontFamily: "'Brix Sans'"
+  "button":
+    fontFamily: "'Brix Sans'"
+    fontSize: "14px"
+    lineHeight: "17px"
+    fontWeight: 700
+  "h2-small":
+    fontFamily: "'Brix Sans'"
+    fontSize: "12px"
+    lineHeight: "18px"
 spacing:
-  "2x-large": "32px"
-  "3x-large": "40px"
-  "4x-large": "48px"
-  extra-large: "24px"
-  extra-small: "4px"
-  large: "16px"
-  medium: "12px"
-  small: "8px"
+  "2x-large": "45px"
+  "3x-large": "60px"
+  extra-large: "30px"
+  extra-small: "5px"
+  large: "20px"
+  medium: "15px"
+  small: "10px"
+  zero: "0px"
 rounded:
-  default: "12px"
-  none: "0px"
-  sm: "4px"
-  lg: "16px"
+  rounded-0: "0px"
+  rounded-1: "5px"
+  rounded-2: "10px"
+  rounded-3: "15px"
+  rounded-circle: "100px"
+  ucsd-8px: "8px"
   pill: "999px"
 components:
   button-primary:
     backgroundColor: "{colors.component-btn-primary}"
     textColor: "{colors.component-btn-label-primary}"
-    rounded: "{rounded.default}"
     typography: "{typography.button}"
   button-secondary:
     backgroundColor: "{colors.component-btn-secondary}"
     textColor: "{colors.component-btn-label-secondary}"
-    rounded: "{rounded.default}"
     typography: "{typography.button}"
   button-tertiary:
     backgroundColor: "{colors.component-btn-tertiary}"
     textColor: "{colors.component-btn-label-tertiary}"
-    rounded: "{rounded.default}"
     typography: "{typography.button}"
 breakpoints:
   sm: "576px"
@@ -172,35 +168,40 @@ motion:
 modes:
   dark:
     colors:
-      component-bg-progress-bar: "#d4d5d5"
+      component-btn-gold: "#d9b662"
+      component-btn-label-black: "#000000"
       component-btn-label-primary: "#182b49"
       component-btn-label-secondary: "#162742"
-      component-btn-label-tertiary: "#ffffff"
+      component-btn-label-tertiary: "#bfc0c1"
+      component-btn-label-white: "#ffffff"
+      component-btn-navy: "#182b49"
+      component-btn-orange: "#fc8900"
       component-btn-primary: "#ffcd00"
       component-btn-secondary: "#5496bc"
-      component-btn-tertiary: "#5496bc"
+      component-btn-tertiary: "#404142"
+      component-btn-turqoise: "#00c6d7"
       component-icon: "#f5f0e6"
       component-link: "#5496bc"
       component-menu: "#747678"
-      component-menu-bottom-nav: "#909193"
-      foreground-body-text: "#a1a2a4"
+      foreground-body-text: "#bfc0c1"
       foreground-body-text-focus: "#f5f0e6"
       foreground-card-border: "#747678"
       foreground-divider: "#959dab"
       foreground-eyebrow: "#f5f0e6"
-      foreground-heading-1: "#f5f0e6"
-      foreground-heading-2: "#f5f0e6"
-      foreground-heading-3: "#f5f0e6"
+      foreground-h1-heading: "#f5f0e6"
+      foreground-h2-heading: "#f5f0e6"
+      foreground-h3-heading: "#f5f0e6"
       foreground-heading-light: "#f5f0e6"
       foreground-subcard-border: "#747678"
       foreground-subheading: "#f5f0e6"
-      foreground-surface-text-bg: "#ffffff"
       status-critical: "#bd1900"
       status-good: "#109b00"
       status-warning: "#fc8900"
-      surface-1: "#1d1d1d"
+      surface-1: "#000000"
       surface-2: "#404142"
-      surface-background: "#182b49"
+      surface-3: "#00629b"
+      surface-4: "#182b49"
+      surface-5: "#313232"
       system-bg-error: "#ac1700"
       system-bg-information: "#5496bc"
       system-bg-success: "#0b6e00"
@@ -234,24 +235,25 @@ modes:
 
 ## Overview
 
-<!-- REVIEW: brand voice. This section is an engineering draft and needs sign-off from
-     the UX designer and against brand.ucsd.edu before it drives production work.
-     Everything else in DESIGN.md is derived from tokens; this is the one section that
-     is a judgment call, and it is the section that most determines output quality. -->
+This is an evolution of Decorator V5, UCSD's web design system since 2017. Decorator V5 runs on Bootstrap 3, jQuery, and Glyphicons, with Teko as the display face and Roboto for body. It serves a broad mix of pages: recruitment marketing, task tools, faculty profiles, and CMS content.
 
-The reference is **Geisel Library**: board-formed concrete and glass, cantilevered, structural, entirely unornamented. Nothing on that building is decoration. The form is the structure, the structure is legible from a distance, and it has read as confidently itself for fifty years without being restyled.
+What carries forward: the UCSD color identity (navy, blue, gold), the structural page shell (masthead with wordmark, navbar with gold active indicator, breadcrumbs, Regents copyright footer), and the commitment to a shared system across campus.
 
-That is the register for UC San Diego on the web. Institutional confidence without corporate gloss. Structure you can see. No ornament that isn't doing work.
+What changes: Bootstrap 3 to 5, then to a token layer that also serves Tailwind and shadcn. Teko and Roboto to Refrigerator Deluxe and Brix Sans from the UCSD brand library. Dark mode, which Decorator V5 never had. And a deliberate shift in register.
 
-**Who is reading.** Prospective students deciding where to spend four years, current students trying to complete a task, faculty and researchers, staff, and the public. Most of them arrived from a search result with a specific question. Very few of them are browsing.
+**The shift.** Decorator V5's homepage is a seven-slide hero carousel with full-bleed photography and decorative background textures (grit, orbs, trident shapes). That reads as a recruitment brochure. This system pulls toward something plainer: **Geisel Library**, board-formed concrete and glass, structural, unornamented. The form is the structure. Nothing is decoration.
 
-**What that implies.** Pages are read, not skimmed for conversion. Content leads; chrome recedes. Generous vertical rhythm and a real reading measure matter more than density. A page that ends two-thirds of the way down the viewport is finished, not underfilled.
+That is the target register: institutional confidence without corporate gloss. Structure you can see. No ornament that isn't doing work.
 
-**The emotional target** is *credible and unhurried*. A public research university has nothing to prove and nothing to sell in the way a product landing page does. Confidence here reads as restraint: one clear action per screen, plain language, no urgency devices.
+**Who is reading.** Prospective students, current students completing a task, faculty, researchers, staff, and the public. Most arrived from a search result with a specific question. The recruitment audience is real but is served by a handful of high-production pages, not by every page carrying marketing chrome.
 
-**What this is not.** Not a startup landing page — no gradient meshes, no glassmorphism, no floating testimonial cards, no animated counters. Not a consumer app — no playful illustration, no mascot voice, no rounded-everything friendliness. Not a brochure — the marks of print (full-bleed hero photography carrying no information, decorative rules, drop caps) don't transfer.
+**What that implies.** Content leads; chrome recedes. Generous vertical rhythm and a real reading measure matter more than density. A page that ends two-thirds of the way down the viewport is finished, not underfilled.
 
-The single most common failure mode is a generated page that is technically on-palette and tonally wrong: UCSD blue applied to a SaaS marketing layout. When a choice isn't covered by a token or a rule below, resolve it toward the building — structural, plain, and durable.
+**The emotional target** is credible and unhurried. A public research university has nothing to sell in the way a product landing page does. Confidence reads as restraint: one clear action per screen, plain language, no urgency devices.
+
+**What this is not.** Not a startup landing page: no gradient meshes, no glassmorphism, no floating testimonial cards, no animated counters. Not a consumer app: no playful illustration, no mascot voice, no rounded-everything friendliness. Not a brochure: the marks of print (full-bleed hero photography carrying no information, decorative rules, drop caps) don't transfer.
+
+The single most common failure mode is a generated page that is technically on-palette and tonally wrong: UCSD blue applied to a SaaS marketing layout. When a choice isn't covered by a token or a rule below, resolve it toward the building: structural, plain, and durable.
 
 ## Colors
 
@@ -260,7 +262,7 @@ The palette is navy and blue carried forward from the university's identity, wit
 Colors are organised by **role, not by hue**. Bind to what a color is *for*, never to what it looks like.
 
 - **`color.theme.*`** — the brand marks themselves: primary, secondary, accent. Reserved for identity. If you are reaching for one to style a button, you want `color.component.*`.
-- **`color.surface.*`** — what sits behind content. `surface.background` is the outer chrome band, `surface.1` is the content surface, `surface.2` is raised.
+- **`color.surface.*`** — what sits behind content, numbered `surface.1` through `surface.5`. `surface.1` is the content surface, `surface.2` is raised, and the darker steps are the chrome bands a page header or footer sits on.
 - **`color.foreground.*`** — text, rules and borders: the heading roles, body text, dividers and card borders. Reach down the ramp for de-emphasis; never fake it with a lower-contrast surface.
 - **`color.component.*`** — what a control is actually made of. Each button fill has a matching label token, and the two are designed to be used as a pair.
 - **`color.system.*`** — feedback messaging: success, warning, error, information. Each has a `bg-` and a `foreground-` half, again meant as a pair. These carry meaning; using error as an accent because it looks good is a bug.
@@ -303,9 +305,9 @@ Long-form content is constrained to `container.prose`, a measure chosen for read
 
 ## Layout
 
-One spacing scale, based on a four-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
+One spacing scale, based on a five-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
 
-Spacing steps are t-shirt sized — `space.small` through `space.4x-large`. Bootstrap's numeric utilities map onto them, so `.p-4` and `space.large` are the same value reached two ways.
+Spacing steps are t-shirt sized — `space.extra-small` through `space.3x-large`. Both frameworks' numeric utilities are built on the same step, so `.p-4` in Bootstrap, `p-4` in Tailwind and `space.large` are one value reached three ways. That holds through step 4; beyond it the numeric scales diverge and the named step is the only way to say it exactly.
 
 **Breakpoints are Bootstrap 5's**, matched exactly by `breakpoint.*`. This is not a preference — Bootstrap utilities and Tailwind variants both compile from these values, and a mismatch produces bugs that take days to find. Never invent a breakpoint, and never write a media query against a value that isn't in the scale.
 
@@ -333,7 +335,7 @@ Depth is **structural, not atmospheric**. Hierarchy comes from surface change an
 
 Use the ladder for things that genuinely float above the page and can be dismissed: menus, popovers, dialogs, toasts. The rule of thumb is that if it can't be dismissed, it probably isn't elevated.
 
-**Cards are not elevated by default.** A card is a surface change and a padding contract. Reach for `color.surface.raised` and let space do the grouping. A page of drop-shadowed cards is the single most common way generated UI drifts off-brand — it reads as a SaaS dashboard, and it flattens the actual hierarchy by giving every region the same visual weight.
+**Cards are not elevated by default.** A card is a surface change and a padding contract. Reach for `color.surface.2` and let space do the grouping. A page of drop-shadowed cards is the single most common way generated UI drifts off-brand: it reads as a SaaS dashboard, and it flattens the actual hierarchy by giving every region the same visual weight.
 
 In dark mode, shadow carries much less information because there is less luminance range beneath it. Depth there comes primarily from the surface ramp — raised surfaces genuinely lighten. Don't compensate by deepening shadows.
 
@@ -355,7 +357,7 @@ Photography is rectangular and full-bleed within its region. It is not rounded, 
 
 ## Components
 
-Component *implementations* are not shared across frameworks and are not described here — a `.btn` in Bootstrap 5 and a `<Button>` in the shadcn registry can never share code. What they share is the token binding below and the behaviour contract in the skill's accessibility reference.
+Component *implementations* are not shared across frameworks and are not described here — a `.btn` in Bootstrap 5 and a `<Button>` in a React app can never share code. What they share is the token binding below and the behaviour contract in the skill's accessibility reference.
 
 Write idiomatic code for whichever stack you are in. Correctness comes from binding to the right tokens, not from matching markup.
 
@@ -383,7 +385,7 @@ Navigation is a landmark, uses real links, and marks the current page programmat
 
 ### Status and feedback
 
-Status colors always appear as a `-subtle` background with its matching `-strong` foreground. Alerts carry an icon *and* text, never color alone. Toasts are for transient confirmations; anything the user must act on belongs on the page.
+Status colors always appear as a `color.system.bg-*` background with its matching `color.system.foreground-*` half. Alerts carry an icon *and* text, never color alone. Toasts are for transient confirmations; anything the user must act on belongs on the page.
 
 ### Adding a component
 

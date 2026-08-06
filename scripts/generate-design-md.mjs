@@ -233,9 +233,36 @@ const motion = ['duration', 'easing'].flatMap((group) => {
 // the one thing our token set carries that the base schema cannot, and dropping it
 // would regress what we already tell agents. Shaped like the proposal in #13 so
 // this becomes conformant rather than rewritten if the spec adopts it.
-const darkColors = dark
-  .filter((t) => t.tier === 'semantic' && t.path.startsWith('color.'))
-  .map((t) => [colorKey(t.path), q(t.value)]);
+const darkByPath = new Map(dark.map((t) => [t.path, t]));
+
+/**
+ * The dark value of a colour that has no entry of its own in the dark manifest.
+ *
+ * Code-owned component tokens (tokens/code/components.json) alias a semantic colour
+ * rather than restating it, precisely so they inherit dark mode — the CSS emits
+ * `var(--ucsd-color-surface-2)` and follows automatically. But the dark manifest is
+ * filtered to tokens declared in semantic.dark.json, so those aliases are absent
+ * from it, and a naive projection would leave them out of `modes.dark` entirely.
+ * DESIGN.md would then claim they are mode-invariant, which is false.
+ *
+ * So follow the alias chain until it lands on something the dark manifest defines.
+ * A chain that never does is genuinely the same in both modes, and its light value
+ * is the honest answer.
+ */
+function darkValueOf(token, seen = new Set()) {
+  const ref = token.reference?.slice(1, -1);
+  if (!ref || seen.has(ref)) return token.value;
+  if (darkByPath.has(ref)) return darkByPath.get(ref).value;
+  const next = byPath.get(ref);
+  return next ? darkValueOf(next, new Set([...seen, ref])) : token.value;
+}
+
+const darkColors = [
+  ...dark.filter((t) => t.tier === 'semantic' && t.path.startsWith('color.')),
+  ...semanticColors.filter((t) => !darkByPath.has(t.path)),
+]
+  .map((t) => [colorKey(t.path), q(darkByPath.get(t.path)?.value ?? darkValueOf(t))])
+  .sort(([a], [b]) => a.localeCompare(b));
 
 // ---------------------------------------------------------------------------
 // Prose
