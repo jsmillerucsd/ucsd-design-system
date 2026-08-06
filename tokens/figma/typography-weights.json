@@ -1,0 +1,40 @@
+{
+  "weight": {
+    "black": {
+      "$type": "fontWeight",
+      "$value": 900
+    },
+    "bold": {
+      "$type": "fontWeight",
+      "$value": 700
+    },
+    "extra-bold": {
+      "$type": "fontWeight",
+      "$value": 800
+    },
+    "extra-light": {
+      "$type": "fontWeight",
+      "$value": 200
+    },
+    "light": {
+      "$type": "fontWeight",
+      "$value": 300
+    },
+    "medium": {
+      "$type": "fontWeight",
+      "$value": 500
+    },
+    "regular": {
+      "$type": "fontWeight",
+      "$value": 400
+    },
+    "semi-bold": {
+      "$type": "fontWeight",
+      "$value": 600
+    },
+    "thin": {
+      "$type": "fontWeight",
+      "$value": 100
+    }
+  }
+}

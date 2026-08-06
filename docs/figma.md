@@ -114,15 +114,15 @@ No plugin, no licence, no recurring cost. This is the payoff from choosing DTCG 
 
 ```
 DESIGNER (Figma only — no git, no terminal)
-  right-click each collection → Export modes → send the files
+  right-click each collection → Export modes → send the ZIPs
 
 MAINTAINER
-  drop them in figma-export/<collection>/<Mode>.tokens.json
+  drop the .zip files directly in figma-export/
   npm run sync:figma
   review the diff, commit, open a PR
 ```
 
-`figma-export/` is committed, so a PR shows exactly what Figma said alongside what we derived from it.
+`sync:figma` extracts the ZIPs automatically (using the system `tar`), so no manual unzipping is needed. Extracted folders are also accepted — mix or match. `figma-export/` is committed, so a PR shows exactly what Figma said alongside what we derived from it.
 
 ### 3.3 What the sync does
 
@@ -264,7 +264,7 @@ If Dev Mode output shows a **primitive** binding (`blue/500`, `palette/*`), that
 | **2** | Figma sync automated | A colour change in Figma opens a PR unaided |
 | **3** | Bootstrap 5 theme + versioned CDN | One real page renders with zero Decorator CSS |
 | **4** | Publish the skill to the Skills Library | An agent builds a compliant page from `DESIGN.md` alone |
-| **5** | shadcn registry | `npx shadcn add` works from `design.ucsd.edu/r/` |
+| **5** | Tailwind/shadcn integration documented | A React team builds a UCSD-styled page from `@ucsd/tokens` + shadcn's own packages |
 | **6** | CMS layout patterns | Content and landing templates in production |
 
 Phases 3–6 are independent once 1–2 land. **Phase 0 is the urgent one** — it costs about a week and is nearly free right now; every week the designer builds under an ad-hoc naming scheme is a week of manual remapping later.

@@ -191,7 +191,7 @@
         "com.figma.hiddenFromPublishing": true
       }
     },
-    "cool gray": {
+    "cool-gray": {
       "$type": "color",
       "$value": {
         "colorSpace": "srgb",

@@ -1,0 +1,133 @@
+{
+  "body-lg": {
+    "$type": "number",
+    "$value": 400,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:5576:414",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:11b85c31c8d6af0f16ba22ba8cfc14f35b93d3b4/-1:-1",
+        "targetVariableName": "regular",
+        "targetVariableSetId": "VariableCollectionId:02b597c88cf725a8b05c12595bfc3b00b6024cac/-1:-1",
+        "targetVariableSetName": "typography-primitive"
+      }
+    }
+  },
+  "body-md": {
+    "$type": "number",
+    "$value": 400,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:5576:415",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:11b85c31c8d6af0f16ba22ba8cfc14f35b93d3b4/-1:-1",
+        "targetVariableName": "regular",
+        "targetVariableSetId": "VariableCollectionId:02b597c88cf725a8b05c12595bfc3b00b6024cac/-1:-1",
+        "targetVariableSetName": "typography-primitive"
+      }
+    }
+  },
+  "body-sm": {
+    "$type": "number",
+    "$value": 400,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:5576:416",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:11b85c31c8d6af0f16ba22ba8cfc14f35b93d3b4/-1:-1",
+        "targetVariableName": "regular",
+        "targetVariableSetId": "VariableCollectionId:02b597c88cf725a8b05c12595bfc3b00b6024cac/-1:-1",
+        "targetVariableSetName": "typography-primitive"
+      }
+    }
+  },
+  "h1": {
+    "$type": "number",
+    "$value": 600,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:5576:446",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:bfbb7a466b0e924a63a5443df6e777827601a97f/-1:-1",
+        "targetVariableName": "semi-bold",
+        "targetVariableSetId": "VariableCollectionId:02b597c88cf725a8b05c12595bfc3b00b6024cac/-1:-1",
+        "targetVariableSetName": "typography-primitive"
+      }
+    }
+  },
+  "h2": {
+    "$type": "number",
+    "$value": 600,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:5576:447",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:bfbb7a466b0e924a63a5443df6e777827601a97f/-1:-1",
+        "targetVariableName": "semi-bold",
+        "targetVariableSetId": "VariableCollectionId:02b597c88cf725a8b05c12595bfc3b00b6024cac/-1:-1",
+        "targetVariableSetName": "typography-primitive"
+      }
+    }
+  },
+  "h3": {
+    "$type": "number",
+    "$value": 900,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:5576:448",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:5935e0bdb291c931540722f0110c46d23ed27ca1/-1:-1",
+        "targetVariableName": "black",
+        "targetVariableSetId": "VariableCollectionId:02b597c88cf725a8b05c12595bfc3b00b6024cac/-1:-1",
+        "targetVariableSetName": "typography-primitive"
+      }
+    }
+  },
+  "subheading": {
+    "$type": "number",
+    "$value": 700,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:5576:449",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:216d712578cd56d0fdeaf62178057ade54c541ce/-1:-1",
+        "targetVariableName": "bold",
+        "targetVariableSetId": "VariableCollectionId:02b597c88cf725a8b05c12595bfc3b00b6024cac/-1:-1",
+        "targetVariableSetName": "typography-primitive"
+      }
+    }
+  },
+  "eyebrow": {
+    "$type": "number",
+    "$value": 700,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:5576:450",
+      "com.figma.scopes": [
+        "ALL_SCOPES"
+      ],
+      "com.figma.aliasData": {
+        "targetVariableId": "VariableID:216d712578cd56d0fdeaf62178057ade54c541ce/-1:-1",
+        "targetVariableName": "bold",
+        "targetVariableSetId": "VariableCollectionId:02b597c88cf725a8b05c12595bfc3b00b6024cac/-1:-1",
+        "targetVariableSetName": "typography-primitive"
+      }
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "Mode 1"
+  }
+}

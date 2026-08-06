@@ -1,20 +1,21 @@
 ## Overview
 
-<!-- REVIEW: brand voice. This section is an engineering draft and needs sign-off from
-     the UX designer and against brand.ucsd.edu before it drives production work.
-     Everything else in DESIGN.md is derived from tokens; this is the one section that
-     is a judgment call, and it is the section that most determines output quality. -->
+This is an evolution of Decorator V5, UCSD's web design system since 2017. Decorator V5 runs on Bootstrap 3, jQuery, and Glyphicons, with Teko as the display face and Roboto for body. It serves a broad mix of pages: recruitment marketing, task tools, faculty profiles, and CMS content.
 
-The reference is **Geisel Library**: board-formed concrete and glass, cantilevered, structural, entirely unornamented. Nothing on that building is decoration. The form is the structure, the structure is legible from a distance, and it has read as confidently itself for fifty years without being restyled.
+What carries forward: the UCSD color identity (navy, blue, gold), the structural page shell (masthead with wordmark, navbar with gold active indicator, breadcrumbs, Regents copyright footer), and the commitment to a shared system across campus.
 
-That is the register for UC San Diego on the web. Institutional confidence without corporate gloss. Structure you can see. No ornament that isn't doing work.
+What changes: Bootstrap 3 to 5, then to a token layer that also serves Tailwind and shadcn. Teko and Roboto to Refrigerator Deluxe and Brix Sans from the UCSD brand library. Dark mode, which Decorator V5 never had. And a deliberate shift in register.
 
-**Who is reading.** Prospective students deciding where to spend four years, current students trying to complete a task, faculty and researchers, staff, and the public. Most of them arrived from a search result with a specific question. Very few of them are browsing.
+**The shift.** Decorator V5's homepage is a seven-slide hero carousel with full-bleed photography and decorative background textures (grit, orbs, trident shapes). That reads as a recruitment brochure. This system pulls toward something plainer: **Geisel Library**, board-formed concrete and glass, structural, unornamented. The form is the structure. Nothing is decoration.
 
-**What that implies.** Pages are read, not skimmed for conversion. Content leads; chrome recedes. Generous vertical rhythm and a real reading measure matter more than density. A page that ends two-thirds of the way down the viewport is finished, not underfilled.
+That is the target register: institutional confidence without corporate gloss. Structure you can see. No ornament that isn't doing work.
 
-**The emotional target** is *credible and unhurried*. A public research university has nothing to prove and nothing to sell in the way a product landing page does. Confidence here reads as restraint: one clear action per screen, plain language, no urgency devices.
+**Who is reading.** Prospective students, current students completing a task, faculty, researchers, staff, and the public. Most arrived from a search result with a specific question. The recruitment audience is real but is served by a handful of high-production pages, not by every page carrying marketing chrome.
 
-**What this is not.** Not a startup landing page — no gradient meshes, no glassmorphism, no floating testimonial cards, no animated counters. Not a consumer app — no playful illustration, no mascot voice, no rounded-everything friendliness. Not a brochure — the marks of print (full-bleed hero photography carrying no information, decorative rules, drop caps) don't transfer.
+**What that implies.** Content leads; chrome recedes. Generous vertical rhythm and a real reading measure matter more than density. A page that ends two-thirds of the way down the viewport is finished, not underfilled.
 
-The single most common failure mode is a generated page that is technically on-palette and tonally wrong: UCSD blue applied to a SaaS marketing layout. When a choice isn't covered by a token or a rule below, resolve it toward the building — structural, plain, and durable.
+**The emotional target** is credible and unhurried. A public research university has nothing to sell in the way a product landing page does. Confidence reads as restraint: one clear action per screen, plain language, no urgency devices.
+
+**What this is not.** Not a startup landing page: no gradient meshes, no glassmorphism, no floating testimonial cards, no animated counters. Not a consumer app: no playful illustration, no mascot voice, no rounded-everything friendliness. Not a brochure: the marks of print (full-bleed hero photography carrying no information, decorative rules, drop caps) don't transfer.
+
+The single most common failure mode is a generated page that is technically on-palette and tonally wrong: UCSD blue applied to a SaaS marketing layout. When a choice isn't covered by a token or a rule below, resolve it toward the building: structural, plain, and durable.

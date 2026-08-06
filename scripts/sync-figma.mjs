@@ -2,8 +2,8 @@
  * figma-export/ -> tokens/figma/
  *
  * Ingests Figma's NATIVE variable export ("right-click a collection -> Export
- * modes"), which lands as one DTCG-ish file per mode, in a folder per collection.
- * See docs/figma.md §3.
+ * modes"), which downloads as a ZIP per collection containing one DTCG-ish file
+ * per mode. Drop the raw ZIPs (or extracted folders) in figma-export/ and run:
  *
  *   npm run sync:figma
  *
@@ -13,11 +13,12 @@
  * rebrand or theme. This script reads the alias data back and reconstructs real
  * DTCG references, so `tokens/` keeps the tier structure the designer authored.
  *
- * The designer never runs this. He exports from Figma and hands over the files;
+ * The designer never runs this. He exports from Figma and hands over the ZIPs;
  * a maintainer drops them in figma-export/ and runs the command.
  */
 
 import { promises as fs } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -37,22 +38,23 @@ const OUT = path.join(REPO, 'tokens', 'figma');
  * Style Dictionary merges every source into one tree.
  */
 const COLLECTIONS = {
-  'colors-brand':     { file: 'brand.json',      root: 'brand',   tier: 'brand' },
-  'colors-primitive': { file: 'primitive.json',  root: 'palette', tier: 'primitive' },
-  'colors-semantic':  { file: null,              root: 'color',   tier: 'semantic', byMode: true },
-  'layout':           { file: 'layout.json',     root: null,      tier: 'semantic' },
-  'typography':       { file: 'typography.json', root: 'type',    tier: 'semantic' },
+  'colors-brand':         { file: 'brand.json',              root: 'brand',  tier: 'brand' },
+  'colors-primitive':     { file: 'primitive.json',          root: 'palette', tier: 'primitive' },
+  'colors-semantic':      { file: null,                      root: 'color',  tier: 'semantic', byMode: true },
+  'layout-primitive':     { file: 'layout.json',             root: null,     tier: 'primitive' },
+  'typography-primitive': { file: 'typography-weights.json', root: 'weight', tier: 'primitive', numberType: 'fontWeight' },
+  'typography-semantic':  { file: 'typography.json',         root: 'type',   tier: 'semantic',  numberType: 'fontWeight', leafSuffix: 'font-weight' },
 };
 
 /** Mode name -> the suffix used in tokens/figma/semantic.<mode>.json. */
 const MODES = { 'light mode': 'light', 'dark mode': 'dark' };
 
 /**
- * The `layout` collection has no group of its own — `border-radius` sits at the
- * root next to `spacing/*`. Renaming here keeps the emitted CSS variables reading
- * like the rest of the system (`--ucsd-space-large`, not `--ucsd-spacing-large`).
+ * The `layout-primitive` collection has `spacing` at the root. Renaming here
+ * keeps the emitted CSS variables reading like the rest of the system
+ * (`--ucsd-space-large`, not `--ucsd-spacing-large`).
  */
-const LAYOUT_RENAME = { 'border-radius': ['radius', 'default'], spacing: ['space'] };
+const LAYOUT_RENAME = { spacing: ['space'] };
 
 /**
  * Figma stores font weight as the typeface's style name. CSS needs a number.
@@ -177,11 +179,15 @@ export function transform(inputs) {
     for (const [rawSegs, token] of leaves(tree)) {
       let segs = collapseRepeats(rawSegs.map(slug)).map((s) => LEAF_RENAME[s] ?? s);
 
-      if (collection === 'layout') {
+      if (collection === 'layout-primitive') {
         const rename = LAYOUT_RENAME[segs[0]];
         if (rename) segs = [...rename, ...segs.slice(1)];
       } else if (spec.root) {
         segs = [spec.root, ...segs];
+      }
+
+      if (spec.leafSuffix) {
+        segs = [...segs, spec.leafSuffix];
       }
 
       const name = segs.join('.');
@@ -205,8 +211,13 @@ export function transform(inputs) {
           value = `${value}${a}`;
         }
       } else if (token.$type === 'number') {
-        type = 'dimension';
-        value = reference ?? (token.$value === 0 ? '0' : `${token.$value}px`);
+        if (spec.numberType === 'fontWeight') {
+          type = 'fontWeight';
+          value = reference ?? token.$value;
+        } else {
+          type = 'dimension';
+          value = reference ?? (token.$value === 0 ? '0' : `${token.$value}px`);
+        }
       } else if (token.$type === 'string') {
         const leaf = segs.at(-1);
         if (leaf === 'font-weight') {
@@ -259,17 +270,73 @@ export function transform(inputs) {
 // I/O
 // ---------------------------------------------------------------------------
 
+/**
+ * Extract any .zip files in figma-export/ into like-named folders, so the
+ * maintainer can drop Figma's raw downloads without manually unzipping.
+ *
+ * Uses the system `tar` (bsdtar on Windows 10+, available everywhere on macOS
+ * and Linux) to avoid a dependency. After extraction, any *.tokens.json nested
+ * in a subfolder is moved to the folder root — Figma sometimes wraps the file
+ * in a directory matching the collection name.
+ */
+async function extractZips(inDir) {
+  const entries = await fs.readdir(inDir, { withFileTypes: true });
+  const zips = entries.filter((d) => d.isFile() && d.name.toLowerCase().endsWith('.zip'));
+  if (!zips.length) return;
+
+  for (const zip of zips) {
+    const zipPath = path.join(inDir, zip.name);
+    const baseName = zip.name.replace(/\.zip$/i, '');
+    const dest = path.join(inDir, baseName);
+
+    await fs.mkdir(dest, { recursive: true });
+    execFileSync('tar', ['-xf', zipPath, '-C', dest], { stdio: 'pipe' });
+
+    await flattenTokensJson(dest);
+
+    await fs.rm(zipPath);
+    console.log(`sync-figma: extracted ${zip.name} -> ${baseName}/`);
+  }
+}
+
+/** Move every *.tokens.json to the folder root and remove empty subdirectories. */
+async function flattenTokensJson(dest) {
+  async function walk(d) {
+    for (const e of await fs.readdir(d, { withFileTypes: true })) {
+      const full = path.join(d, e.name);
+      if (e.isDirectory()) {
+        await walk(full);
+      } else if (e.isFile() && e.name.endsWith('.tokens.json') && d !== dest) {
+        await fs.rename(full, path.join(dest, e.name));
+      }
+    }
+  }
+  await walk(dest);
+
+  async function pruneEmpty(d) {
+    for (const e of (await fs.readdir(d, { withFileTypes: true })).filter((x) => x.isDirectory())) {
+      const sub = path.join(d, e.name);
+      await pruneEmpty(sub);
+      if (!(await fs.readdir(sub)).length) await fs.rmdir(sub);
+    }
+  }
+  await pruneEmpty(dest);
+}
+
 if (import.meta.url === `file://${process.argv[1]}`.replace(/\\/g, '/') ||
     process.argv[1]?.endsWith('sync-figma.mjs')) {
-  const collections = await fs.readdir(IN, { withFileTypes: true }).catch(() => {
+  await fs.readdir(IN, { withFileTypes: true }).catch(() => {
     console.error(
       `\nsync-figma: figma-export/ not found.\n\n` +
       `  Ask the designer to right-click each variable collection in Figma and choose\n` +
-      `  "Export modes", then drop the folders here. See docs/figma.md §3.\n`,
+      `  "Export modes", then drop the ZIPs here. See docs/figma.md §3.\n`,
     );
     process.exit(1);
   });
 
+  await extractZips(IN);
+
+  const collections = await fs.readdir(IN, { withFileTypes: true });
   const inputs = [];
   for (const dir of collections.filter((d) => d.isDirectory())) {
     for (const entry of await fs.readdir(path.join(IN, dir.name))) {

@@ -23,8 +23,12 @@
     <div class="container">
       <a class="navbar-brand" href="#">Design System</a>
       <div class="navbar-nav">
-        <a class="nav-link active" aria-current="page" href="#">Components</a>
-        <a class="nav-link" href="#">Tokens</a>
+        <a class="nav-link active" aria-current="page" href="#h-color">Colors</a>
+        <a class="nav-link" href="#h-type">Typography</a>
+        <a class="nav-link" href="#h-btn">Buttons</a>
+        <a class="nav-link" href="#h-form">Forms</a>
+        <a class="nav-link" href="#h-card">Cards</a>
+        <a class="nav-link" href="#h-alert">Alerts</a>
       </div>
     </div>
   </nav>
@@ -44,26 +48,41 @@
     <p class="text-body-secondary">These swatches must change with the mode toggle. If one doesn't, it's hard-coded.</p>
     <div class="row g-3">
       <div class="col-6 col-md-3">
-        <div class="p-4 rounded border" style="background: var(--ucsd-color-surface-default); color: var(--ucsd-color-text-default);">surface / text default</div>
+        <div class="p-4 rounded border" style="background: var(--ucsd-color-surface-1); color: var(--ucsd-color-foreground-body-text);">surface-1 / body-text</div>
       </div>
       <div class="col-6 col-md-3">
-        <div class="p-4 rounded border" style="background: var(--ucsd-color-surface-subtle); color: var(--ucsd-color-text-muted);">surface subtle / text muted</div>
+        <div class="p-4 rounded border" style="background: var(--ucsd-color-surface-2); color: var(--ucsd-color-component-menu);">surface-2 / menu (muted)</div>
       </div>
       <div class="col-6 col-md-3">
-        <div class="p-4 rounded" style="background: var(--ucsd-color-action-primary); color: var(--ucsd-color-text-inverse);">action primary</div>
+        <div class="p-4 rounded" style="background: var(--ucsd-color-component-btn-primary); color: var(--ucsd-color-component-btn-label-primary);">btn-primary / btn-label-primary</div>
       </div>
       <div class="col-6 col-md-3">
-        <div class="p-4 rounded" style="background: var(--ucsd-color-surface-inverse); color: var(--ucsd-color-text-inverse);">surface inverse</div>
+        <div class="p-4 rounded" style="background: var(--ucsd-color-surface-4); color: var(--ucsd-color-foreground-heading-light);">surface-4 / heading-light</div>
+      </div>
+    </div>
+    <h3 class="h6 mt-4">System / feedback</h3>
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <div class="p-3 rounded" style="background: var(--ucsd-color-system-bg-success); color: var(--ucsd-color-system-foreground-success);">bg-success / foreground-success</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="p-3 rounded" style="background: var(--ucsd-color-system-bg-warning); color: var(--ucsd-color-system-foreground-warning);">bg-warning / foreground-warning</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="p-3 rounded" style="background: var(--ucsd-color-system-bg-error); color: var(--ucsd-color-system-foreground-error);">bg-error / foreground-error</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="p-3 rounded" style="background: var(--ucsd-color-system-bg-information); color: var(--ucsd-color-system-foreground-information);">bg-information / foreground-information</div>
       </div>
     </div>
   </section>
 
   <section class="mb-5" aria-labelledby="h-type">
     <h2 id="h-type">Typography</h2>
-    <h1 class="mb-2">Heading 1 — Teko display</h1>
+    <h1 class="mb-2">Heading 1 — Refrigerator Deluxe</h1>
     <h2 class="mb-2">Heading 2</h2>
     <h3 class="mb-2">Heading 3</h3>
-    <p>Body copy in Roboto. <a href="#">An inline link</a> should be underlined and meet AA contrast.</p>
+    <p>Body copy in Brix Sans. <a href="#">An inline link</a> should be underlined and meet AA contrast.</p>
     <p class="text-body-secondary">Secondary body text.</p>
   </section>
 
@@ -185,7 +204,7 @@
 
 <footer class="ucsd-footer">
   <div class="container">
-    <p class="mb-0">UCSD footer — UCSD <strong>Blue</strong>, not navy. A persistent Decorator V5 misreading.</p>
+    <p class="mb-0">UCSD footer — UCSD Blue (theme-secondary), per Decorator V5 convention.</p>
   </div>
 </footer>
 

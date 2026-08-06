@@ -46,15 +46,27 @@ Constraints driving the replacement:
 
 ---
 
-## D4. shadcn *registry*, not an npm React component package
+## D4. Tokens, not components, for React
 
-**Decision.** Publish `registry.json` + component sources; teams run `npx shadcn add https://design.ucsd.edu/r/button.json`.
+**Decision.** Ship `@ucsd/tokens` only. React teams install shadcn (or any other component library) normally via npm, then bind the components to UCSD tokens. No `@ucsd/react` package, no shadcn registry, no `design.ucsd.edu/r/`.
 
-**Rejected: `@ucsd/react` as a versioned component package.** A versioned component library makes the design system team the bottleneck for every product's edge case, and every consumer eventually needs a variant we didn't anticipate. The registry model gives teams code they own and can modify, while we still own the starting point and the tokens underneath it.
+**Rejected: a shadcn registry.** A registry makes the design system team the hosting bottleneck and adds an infrastructure surface (a versioned endpoint, a registry.json schema, a CDN) for no gain over "install shadcn, swap the classes." shadcn's model is already "you own the code" — a registry just changes where the starting copy comes from.
 
-**Bonus.** shadcn ships a registry MCP server, so agents can already enumerate and pull our components with no custom tooling from us.
+**Rejected: `@ucsd/react` as a versioned component package.** A versioned component library makes the design system team the bottleneck for every product's edge case, and every consumer eventually needs a variant we didn't anticipate. Tokens + "swap the classes" gives teams code they own and can modify, while we own the tokens underneath it.
 
-**Not built yet.** This is the decision, not the state. `design.ucsd.edu/r/` does not resolve and there is no `packages/registry/` — the stub was removed rather than left to imply otherwise. Sequenced as Phase 5 in [`figma.md`](figma.md). Until it exists, React teams use `@ucsd/tokens` with shadcn's own components; see [`using/nextjs.md`](using/nextjs.md).
+**How it works in practice.** `@ucsd/tokens` exports CSS custom properties and a Tailwind `@theme` block. A React team does:
+
+```bash
+npm install @ucsd/tokens
+npx shadcn@latest add button   # shadcn's own registry, not ours
+```
+```css
+@import "tailwindcss";
+@import "@ucsd/tokens/css";
+@import "@ucsd/tokens/tailwind";
+```
+
+Then bind the shadcn component to UCSD tokens instead of shadcn's defaults — see [`using/nextjs.md`](using/nextjs.md) for the full variant mapping.
 
 ---
 
@@ -146,7 +158,7 @@ The format's authors say the same thing. Its [PHILOSOPHY.md](https://github.com/
 |---|---|---|---|
 | 1 | Which **CMS**? (Drupal / headless / other) | `layouts/` content-model mapping | Write layouts CMS-agnostically with a mapping table per platform |
 | 2 | ~~Figma plan tier?~~ **Answered: Professional.** | — | Settled. Variable modes work, and Figma's native DTCG export handles the sync with no plugin or licence ([figma.md §3](figma.md)). The file must sit in a Project, not Drafts. **Code Connect is Organization/Enterprise-only, so it is off the table**; the component naming convention carries that weight instead. |
-| 3 | Keep **Teko** as the display face? | `font.family.display` | Carry it forward from Decorator V5 |
+| 3 | ~~Keep **Teko** as the display face?~~ **Answered: no.** | `font.family.display` | Refrigerator Deluxe is the display face; Brix Sans is the body face. Both licensed, web licence unconfirmed. |
 | 4 | Icon strategy — Glyphicons are dead | Icon tokens + component | Bootstrap Icons (BS5-native, MIT, ~2,000 glyphs) |
 | 5 | Where does this repo live — new GitHub repo, or inside the Skills Library? | CI publish target | Standalone repo; CI copies `skills/` into the Skills Library on release |
-| 6 | Is there an existing UCSD Tailwind/shadcn user to pilot with? | Phase 5 priority | Sequence after Bootstrap |
+| 6 | Is there an existing UCSD Tailwind/shadcn user to pilot with? | Phase 5 priority | Sequence after Bootstrap. No registry; teams install shadcn normally and swap classes to UCSD tokens. |

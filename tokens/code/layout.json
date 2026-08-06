@@ -16,10 +16,7 @@
     "wide":   { "$value": "1320px", "$type": "dimension" }
   },
   "radius": {
-    "$description": "Figma defines a single radius (radius.default, 12px). Bootstrap's component API needs a small scale around it, so the derived steps live here. If the designer adds a radius scale in Figma, delete these and let the sync own them.",
-    "none": { "$value": "0",     "$type": "dimension" },
-    "sm":   { "$value": "4px",   "$type": "dimension" },
-    "lg":   { "$value": "16px",  "$type": "dimension" },
+    "$description": "Figma now exports a radius scale (rounded-0 through rounded-3, rounded-circle, ucsd-8px). Only 'pill' is code-owned because Figma has no pill equivalent.",
     "pill": { "$value": "999px", "$type": "dimension" }
   }
 }

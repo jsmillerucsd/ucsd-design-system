@@ -6,22 +6,26 @@ UCSD's Bootstrap 5 theme is Bootstrap with the UCSD tokens compiled in. **Everyt
 
 ## Setup
 
-**No build step** — one link tag, tokens included:
+**No build step** - install the package and link the compiled CSS:
 
-```html
-<link rel="stylesheet" href="https://cdn.ucsd.edu/ucsd/2/ucsd-bootstrap.min.css">
-<script src="https://cdn.ucsd.edu/ucsd/2/bootstrap.bundle.min.js" defer></script>
+```bash
+npm install @ucsd/bootstrap
 ```
 
-Pin the major line (`/2/`) for auto-patching, or an exact version (`/2.1.0/`) if you need byte-stability.
+```html
+<link rel="stylesheet" href="node_modules/@ucsd/bootstrap/dist/ucsd-bootstrap.min.css">
+<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+```
 
-**With Sass** — gives you Bootstrap's full variable API on UCSD tokens:
+Or copy `ucsd-bootstrap.min.css` from `node_modules/@ucsd/bootstrap/dist/` into your static assets folder.
+
+**With Sass** - gives you Bootstrap's full variable API on UCSD tokens:
 
 ```scss
 @import "@ucsd/bootstrap/scss";
 ```
 
-To trim the bundle, copy `packages/bootstrap/scss/ucsd-bootstrap.scss` and delete the component imports you don't use. Keep the order — functions → tokens → bridge → variables → maps → mixins.
+To trim the bundle, copy `packages/bootstrap/scss/ucsd-bootstrap.scss` and delete the component imports you don't use. Keep the order: functions, tokens, bridge, variables, maps, mixins.
 
 ## What the theme changes
 

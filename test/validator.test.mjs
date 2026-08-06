@@ -51,13 +51,13 @@ describe('noncompliant fixture', async () => {
   }
 
   test('suggests the spacing token for padding, not the type token', () => {
-    // 16px is both space.large and radius.lg — the suggestion must be category-aware.
-    assert.match(out, /padding: 16px .*--ucsd-space-large/);
-    assert.doesNotMatch(out, /padding: 16px .*--ucsd-radius-lg/);
+    // 10px is both space.small and radius.rounded-2 — the suggestion must be category-aware.
+    assert.match(out, /padding: 10px .*--ucsd-space-small/);
+    assert.doesNotMatch(out, /padding: 10px .*--ucsd-radius-rounded-2/);
   });
 
   test('suggests the radius token for border-radius', () => {
-    assert.match(out, /border-radius: 12px .*--ucsd-radius-default/);
+    assert.match(out, /border-radius: 10px .*--ucsd-radius-rounded-2/);
   });
 
   test('does not match a legacy class name inside a longer hyphenated class', () => {

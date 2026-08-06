@@ -16,7 +16,7 @@
   background: $ucsd-color-surface-1;
   color: $ucsd-color-component-link;
   border: 2px solid $ucsd-color-theme-secondary;
-  border-radius: $ucsd-radius-default;
+  border-radius: $ucsd-radius-rounded-2;
 
   &:focus-visible {
     inset-block-start: $ucsd-space-small;
@@ -45,7 +45,7 @@
 .ucsd-footer {
   background: $ucsd-color-theme-secondary;
   color: $ucsd-color-foreground-heading-light;
-  padding-block: $ucsd-space-4x-large;
+  padding-block: $ucsd-space-3x-large;
 
   a {
     color: inherit;
@@ -89,8 +89,31 @@
 
 // --- Section rhythm ----------------------------------------------------------
 // Landing-page section spacing. Two sizes only, on purpose.
-.ucsd-section    { padding-block: $ucsd-space-4x-large; }
+.ucsd-section    { padding-block: $ucsd-space-3x-large; }
 .ucsd-section--sm { padding-block: $ucsd-space-3x-large; }
+
+// --- System color pairs ------------------------------------------------------
+// Bootstrap 5.3 auto-computes tints/shades from theme colors via Sass. We replace
+// those derived CSS variables with the Figma-designed UCSD system pairs so every
+// component that references them (alerts, badges, tables) uses intentional colors,
+// not math. Primary/secondary are left alone — they have no Figma system pair.
+:root {
+  --bs-success-text-emphasis: var(--ucsd-color-system-foreground-success);
+  --bs-success-bg-subtle:     var(--ucsd-color-system-bg-success);
+  --bs-success-border-subtle: var(--ucsd-color-system-success);
+
+  --bs-info-text-emphasis:    var(--ucsd-color-system-foreground-information);
+  --bs-info-bg-subtle:        var(--ucsd-color-system-bg-information);
+  --bs-info-border-subtle:    var(--ucsd-color-system-information);
+
+  --bs-warning-text-emphasis: var(--ucsd-color-system-foreground-warning);
+  --bs-warning-bg-subtle:     var(--ucsd-color-system-bg-warning);
+  --bs-warning-border-subtle: var(--ucsd-color-system-warning);
+
+  --bs-danger-text-emphasis:  var(--ucsd-color-system-foreground-error);
+  --bs-danger-bg-subtle:      var(--ucsd-color-system-bg-error);
+  --bs-danger-border-subtle:  var(--ucsd-color-system-error);
+}
 
 // --- Reduced motion ----------------------------------------------------------
 @media (prefers-reduced-motion: reduce) {

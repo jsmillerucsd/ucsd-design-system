@@ -1,33 +1,50 @@
-# UCSD's DESIGN.md
+# UCSD Design System
 
-The UC San Diego design system as **one file you hand a coding agent** — [`DESIGN.md`](DESIGN.md) — plus the same tokens compiled for every framework.
+Token-first design system for UC San Diego. Successor to Decorator V5.
 
-Successor to **Decorator V5** (Bootstrap 3, jQuery, Glyphicons, no dark mode).
+Two packages ship from this repo:
 
-> **Status: real values, not placeholders.** Colour, type, spacing and radius are synced from the designer's Figma file. Two caveats: the display faces (Refrigerator Deluxe, Brix Sans) are licensed and their **web licence is unconfirmed**, and `tokens/known-issues.json` tracks six defects design still needs to fix.
+- **`@ucsd/tokens`** - CSS custom properties, Sass, Tailwind @theme, JS, JSON
+- **`@ucsd/bootstrap`** - Bootstrap 5 theme, compiled CSS + Sass entry point
+
+Tokens sync from the designer's Figma file. `DESIGN.md` is the single file you hand a coding agent.
+
+## Install
+
+Add one line to your app's `.npmrc`:
+
+```
+@ucsd:registry=https://npm.pkg.github.com
+```
+
+Then:
+
+```bash
+npm install @ucsd/tokens        # any framework
+npm install @ucsd/bootstrap     # Bootstrap 5 sites
+```
 
 ## Use it
 
-**Next.js / React / Vite** — [full guide](docs/using/nextjs.md)
+**Next.js / React / Tailwind** - [full guide](docs/using/nextjs.md)
 
 ```css
-/* app/globals.css */
 @import "tailwindcss";
 @import "@ucsd/tokens/css";
 @import "@ucsd/tokens/tailwind";
 ```
 
-Then `bg-theme-primary`, `text-foreground-body-text`, `p-large`, `text-h1`. Dark mode needs no `dark:` variants.
+Then `bg-component-btn-primary`, `text-foreground-body-text`, `p-large`, `text-h1`. Dark mode needs no `dark:` variants.
 
-**Bootstrap 5 / static page / CMS template** — [full guide](docs/using/bootstrap.md)
+**Bootstrap 5 / CMS / static page** - [full guide](docs/using/bootstrap.md)
 
-```html
-<link rel="stylesheet" href="https://cdn.ucsd.edu/ucsd/2/ucsd-bootstrap.min.css">
+```bash
+npm install @ucsd/bootstrap
 ```
 
-No build step, tokens included. With Sass instead: `@import "@ucsd/bootstrap/scss";`
+With Sass: `@import "@ucsd/bootstrap/scss";`
 
-**Vue, Svelte, web components, email, charts** — [full guide](docs/using/other.md)
+**Vue, Svelte, anything else** - [full guide](docs/using/other.md)
 
 ```css
 background: var(--ucsd-color-surface-1);
@@ -36,7 +53,7 @@ color: var(--ucsd-color-foreground-body-text);
 
 ## Use it with an agent
 
-Point it at [`DESIGN.md`](DESIGN.md). One file, no setup: every semantic token with light *and* dark values, the rules, and the design intent behind them, in the [DESIGN.md format](https://github.com/google-labs-code/design.md) agents already understand.
+Point it at [`DESIGN.md`](DESIGN.md). One file, no setup: every semantic token with light and dark values, the rules, and the design intent, in the [DESIGN.md format](https://github.com/google-labs-code/design.md) agents already understand.
 
 ```
 Build a UCSD program landing page. Follow DESIGN.md.
@@ -44,7 +61,7 @@ Use the landing-page pattern from docs/layouts/.
 Run `npm run validate` and fix what it reports.
 ```
 
-`npm run validate "src/**/*.tsx"` flags raw hex and px where a token exists, Bootstrap 3 leftovers, and common accessibility misses. Claude Code users also get the [skill](skills/ucsd-design-system/SKILL.md).
+`npm run validate "src/**/*.tsx"` flags raw hex and px where a token exists, Bootstrap 3 leftovers, and common accessibility misses.
 
 ## Keep it updated
 
@@ -52,22 +69,21 @@ Figma owns the values. The designer never touches git:
 
 | Who | Does |
 |---|---|
-| **Designer** | In Figma: right-click each variable collection → **Export modes** → send the files |
-| **You** | Drop them in `figma-export/`, run `npm run sync:figma`, review the diff, open a PR |
+| Designer | In Figma: right-click each collection, Export modes, send the ZIPs |
+| You | Drop them in `figma-export/`, run `npm run sync:figma`, review the diff, open a PR |
 
-`npm run build` then recompiles every target — CSS, Sass, Tailwind, TS, Bootstrap, `DESIGN.md`, and the skill — from that one source. Nobody retypes a hex code anywhere in the chain.
-
-The gate blocks a bad sync: aliases must resolve, every token must exist in both modes, names must match the contract, and text/background pairs must pass WCAG 2.2 AA in both modes. Full detail in [docs/figma.md](docs/figma.md).
+`npm run build` recompiles every target from that one source. The gate blocks a bad sync: aliases must resolve, every token must exist in both modes, names must match the contract, text/background pairs must pass WCAG 2.2 AA. Full detail in [docs/figma.md](docs/figma.md).
 
 ## Docs
 
-| | |
+| Doc | What |
 |---|---|
-| [Using it: Next.js](docs/using/nextjs.md) · [Bootstrap](docs/using/bootstrap.md) · [everything else](docs/using/other.md) | Get it into your app |
-| [Page layouts](docs/layouts/README.md) | Content, landing and listing patterns + CMS content models |
-| [Figma → code](docs/figma.md) | The sync, and the authoring contract for designers |
+| [Using: Next.js](docs/using/nextjs.md) / [Bootstrap](docs/using/bootstrap.md) / [other](docs/using/other.md) | Get it into your app |
+| [Page layouts](docs/layouts/README.md) | Content, landing, listing patterns + CMS content models |
+| [Figma to code](docs/figma.md) | The sync and the authoring contract for designers |
+| [Figma naming delta](docs/figma-naming-delta.md) | Punch list of Figma-side naming fixes for the designer |
 | [Token naming contract](docs/token-naming-contract.md) | The four tiers and what each is for |
 | [Accessibility](docs/accessibility.md) | The contract every component owes |
-| [Migrating off Decorator V5](docs/migration.md) | Bootstrap 3 → 5 class mapping |
-| [Architecture](docs/architecture.md) | Decisions, and the alternatives they rejected |
+| [Migrating off Decorator V5](docs/migration.md) | Bootstrap 3 to 5 class mapping |
+| [Architecture](docs/architecture.md) | Decisions and the alternatives they rejected |
 | [Contributing](CONTRIBUTING.md) | Build, test, repo map, how to change a token |

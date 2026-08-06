@@ -1,0 +1,2 @@
+# Add this line to your app's .npmrc, then: npm install @ucsd/tokens
+@ucsd:registry=https://npm.pkg.github.com

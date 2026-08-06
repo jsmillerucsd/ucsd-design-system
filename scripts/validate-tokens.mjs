@@ -199,16 +199,15 @@ const PAIRS = [
   ['color.foreground.body-text', 'color.surface.1', 4.5],
   ['color.foreground.body-text', 'color.surface.2', 4.5],
   ['color.foreground.body-text-focus', 'color.surface.1', 4.5],
-  ['color.foreground.heading-1', 'color.surface.1', 4.5],
-  ['color.foreground.heading-2', 'color.surface.1', 4.5],
-  ['color.foreground.heading-3', 'color.surface.1', 4.5],
+  ['color.foreground.h1-heading', 'color.surface.1', 4.5],
+  ['color.foreground.h2-heading', 'color.surface.1', 4.5],
+  ['color.foreground.h3-heading', 'color.surface.1', 4.5],
   ['color.foreground.subheading', 'color.surface.1', 4.5],
   ['color.foreground.eyebrow', 'color.surface.1', 4.5],
 
   // Buttons: each label against its own fill.
   ['color.component.btn-label-primary', 'color.component.btn-primary', 4.5],
   ['color.component.btn-label-secondary', 'color.component.btn-secondary', 4.5],
-  ['color.component.btn-label-tertiary', 'color.component.btn-tertiary', 4.5],
 
   ['color.component.link', 'color.surface.1', 4.5],
   ['color.component.icon', 'color.surface.1', 3.0],

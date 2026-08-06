@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "description": "UCSD Bootstrap 5 theme. Successor to Decorator V5. Ships a compiled CDN bundle and a Sass entry point.",
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsmillerucsd/ucsd-design-system.git",
+    "directory": "packages/bootstrap"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "files": ["dist", "scss"],
   "main": "./dist/ucsd-bootstrap.css",
   "sass": "./scss/ucsd-bootstrap.scss",
