@@ -110,7 +110,7 @@ typography:
     fontSize: "12px"
     lineHeight: "18px"
 spacing:
-  3x-large: "60px"
+  3x-large: "64px"
   2x-large: "48px"
   extra-large: "32px"
   large: "24px"
