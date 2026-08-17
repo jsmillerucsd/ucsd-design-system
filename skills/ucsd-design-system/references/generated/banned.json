@@ -1,7 +1,7 @@
 {
   "$comment": "GENERATED. Literal values that must not appear in source — a token exists for each.",
   "colors": {
-    "#fbf9f5": [
+    "#f5f0e6": [
       "--ucsd-color-component-btn-tertiary",
       "--ucsd-color-surface-2"
     ],
@@ -19,6 +19,7 @@
       "--ucsd-color-theme-primary",
       "--ucsd-color-component-btn-label-primary",
       "--ucsd-color-component-btn-navy",
+      "--ucsd-color-component-card-navy",
       "--ucsd-color-component-icon",
       "--ucsd-color-foreground-body-text-focus",
       "--ucsd-color-foreground-eyebrow",
@@ -46,6 +47,7 @@
     "#00629b": [
       "--ucsd-color-theme-secondary",
       "--ucsd-color-component-btn-secondary",
+      "--ucsd-color-component-card-blue",
       "--ucsd-color-component-link",
       "--ucsd-color-foreground-h1-heading",
       "--ucsd-color-surface-3",
@@ -152,9 +154,9 @@
     "#404142",
     "#fefefd",
     "#fdfcfa",
+    "#fbf9f5",
     "#f9f6f0",
     "#f7f3eb",
-    "#f5f0e6",
     "#c4c0b8",
     "#93908a",
     "#62605c",
@@ -185,20 +187,20 @@
     "#4f0b00"
   ],
   "space": {
-    "45px": "--ucsd-space-2x-large",
-    "60px": "--ucsd-space-3x-large",
-    "30px": "--ucsd-space-extra-large",
-    "5px": "--ucsd-space-extra-small",
-    "20px": "--ucsd-space-large",
-    "15px": "--ucsd-space-medium",
-    "10px": "--ucsd-space-small"
+    "24px": "--ucsd-space-lg-24",
+    "16px": "--ucsd-space-md-16",
+    "12px": "--ucsd-space-sm-12",
+    "32px": "--ucsd-space-xl-32",
+    "8px": "--ucsd-space-xs-8",
+    "48px": "--ucsd-space-xxl-48",
+    "4px": "--ucsd-space-xxs-4",
+    "64px": "--ucsd-space-xxxl-64"
   },
   "radius": {
-    "5px": "--ucsd-radius-rounded-1",
-    "10px": "--ucsd-radius-rounded-2",
-    "15px": "--ucsd-radius-rounded-3",
+    "12px": "--ucsd-radius-rounded-12",
+    "4px": "--ucsd-radius-rounded-4",
+    "8px": "--ucsd-radius-rounded-8",
     "100px": "--ucsd-radius-rounded-circle",
-    "8px": "--ucsd-radius-ucsd-8px",
     "999px": "--ucsd-radius-pill"
   },
   "breakpoints": [

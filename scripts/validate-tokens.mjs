@@ -206,8 +206,8 @@ const PAIRS = [
   ['color.foreground.eyebrow', 'color.surface.1', 4.5],
 
   // Buttons: each label against its own fill.
-  ['color.component.btn-label-primary', 'color.component.btn-primary', 4.5],
-  ['color.component.btn-label-secondary', 'color.component.btn-secondary', 4.5],
+  ['color.component.btn.label-primary', 'color.component.btn.primary', 4.5],
+  ['color.component.btn.label-secondary', 'color.component.btn.secondary', 4.5],
 
   ['color.component.link', 'color.surface.1', 4.5],
   ['color.component.icon', 'color.surface.1', 3.0],

@@ -4,59 +4,59 @@
       "$type": "dimension",
       "$value": "0"
     },
-    "rounded-1": {
+    "rounded-12": {
       "$type": "dimension",
-      "$value": "5px"
+      "$value": "12px"
     },
-    "rounded-2": {
+    "rounded-4": {
       "$type": "dimension",
-      "$value": "10px"
+      "$value": "4px"
     },
-    "rounded-3": {
+    "rounded-8": {
       "$type": "dimension",
-      "$value": "15px"
+      "$value": "8px"
     },
     "rounded-circle": {
       "$type": "dimension",
       "$value": "100px"
-    },
-    "ucsd-8px": {
-      "$type": "dimension",
-      "$value": "8px"
     }
   },
   "space": {
-    "2x-large": {
-      "$type": "dimension",
-      "$value": "45px"
-    },
-    "3x-large": {
-      "$type": "dimension",
-      "$value": "60px"
-    },
-    "extra-large": {
-      "$type": "dimension",
-      "$value": "30px"
-    },
-    "extra-small": {
-      "$type": "dimension",
-      "$value": "5px"
-    },
-    "large": {
-      "$type": "dimension",
-      "$value": "20px"
-    },
-    "medium": {
-      "$type": "dimension",
-      "$value": "15px"
-    },
-    "small": {
-      "$type": "dimension",
-      "$value": "10px"
-    },
-    "zero": {
+    "0": {
       "$type": "dimension",
       "$value": "0"
+    },
+    "lg-24": {
+      "$type": "dimension",
+      "$value": "24px"
+    },
+    "md-16": {
+      "$type": "dimension",
+      "$value": "16px"
+    },
+    "sm-12": {
+      "$type": "dimension",
+      "$value": "12px"
+    },
+    "xl-32": {
+      "$type": "dimension",
+      "$value": "32px"
+    },
+    "xs-8": {
+      "$type": "dimension",
+      "$value": "8px"
+    },
+    "xxl-48": {
+      "$type": "dimension",
+      "$value": "48px"
+    },
+    "xxs-4": {
+      "$type": "dimension",
+      "$value": "4px"
+    },
+    "xxxl-64": {
+      "$type": "dimension",
+      "$value": "64px"
     }
   }
 }

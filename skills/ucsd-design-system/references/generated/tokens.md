@@ -4,7 +4,7 @@
 > from `packages/tokens/dist/tokens.json`. To change a value, change it in Figma
 > and run the sync; see `docs/figma.md`.
 
-Semantic tokens: **133** · component: **0** · primitives: **105**
+Semantic tokens: **148** · component: **0** · primitives: **105**
 
 ## How to reference a token
 
@@ -30,22 +30,35 @@ with light/dark mode automatically.
 | `breakpoint.xl` | `--ucsd-breakpoint-xl` | `xl:` variants | `1200px` | — |
 | `breakpoint.xxl` | `--ucsd-breakpoint-xxl` | `xxl:` variants | `1400px` | — |
 
+### `button`
+
+| Token | CSS variable | Tailwind | Value | Use for |
+| --- | --- | --- | --- | --- |
+| `button.gap` | `--ucsd-button-gap` | — | `12px` | — |
+| `button.padding-x` | `--ucsd-button-padding-x` | — | `24px` | — |
+| `button.padding-y` | `--ucsd-button-padding-y` | — | `8px` | — |
+| `button.radius` | `--ucsd-button-radius` | — | `8px` | — |
+
 ### `color.component`
 
 | Token | CSS variable | Tailwind | Light | Dark | Use for |
 | --- | --- | --- | --- | --- | --- |
-| `color.component.btn-tertiary` | `--ucsd-color-component-btn-tertiary` | `bg-component-btn-tertiary` `text-component-btn-tertiary` `border-component-btn-tertiary` | `#fbf9f5` | `—` | Quiet third button fill. Aliases the raised content surface rather than a primitive, so it re-aliases in dark mode for free. |
-| `color.component.btn-label-tertiary` | `--ucsd-color-component-btn-label-tertiary` | `bg-component-btn-label-tertiary` `text-component-btn-label-tertiary` `border-component-btn-label-tertiary` | `#313232` | `—` | Label for btn-tertiary. Aliases body text, so the pair inherits the already-gated `foreground.body-text on surface.2` contrast check in BOTH modes — see PAIRS in scripts/validate-tokens.mjs. |
-| `color.component.btn-gold` | `--ucsd-color-component-btn-gold` | `bg-component-btn-gold` `text-component-btn-gold` `border-component-btn-gold` | `#c69214` | `#d9b662` | — |
-| `color.component.btn-label-black` | `--ucsd-color-component-btn-label-black` | `bg-component-btn-label-black` `text-component-btn-label-black` `border-component-btn-label-black` | `#000000` | `#000000` | — |
-| `color.component.btn-label-primary` | `--ucsd-color-component-btn-label-primary` | `bg-component-btn-label-primary` `text-component-btn-label-primary` `border-component-btn-label-primary` | `#182b49` | `#182b49` | — |
-| `color.component.btn-label-secondary` | `--ucsd-color-component-btn-label-secondary` | `bg-component-btn-label-secondary` `text-component-btn-label-secondary` `border-component-btn-label-secondary` | `#ffffff` | `#162742` | — |
-| `color.component.btn-label-white` | `--ucsd-color-component-btn-label-white` | `bg-component-btn-label-white` `text-component-btn-label-white` `border-component-btn-label-white` | `#ffffff` | `#ffffff` | — |
-| `color.component.btn-navy` | `--ucsd-color-component-btn-navy` | `bg-component-btn-navy` `text-component-btn-navy` `border-component-btn-navy` | `#182b49` | `#182b49` | — |
-| `color.component.btn-orange` | `--ucsd-color-component-btn-orange` | `bg-component-btn-orange` `text-component-btn-orange` `border-component-btn-orange` | `#fc8900` | `#fc8900` | — |
-| `color.component.btn-primary` | `--ucsd-color-component-btn-primary` | `bg-component-btn-primary` `text-component-btn-primary` `border-component-btn-primary` | `#ffcd00` | `#ffcd00` | — |
-| `color.component.btn-secondary` | `--ucsd-color-component-btn-secondary` | `bg-component-btn-secondary` `text-component-btn-secondary` `border-component-btn-secondary` | `#00629b` | `#5496bc` | — |
-| `color.component.btn-turqoise` | `--ucsd-color-component-btn-turqoise` | `bg-component-btn-turqoise` `text-component-btn-turqoise` `border-component-btn-turqoise` | `#00c6d7` | `#00c6d7` | — |
+| `color.component.btn.tertiary` | `--ucsd-color-component-btn-tertiary` | `bg-component-btn-tertiary` `text-component-btn-tertiary` `border-component-btn-tertiary` | `#f5f0e6` | `—` | Quiet third button fill. Aliases the raised content surface rather than a primitive, so it re-aliases in dark mode for free. |
+| `color.component.btn.label-tertiary` | `--ucsd-color-component-btn-label-tertiary` | `bg-component-btn-label-tertiary` `text-component-btn-label-tertiary` `border-component-btn-label-tertiary` | `#313232` | `—` | Label for btn.tertiary. Aliases body text, so the pair inherits the already-gated `foreground.body-text on surface.2` contrast check in BOTH modes — see PAIRS in scripts/validate-tokens.mjs. |
+| `color.component.btn.gold` | `--ucsd-color-component-btn-gold` | `bg-component-btn-gold` `text-component-btn-gold` `border-component-btn-gold` | `#c69214` | `#d9b662` | — |
+| `color.component.btn.label-black` | `--ucsd-color-component-btn-label-black` | `bg-component-btn-label-black` `text-component-btn-label-black` `border-component-btn-label-black` | `#000000` | `#000000` | — |
+| `color.component.btn.label-primary` | `--ucsd-color-component-btn-label-primary` | `bg-component-btn-label-primary` `text-component-btn-label-primary` `border-component-btn-label-primary` | `#182b49` | `#182b49` | — |
+| `color.component.btn.label-secondary` | `--ucsd-color-component-btn-label-secondary` | `bg-component-btn-label-secondary` `text-component-btn-label-secondary` `border-component-btn-label-secondary` | `#ffffff` | `#162742` | — |
+| `color.component.btn.label-white` | `--ucsd-color-component-btn-label-white` | `bg-component-btn-label-white` `text-component-btn-label-white` `border-component-btn-label-white` | `#ffffff` | `#ffffff` | — |
+| `color.component.btn.navy` | `--ucsd-color-component-btn-navy` | `bg-component-btn-navy` `text-component-btn-navy` `border-component-btn-navy` | `#182b49` | `#182b49` | — |
+| `color.component.btn.orange` | `--ucsd-color-component-btn-orange` | `bg-component-btn-orange` `text-component-btn-orange` `border-component-btn-orange` | `#fc8900` | `#fc8900` | — |
+| `color.component.btn.primary` | `--ucsd-color-component-btn-primary` | `bg-component-btn-primary` `text-component-btn-primary` `border-component-btn-primary` | `#ffcd00` | `#ffcd00` | — |
+| `color.component.btn.secondary` | `--ucsd-color-component-btn-secondary` | `bg-component-btn-secondary` `text-component-btn-secondary` `border-component-btn-secondary` | `#00629b` | `#5496bc` | — |
+| `color.component.btn.turqoise` | `--ucsd-color-component-btn-turqoise` | `bg-component-btn-turqoise` `text-component-btn-turqoise` `border-component-btn-turqoise` | `#00c6d7` | `#00c6d7` | — |
+| `color.component.card.blue` | `--ucsd-color-component-card-blue` | `bg-component-card-blue` `text-component-card-blue` `border-component-card-blue` | `#00629b` | `#00629b` | — |
+| `color.component.card.navy` | `--ucsd-color-component-card-navy` | `bg-component-card-navy` `text-component-card-navy` `border-component-card-navy` | `#182b49` | `#182b49` | — |
+| `color.component.card.semi-transparent-blue` | `--ucsd-color-component-card-semi-transparent-blue` | `bg-component-card-semi-transparent-blue` `text-component-card-semi-transparent-blue` `border-component-card-semi-transparent-blue` | `rgba(0, 98, 155, 0.8)` | `rgba(0, 98, 155, 0.8)` | — |
+| `color.component.card.semi-transparent-navy` | `--ucsd-color-component-card-semi-transparent-navy` | `bg-component-card-semi-transparent-navy` `text-component-card-semi-transparent-navy` `border-component-card-semi-transparent-navy` | `rgba(24, 43, 73, 0.8)` | `rgba(24, 43, 73, 0.8)` | — |
 | `color.component.icon` | `--ucsd-color-component-icon` | `bg-component-icon` `text-component-icon` `border-component-icon` | `#182b49` | `#f5f0e6` | — |
 | `color.component.link` | `--ucsd-color-component-link` | `bg-component-link` `text-component-link` `border-component-link` | `#00629b` | `#5496bc` | — |
 | `color.component.menu` | `--ucsd-color-component-menu` | `bg-component-menu` `text-component-menu` `border-component-menu` | `#747678` | `#747678` | — |
@@ -79,7 +92,7 @@ with light/dark mode automatically.
 | Token | CSS variable | Tailwind | Light | Dark | Use for |
 | --- | --- | --- | --- | --- | --- |
 | `color.surface.1` | `--ucsd-color-surface-1` | `bg-surface-1` `text-surface-1` `border-surface-1` | `#ffffff` | `#000000` | — |
-| `color.surface.2` | `--ucsd-color-surface-2` | `bg-surface-2` `text-surface-2` `border-surface-2` | `#fbf9f5` | `#404142` | — |
+| `color.surface.2` | `--ucsd-color-surface-2` | `bg-surface-2` `text-surface-2` `border-surface-2` | `#f5f0e6` | `#404142` | — |
 | `color.surface.3` | `--ucsd-color-surface-3` | `bg-surface-3` `text-surface-3` `border-surface-3` | `#00629b` | `#00629b` | — |
 | `color.surface.4` | `--ucsd-color-surface-4` | `bg-surface-4` `text-surface-4` `border-surface-4` | `#182b49` | `#182b49` | — |
 | `color.surface.5` | `--ucsd-color-surface-5` | `bg-surface-5` `text-surface-5` `border-surface-5` | `#f8f8f9` | `#313232` | — |
@@ -114,6 +127,8 @@ with light/dark mode automatically.
 
 | Token | CSS variable | Tailwind | Value | Use for |
 | --- | --- | --- | --- | --- |
+| `container.gutter` | `--ucsd-container-gutter` | `max-w-gutter` | `24px` | — |
+| `container.margin` | `--ucsd-container-margin` | `max-w-margin` | `12px` | — |
 | `container.prose` | `--ucsd-container-prose` | `max-w-prose` | `70ch` | — |
 | `container.narrow` | `--ucsd-container-narrow` | `max-w-narrow` | `768px` | — |
 | `container.base` | `--ucsd-container-base` | `max-w-base` | `1140px` | — |
@@ -128,6 +143,21 @@ with light/dark mode automatically.
 | `elevation.2` | `--ucsd-elevation-2` | `shadow-2` | `0 2px 6px 0 rgba(24, 43, 73, 0.10)` | — |
 | `elevation.3` | `--ucsd-elevation-3` | `shadow-3` | `0 6px 16px 0 rgba(24, 43, 73, 0.12)` | — |
 | `elevation.4` | `--ucsd-elevation-4` | `shadow-4` | `0 12px 32px 0 rgba(24, 43, 73, 0.16)` | — |
+
+### `grid`
+
+| Token | CSS variable | Tailwind | Value | Use for |
+| --- | --- | --- | --- | --- |
+| `grid.gap` | `--ucsd-grid-gap` | — | `12px` | — |
+
+### `icon`
+
+| Token | CSS variable | Tailwind | Value | Use for |
+| --- | --- | --- | --- | --- |
+| `icon.lg-16` | `--ucsd-icon-lg-16` | — | `16px` | — |
+| `icon.lg-20` | `--ucsd-icon-lg-20` | — | `20px` | — |
+| `icon.sm-8` | `--ucsd-icon-sm-8` | — | `8px` | — |
+| `icon.xl-24` | `--ucsd-icon-xl-24` | — | `24px` | — |
 
 ### `motion`
 
@@ -145,25 +175,25 @@ with light/dark mode automatically.
 | Token | CSS variable | Tailwind | Value | Use for |
 | --- | --- | --- | --- | --- |
 | `radius.rounded-0` | `--ucsd-radius-rounded-0` | `rounded-rounded-0` | `0` | — |
-| `radius.rounded-1` | `--ucsd-radius-rounded-1` | `rounded-rounded-1` | `5px` | — |
-| `radius.rounded-2` | `--ucsd-radius-rounded-2` | `rounded-rounded-2` | `10px` | — |
-| `radius.rounded-3` | `--ucsd-radius-rounded-3` | `rounded-rounded-3` | `15px` | — |
+| `radius.rounded-12` | `--ucsd-radius-rounded-12` | `rounded-rounded-12` | `12px` | — |
+| `radius.rounded-4` | `--ucsd-radius-rounded-4` | `rounded-rounded-4` | `4px` | — |
+| `radius.rounded-8` | `--ucsd-radius-rounded-8` | `rounded-rounded-8` | `8px` | — |
 | `radius.rounded-circle` | `--ucsd-radius-rounded-circle` | `rounded-rounded-circle` | `100px` | — |
-| `radius.ucsd-8px` | `--ucsd-radius-ucsd-8px` | `rounded-ucsd-8px` | `8px` | — |
 | `radius.pill` | `--ucsd-radius-pill` | `rounded-pill` | `999px` | — |
 
 ### `space`
 
 | Token | CSS variable | Tailwind | Value | Use for |
 | --- | --- | --- | --- | --- |
-| `space.2x-large` | `--ucsd-space-2x-large` | `p-2x-large` `m-2x-large` `gap-2x-large` | `45px` | — |
-| `space.3x-large` | `--ucsd-space-3x-large` | `p-3x-large` `m-3x-large` `gap-3x-large` | `60px` | — |
-| `space.extra-large` | `--ucsd-space-extra-large` | `p-extra-large` `m-extra-large` `gap-extra-large` | `30px` | — |
-| `space.extra-small` | `--ucsd-space-extra-small` | `p-extra-small` `m-extra-small` `gap-extra-small` | `5px` | — |
-| `space.large` | `--ucsd-space-large` | `p-large` `m-large` `gap-large` | `20px` | — |
-| `space.medium` | `--ucsd-space-medium` | `p-medium` `m-medium` `gap-medium` | `15px` | — |
-| `space.small` | `--ucsd-space-small` | `p-small` `m-small` `gap-small` | `10px` | — |
-| `space.zero` | `--ucsd-space-zero` | `p-zero` `m-zero` `gap-zero` | `0` | — |
+| `space.0` | `--ucsd-space-0` | `p-0` `m-0` `gap-0` | `0` | — |
+| `space.lg-24` | `--ucsd-space-lg-24` | `p-lg-24` `m-lg-24` `gap-lg-24` | `24px` | — |
+| `space.md-16` | `--ucsd-space-md-16` | `p-md-16` `m-md-16` `gap-md-16` | `16px` | — |
+| `space.sm-12` | `--ucsd-space-sm-12` | `p-sm-12` `m-sm-12` `gap-sm-12` | `12px` | — |
+| `space.xl-32` | `--ucsd-space-xl-32` | `p-xl-32` `m-xl-32` `gap-xl-32` | `32px` | — |
+| `space.xs-8` | `--ucsd-space-xs-8` | `p-xs-8` `m-xs-8` `gap-xs-8` | `8px` | — |
+| `space.xxl-48` | `--ucsd-space-xxl-48` | `p-xxl-48` `m-xxl-48` `gap-xxl-48` | `48px` | — |
+| `space.xxs-4` | `--ucsd-space-xxs-4` | `p-xxs-4` `m-xxs-4` `gap-xxs-4` | `4px` | — |
+| `space.xxxl-64` | `--ucsd-space-xxxl-64` | `p-xxxl-64` `m-xxxl-64` `gap-xxxl-64` | `64px` | — |
 
 ### `type`
 

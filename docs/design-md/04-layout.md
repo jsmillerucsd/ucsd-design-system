@@ -1,8 +1,8 @@
 ## Layout
 
-One spacing scale, based on a five-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
+One spacing scale, based on a four-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
 
-Spacing steps are t-shirt sized — `space.extra-small` through `space.3x-large`. Both frameworks' numeric utilities are built on the same step, so `.p-4` in Bootstrap, `p-4` in Tailwind and `space.large` are one value reached three ways. That holds through step 4; beyond it the numeric scales diverge and the named step is the only way to say it exactly.
+Spacing steps carry their pixel value in the name — `space.xxs-4` through `space.xxxl-64`. Both frameworks' numeric utilities are built on the same step, so `.p-4` in Bootstrap, `p-4` in Tailwind and `space.md-16` are one value reached three ways. The alignment holds across the full scale.
 
 **Breakpoints are Bootstrap 5's**, matched exactly by `breakpoint.*`. This is not a preference — Bootstrap utilities and Tailwind variants both compile from these values, and a mismatch produces bugs that take days to find. Never invent a breakpoint, and never write a media query against a value that isn't in the scale.
 

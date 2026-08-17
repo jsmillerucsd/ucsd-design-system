@@ -1,0 +1,54 @@
+{
+  "button": {
+    "gap": {
+      "$type": "dimension",
+      "$value": "{space.sm-12}"
+    },
+    "padding-x": {
+      "$type": "dimension",
+      "$value": "{space.lg-24}"
+    },
+    "padding-y": {
+      "$type": "dimension",
+      "$value": "{space.xs-8}"
+    },
+    "radius": {
+      "$type": "dimension",
+      "$value": "{radius.rounded-8}"
+    }
+  },
+  "container": {
+    "gutter": {
+      "$type": "dimension",
+      "$value": "{space.lg-24}"
+    },
+    "margin": {
+      "$type": "dimension",
+      "$value": "{space.sm-12}"
+    }
+  },
+  "grid": {
+    "gap": {
+      "$type": "dimension",
+      "$value": "{space.sm-12}"
+    }
+  },
+  "icon": {
+    "lg-16": {
+      "$type": "dimension",
+      "$value": "{space.md-16}"
+    },
+    "lg-20": {
+      "$type": "dimension",
+      "$value": "20px"
+    },
+    "sm-8": {
+      "$type": "dimension",
+      "$value": "{space.xs-8}"
+    },
+    "xl-24": {
+      "$type": "dimension",
+      "$value": "{space.lg-24}"
+    }
+  }
+}

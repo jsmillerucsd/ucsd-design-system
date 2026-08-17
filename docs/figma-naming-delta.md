@@ -43,7 +43,7 @@ All four fail WCAG 2.2 AA (needs 4.5:1).
 | Token (dark mode) | Ratio | Fix |
 |---|---|---|
 | `color.foreground.body-text` on `color.surface.2` | 4.00:1 | Lighten body-text to `gray-300`, or darken surface-2 |
-| `color.component.btn-label-tertiary` on `color.component.btn-tertiary` | 3.25:1 | Darken the tertiary fill, or use a dark label |
+| `color.component.btn.label-tertiary` on `color.component.btn.tertiary` | 3.25:1 | Darken the tertiary fill, or use a dark label |
 | `color.component.menu` on `color.surface.1` | 3.70:1 | Lighten menu to `gray-400` or above |
 | `color.system.foreground-information` on `color.system.bg-information` | 2.79:1 | Darken `bg-information` in dark mode (success/warning/error pairs already do this) |
 

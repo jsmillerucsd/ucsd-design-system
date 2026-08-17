@@ -49,6 +49,7 @@ const COMMON_SOURCES = [
   g('tokens', 'figma', 'primitive.json'),
   g('tokens', 'figma', 'typography-weights.json'),
   g('tokens', 'figma', 'layout.json'),
+  g('tokens', 'figma', 'layout-semantic.json'),
   g('tokens', 'figma', 'typography.json'),
   g('tokens', 'code', '*.json'),
 ];

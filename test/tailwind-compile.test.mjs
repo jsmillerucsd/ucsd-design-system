@@ -50,17 +50,19 @@ const CANDIDATES = [
   'bg-surface-1', 'bg-surface-2', 'text-foreground-body-text', 'border-foreground-card-border',
   'bg-component-btn-primary', 'text-component-btn-label-primary',
   'bg-component-btn-tertiary', 'text-component-btn-label-tertiary',
-  'p-large', 'gap-small', 'rounded-rounded-2', 'shadow-2',
+  'p-md-16', 'gap-xs-8', 'rounded-rounded-8', 'shadow-2',
   'text-h1', 'text-body-md', 'font-h1', 'font-body',
-  'max-w-base', 'md:p-large', 'xxl:p-large',
+  'max-w-base', 'md:p-md-16', 'xxl:p-md-16',
   // Tailwind's own scales, which must land on UCSD values
   'p-1', 'p-2', 'p-3', 'p-4', 'px-4', 'py-2', 'h-9', 'gap-2', 'rounded-md', 'rounded-lg', 'rounded-sm',
   // shadcn slots
   'bg-background', 'text-foreground', 'bg-primary', 'text-primary-foreground',
   'bg-secondary', 'text-secondary-foreground', 'bg-destructive', 'bg-muted',
   'text-muted-foreground', 'border-border', 'ring-ring', 'bg-card', 'bg-sidebar', 'bg-chart-1',
+  'bg-accent', 'text-accent-foreground', 'text-link', 'bg-success',
+  'text-success-foreground', 'text-warning-foreground', 'bg-warning',
   // Must NOT compile
-  'bg-blue-500', 'text-slate-700', 'bg-white', 'text-black', '2xl:p-large',
+  'bg-blue-500', 'text-slate-700', 'bg-white', 'text-black', '2xl:p-md-16',
 ];
 
 let out = '';
@@ -173,17 +175,17 @@ describe('UCSD utilities compile and resolve through the token layer', () => {
   });
 
   test('spacing, radius, shadow and container utilities generate', () => {
-    resolvesTo('p-large', '--ucsd-space-large');
-    resolvesTo('gap-small', '--ucsd-space-small');
-    resolvesTo('rounded-rounded-2', '--ucsd-radius-rounded-2');
+    resolvesTo('p-md-16', '--ucsd-space-md-16');
+    resolvesTo('gap-xs-8', '--ucsd-space-xs-8');
+    resolvesTo('rounded-rounded-8', '--ucsd-radius-rounded-8');
     resolvesTo('shadow-2', '--ucsd-elevation-2');
     resolvesTo('max-w-base', '--ucsd-container-base');
   });
 
   test('breakpoint variants come from the UCSD scale', () => {
-    assert.ok(has('md:p-large'), 'md: variant should compile');
-    assert.ok(has('xxl:p-large'), 'xxl: is the UCSD name for the widest breakpoint');
-    assert.ok(!has('2xl:p-large'), "2xl: is Tailwind's name and is reset — docs must say xxl:");
+    assert.ok(has('md:p-md-16'), 'md: variant should compile');
+    assert.ok(has('xxl:p-md-16'), 'xxl: is the UCSD name for the widest breakpoint');
+    assert.ok(!has('2xl:p-md-16'), "2xl: is Tailwind's name and is reset — docs must say xxl:");
   });
 });
 
@@ -271,27 +273,27 @@ describe("Tailwind's own scales are re-pointed at UCSD values", () => {
   // Every stock shadcn component ships with these classes. Unbridged they compile
   // against Tailwind's 4px base and 0.375rem radii — plausible, off-system, and
   // invisible in review.
-  test('the numeric spacing scale is built on the UCSD 5px step', () => {
+  test('the numeric spacing scale is built on the UCSD 4px step', () => {
     assert.match(css('p-1'), /var\(--spacing\)/);
     assert.match(css('p-4'), /calc\(var\(--spacing\) \* 4\)/);
-    assert.match(out, /--spacing:\s*var\(--ucsd-space-extra-small\)/);
+    assert.match(out, /--spacing:\s*var\(--ucsd-space-xxs-4\)/);
   });
 
   test('p-1 through p-4 agree with Bootstrap .p-1 through .p-4', async () => {
-    // DESIGN.md claims ".p-4 and space.large are the same value reached two ways".
-    // 5px base x 4 = 20px = space.large = Bootstrap's $spacers 4. Pinned because it
+    // DESIGN.md claims ".p-4 and space.md-16 are the same value reached two ways".
+    // 4px base x 4 = 16px = space.md-16 = Bootstrap's $spacers 4. Pinned because it
     // is the one place the two frameworks can silently disagree by a few pixels.
     const manifest = JSON.parse(await fs.readFile(path.join(TOK, 'tokens.json'), 'utf8'));
     const val = (p) => manifest.find((t) => t.path === p).value;
-    assert.equal(val('space.extra-small'), '5px');
+    assert.equal(val('space.xxs-4'), '4px');
     for (const [step, tokenPath] of [
-      [1, 'space.extra-small'],
-      [2, 'space.small'],
-      [3, 'space.medium'],
-      [4, 'space.large'],
+      [1, 'space.xxs-4'],
+      [2, 'space.xs-8'],
+      [3, 'space.sm-12'],
+      [4, 'space.md-16'],
     ]) {
       assert.equal(
-        `${5 * step}px`,
+        `${4 * step}px`,
         val(tokenPath),
         `Tailwind p-${step} must equal ${tokenPath}, which backs Bootstrap .p-${step}`,
       );
@@ -300,9 +302,9 @@ describe("Tailwind's own scales are re-pointed at UCSD values", () => {
 
   test('rounded-sm/md/lg come from the UCSD radius scale', () => {
     assert.match(css('rounded-sm'), /var\(--radius-sm\)/);
-    assert.match(out, /--radius-sm:\s*var\(--ucsd-radius-rounded-1\)/);
-    assert.match(out, /--radius-md:\s*var\(--ucsd-radius-rounded-2\)/);
-    assert.match(out, /--radius-lg:\s*var\(--ucsd-radius-rounded-3\)/);
+    assert.match(out, /--radius-sm:\s*var\(--ucsd-radius-rounded-4\)/);
+    assert.match(out, /--radius-md:\s*var\(--ucsd-radius-rounded-8\)/);
+    assert.match(out, /--radius-lg:\s*var\(--ucsd-radius-rounded-12\)/);
   });
 });
 
@@ -331,11 +333,17 @@ describe('the shadcn bridge reaches shadcn components', () => {
 
   test('slots resolve through to UCSD tokens, not to a literal', () => {
     resolvesTo('bg-background', '--ucsd-color-surface-1');
-    resolvesTo('bg-primary', '--ucsd-color-component-btn-secondary');
-    resolvesTo('text-primary-foreground', '--ucsd-color-component-btn-label-secondary');
+    resolvesTo('bg-primary', '--ucsd-color-component-btn-primary');
+    resolvesTo('text-primary-foreground', '--ucsd-color-component-btn-label-primary');
+    resolvesTo('bg-secondary', '--ucsd-color-component-btn-secondary');
     resolvesTo('bg-destructive', '--ucsd-color-system-error');
+    resolvesTo('bg-accent', '--ucsd-color-surface-2');
+    resolvesTo('text-accent-foreground', '--ucsd-color-foreground-body-text');
+    resolvesTo('text-link', '--ucsd-color-component-link');
     resolvesTo('border-border', '--ucsd-color-foreground-card-border');
-    resolvesTo('bg-secondary', '--ucsd-color-component-btn-tertiary');
+    resolvesTo('bg-success', '--ucsd-color-system-success');
+    resolvesTo('text-success-foreground', '--ucsd-color-component-btn-label-black');
+    resolvesTo('text-warning-foreground', '--ucsd-color-component-btn-label-black');
   });
 
   test('the bridge carries no .dark block', async () => {
@@ -348,7 +356,7 @@ describe('the shadcn bridge reaches shadcn components', () => {
   test('--radius is defined once, in the bridge only', async () => {
     const bridge = await fs.readFile(path.join(TOK, 'shadcn', 'theme.css'), 'utf8');
     const theme = await fs.readFile(path.join(TOK, 'tailwind', 'theme.css'), 'utf8');
-    assert.match(bridge, /--radius:\s*var\(--ucsd-radius-rounded-2\)/);
+    assert.match(bridge, /--radius:\s*var\(--ucsd-radius-rounded-8\)/);
     assert.ok(!/--radius:\s/.test(theme), '--radius belongs to the shadcn bridge, not theme.css');
   });
 });

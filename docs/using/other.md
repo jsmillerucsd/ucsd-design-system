@@ -28,7 +28,7 @@ Then use them anywhere CSS reaches:
 }
 ```
 
-Naming is mechanical: token path `color.component.btn-primary` → `--ucsd-color-component-btn-primary`. Dark mode comes along for free — the stylesheet defines both modes, activated by `.dark`, `[data-theme="dark"]` or `[data-bs-theme="dark"]` on any ancestor.
+Naming is mechanical: token path `color.component.btn.primary` → `--ucsd-color-component-btn-primary`. Dark mode comes along for free — the stylesheet defines both modes, activated by `.dark`, `[data-theme="dark"]` or `[data-bs-theme="dark"]` on any ancestor.
 
 ### Fonts always need the fallback stack
 
@@ -50,8 +50,8 @@ Some things can't read CSS — canvas, WebGL, chart libraries that want a colour
 ```js
 import tokens from "@ucsd/tokens";
 
-tokens["color.component.btn-secondary"];  // "#00629b"
-tokens["space.large"];                    // "20px"
+tokens["color.component.btn.secondary"];  // "#00629b"
+tokens["space.md-16"];                    // "16px"
 ```
 
 Fully typed — `tokens.d.ts` ships with the package, so the key list autocompletes.

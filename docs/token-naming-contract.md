@@ -12,14 +12,14 @@ The document design and engineering both sign. Everything downstream — CSS var
 |---|---|---|---|---|
 | **Brand** | `colors-brand` | "What are the UCSD colours?" | **Never** | `brand.core.navy` |
 | **Primitive** | `colors-primitive` | "What tints and shades exist?" | **Never** | `palette.primary.blue.500` |
-| **Semantic** | `colors-semantic` | "What is this *for*?" | **Always** | `color.component.btn-primary` |
+| **Semantic** | `colors-semantic` | "What is this *for*?" | **Always** | `color.component.btn.primary` |
 | **Code-owned** | — | "What can't Figma express?" | Always | `breakpoint.md`, `elevation.2` |
 
 Brand is the paint. Primitives are the mixed tints. Semantics are the decision about where paint goes.
 
 ### Why components never touch brand or primitive
 
-Bind a button to `palette.primary.blue.500` and a brand decision is hard-coded into that button. Dark mode, a rebrand and a high-contrast theme then each require touching every component. Bind it to `color.component.btn-primary` and all three are a re-alias in one place.
+Bind a button to `palette.primary.blue.500` and a brand decision is hard-coded into that button. Dark mode, a rebrand and a high-contrast theme then each require touching every component. Bind it to `color.component.btn.primary` and all three are a re-alias in one place.
 
 This is also the highest-leverage thing for agent output quality: `color-component-btn-primary` states its intent, so a model picks it correctly without reading docs. `blue-500` requires the model to *know* that blue-500 is the button colour — which it doesn't, so it guesses.
 
@@ -35,8 +35,8 @@ Rendered as CSS custom properties with the `ucsd` prefix:
 |---|---|---|
 | `brand.core.navy` | `--ucsd-brand-core-navy` | `$ucsd-brand-core-navy` |
 | `palette.primary.blue.500` | `--ucsd-palette-primary-blue-500` | `$ucsd-palette-primary-blue-500` |
-| `color.component.btn-primary` | `--ucsd-color-component-btn-primary` | `$ucsd-color-component-btn-primary` |
-| `space.large` | `--ucsd-space-large` | `$ucsd-space-large` |
+| `color.component.btn.primary` | `--ucsd-color-component-btn-primary` | `$ucsd-color-component-btn-primary` |
+| `space.md-16` | `--ucsd-space-md-16` | `$ucsd-space-md-16` |
 | `type.h1.font-size` | `--ucsd-type-h1-font-size` | `$ucsd-type-h1-font-size` |
 
 **Rules.** Lowercase `kebab-case` segments, enforced by the sync. US spelling.
@@ -47,7 +47,7 @@ Rendered as CSS custom properties with the `ucsd` prefix:
 ^[a-z][a-z0-9]*(-[a-z0-9]+)*(\.[a-z0-9]+(-[a-z0-9]+)*)*$
 ```
 
-The first segment must start with a letter; later segments may start with a digit, because numeric scale steps are the norm — `palette.primary.navy.500`, `space.2x-large`, `elevation.1`.
+The first segment must start with a letter; later segments may start with a digit, because numeric scale steps are the norm — `palette.primary.navy.500`, `space.xxxl-64`, `elevation.1`.
 
 ---
 
@@ -60,16 +60,16 @@ Six groups, from the `colors-semantic` collection. Adding one is a design + engi
 | `color.theme.*` | Brand identity | `primary` (navy) `secondary` (blue) `accent` (yellow) |
 | `color.surface.*` | What sits behind content | `background` (outer chrome) `1` (content) `2` (raised) |
 | `color.foreground.*` | Text, rules and borders | `heading-1..3` `subheading` `eyebrow` `heading-light` `body-text` `body-text-focus` `divider` `card-border` `subcard-border` `surface-text-bg` |
-| `color.component.*` | What a control is made of | `btn-primary\|secondary\|tertiary` + matching `btn-label-*`, `link` `icon` `menu` `menu-bottom-nav` `bg-progress-bar` |
+| `color.component.*` | What a control is made of | `btn.primary\|secondary\|tertiary` + matching `btn.label-*`, `link` `icon` `menu` `menu-bottom-nav` `bg-progress-bar` |
 | `color.system.*` | Feedback messaging | `success` `warning` `error` `information`, each with a `bg-` and `foreground-` pair |
 | `color.status.*` | Standalone state marks | `good` `warning` `critical` |
 
-> `color.theme.*` is brand identity. If you are reaching for it to style a button, you want `color.component.btn-*`.
+> `color.theme.*` is brand identity. If you are reaching for it to style a button, you want `color.component.btn.*`.
 
 ### `space.*` · `radius.*` · `type.*`
 
-- **`space.*`** — t-shirt sized: `extra-small` `small` `medium` `large` `extra-large` `2x-large` `3x-large` `4x-large` (4 → 48px). Bootstrap's numeric `.p-1`…`.p-8` map onto these in `_bridge.scss`.
-- **`radius.*`** — Figma defines `default` (12px); `none` `sm` `lg` `pill` are code-owned for Bootstrap's component API.
+- **`space.*`** — numeric: `xxs-4` `xs-8` `sm-12` `md-16` `lg-24` `xl-32` `xxl-48` `xxxl-64` (4 → 64px). Bootstrap's numeric `.p-1`…`.p-8` map onto these in `_bridge.scss`.
+- **`radius.*`** — Figma defines `rounded-0` `rounded-4` `rounded-8` `rounded-12`; `circle` `pill` are code-owned.
 - **`type.*`** — roles, not a numeric ramp: `h1` `h2` `h2-small` `h3` `subheading` `eyebrow` `button` `body.small|medium|large`. Each carries `font-size`, `line-height`, `font-weight`, `font-family`, `tracking`.
 
 Type roles are named after their use rather than their scale. That is not what this document originally prescribed — an `<h1>` isn't always the largest text on a page — but it is what the design library is built on, and forcing a rename would mean rebinding every component for little gain.

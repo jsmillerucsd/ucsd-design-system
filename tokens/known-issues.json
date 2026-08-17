@@ -5,7 +5,19 @@
       "rule": "contrast",
       "match": "Dark: color.system.foreground-information (#e6eff5) on color.system.bg-information",
       "owner": "design",
-      "reason": "2.79:1, needs 4.5:1. The information pair is inverted in dark mode — the light foreground sits on a mid-tone blue. Fix: darken bg-information in dark mode, as the success/warning/error pairs already do."
+      "reason": "2.79:1, needs 4.5:1. The information pair is inverted in dark mode - the light foreground sits on a mid-tone blue. Fix: darken bg-information in dark mode, as the success/warning/error pairs already do."
+    },
+    {
+      "rule": "semantic-must-alias",
+      "match": "color.component.card.semi-transparent-blue",
+      "owner": "design",
+      "reason": "Literal #00629bcc with alpha instead of an alias. The designer must bind this to a primitive with alpha in Figma so it re-aliases in dark mode."
+    },
+    {
+      "rule": "semantic-must-alias",
+      "match": "color.component.card.semi-transparent-navy",
+      "owner": "design",
+      "reason": "Literal #182b49cc with alpha instead of an alias. The designer must bind this to a primitive with alpha in Figma so it re-aliases in dark mode."
     }
   ]
 }

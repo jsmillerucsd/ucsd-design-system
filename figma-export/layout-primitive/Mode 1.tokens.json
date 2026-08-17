@@ -1,6 +1,6 @@
 {
   "spacing": {
-    "zero": {
+    "0": {
       "$type": "number",
       "$value": 0,
       "$extensions": {
@@ -10,9 +10,9 @@
         ]
       }
     },
-    "extra-small": {
+    "xxs-4": {
       "$type": "number",
-      "$value": 5,
+      "$value": 4,
       "$extensions": {
         "com.figma.variableId": "VariableID:2363:382",
         "com.figma.scopes": [
@@ -20,9 +20,9 @@
         ]
       }
     },
-    "small": {
+    "xs-8": {
       "$type": "number",
-      "$value": 10,
+      "$value": 8,
       "$extensions": {
         "com.figma.variableId": "VariableID:2363:383",
         "com.figma.scopes": [
@@ -30,9 +30,9 @@
         ]
       }
     },
-    "medium": {
+    "sm-12": {
       "$type": "number",
-      "$value": 15,
+      "$value": 12,
       "$extensions": {
         "com.figma.variableId": "VariableID:2363:384",
         "com.figma.scopes": [
@@ -40,9 +40,9 @@
         ]
       }
     },
-    "large": {
+    "md-16": {
       "$type": "number",
-      "$value": 20,
+      "$value": 16,
       "$extensions": {
         "com.figma.variableId": "VariableID:2363:420",
         "com.figma.scopes": [
@@ -50,9 +50,9 @@
         ]
       }
     },
-    "extra-large": {
+    "lg-24": {
       "$type": "number",
-      "$value": 30,
+      "$value": 24,
       "$extensions": {
         "com.figma.variableId": "VariableID:2363:434",
         "com.figma.scopes": [
@@ -60,21 +60,31 @@
         ]
       }
     },
-    "2X-large": {
+    "xl-32": {
       "$type": "number",
-      "$value": 45,
+      "$value": 32,
       "$extensions": {
-        "com.figma.variableId": "VariableID:2363:421",
+        "com.figma.variableId": "VariableID:7022:6029",
         "com.figma.scopes": [
           "ALL_SCOPES"
         ]
       }
     },
-    "3x-large": {
+    "xxl-48": {
       "$type": "number",
-      "$value": 60,
+      "$value": 48,
       "$extensions": {
-        "com.figma.variableId": "VariableID:2363:432",
+        "com.figma.variableId": "VariableID:7006:2216",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      }
+    },
+    "xxxl-64": {
+      "$type": "number",
+      "$value": 64,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:7044:8897",
         "com.figma.scopes": [
           "ALL_SCOPES"
         ]
@@ -92,9 +102,9 @@
         ]
       }
     },
-    "rounded-1": {
+    "rounded-4": {
       "$type": "number",
-      "$value": 5,
+      "$value": 4,
       "$extensions": {
         "com.figma.variableId": "VariableID:5490:653",
         "com.figma.scopes": [
@@ -102,9 +112,9 @@
         ]
       }
     },
-    "rounded-2": {
+    "rounded-8": {
       "$type": "number",
-      "$value": 10,
+      "$value": 8,
       "$extensions": {
         "com.figma.variableId": "VariableID:5489:645",
         "com.figma.scopes": [
@@ -112,9 +122,9 @@
         ]
       }
     },
-    "rounded-3": {
+    "rounded-12": {
       "$type": "number",
-      "$value": 15,
+      "$value": 12,
       "$extensions": {
         "com.figma.variableId": "VariableID:5489:646",
         "com.figma.scopes": [
@@ -127,16 +137,6 @@
       "$value": 100,
       "$extensions": {
         "com.figma.variableId": "VariableID:5489:649",
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      }
-    },
-    "ucsd-8px": {
-      "$type": "number",
-      "$value": 8,
-      "$extensions": {
-        "com.figma.variableId": "VariableID:5552:747",
         "com.figma.scopes": [
           "ALL_SCOPES"
         ]

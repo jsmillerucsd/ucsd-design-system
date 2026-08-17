@@ -87,10 +87,10 @@ function Section({
   id: string; title: string; lede?: string; children: React.ReactNode;
 }) {
   return (
-    <section aria-labelledby={id} className="mb-3x-large">
-      <h2 id={id} className="mb-small text-h2 font-h2 text-foreground-h2-heading">{title}</h2>
+    <section aria-labelledby={id} className="mb-xxxl-64">
+      <h2 id={id} className="mb-xs-8 text-h2 font-h2 text-foreground-h2-heading">{title}</h2>
       {lede && (
-        <p className="mb-large max-w-[--ucsd-container-prose] text-body-md text-muted-foreground">
+        <p className="mb-md-16 max-w-[--ucsd-container-prose] text-body-md text-muted-foreground">
           {lede}
         </p>
       )}
@@ -102,7 +102,7 @@ function Section({
 /** Marks a place where a call-site override was needed, so they stay countable. */
 function Override({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mt-small text-body-sm text-muted-foreground">
+    <p className="mt-xs-8 text-body-sm text-muted-foreground">
       <strong className="text-foreground-body-text">Override:</strong> {children}
     </p>
   );
@@ -110,7 +110,7 @@ function Override({ children }: { children: React.ReactNode }) {
 
 function Swatch({ className, label }: { className: string; label: string }) {
   return (
-    <div className={`rounded-md p-large text-body-sm ${className}`}>{label}</div>
+    <div className={`rounded-md p-md-16 text-body-sm ${className}`}>{label}</div>
   );
 }
 
@@ -126,7 +126,7 @@ export function Page() {
   return (
     <>
       <header className="bg-theme-primary text-foreground-heading-light">
-        <div className="mx-auto flex max-w-base items-center justify-between px-large py-small">
+        <div className="mx-auto flex max-w-base items-center justify-between px-md-16 py-xs-8">
           <strong>UC San Diego</strong>
           <Button
             variant="outline"
@@ -142,11 +142,11 @@ export function Page() {
         </div>
       </header>
 
-      <main id="main" className="mx-auto max-w-base px-large py-3x-large">
-        <h1 className="mb-small text-h1 font-h1 text-foreground-h1-heading">
+      <main id="main" className="mx-auto max-w-base px-md-16 py-xxxl-64">
+        <h1 className="mb-xs-8 text-h1 font-h1 text-foreground-h1-heading">
           shadcn/ui on UCSD tokens
         </h1>
-        <p className="mb-3x-large max-w-[--ucsd-container-prose] text-body-md text-muted-foreground">
+        <p className="mb-xxxl-64 max-w-[--ucsd-container-prose] text-body-md text-muted-foreground">
           Every component below is unmodified shadcn/ui source, vendored from its own
           registry. No component file was edited. Toggle the mode: nothing here carries
           a UCSD <code>dark:</code> class, so if the page follows, the bridge holds.
@@ -229,19 +229,19 @@ export function Page() {
           title="Cards"
           lede="Surface, border and a padding contract — no drop shadow, which is what DESIGN.md asks for and what shadcn's card already does."
         >
-          <div className="grid gap-large md:grid-cols-2">
+          <div className="grid gap-md-16 md:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Financial aid status</CardTitle>
                 <CardDescription>Updated 5 August 2026</CardDescription>
                 <CardAction><Badge variant="secondary">Sample</Badge></CardAction>
               </CardHeader>
-              <CardContent className="grid gap-medium">
+              <CardContent className="grid gap-sm-12">
                 <p className="text-body-md">
                   Every class in this card is shadcn's. The surface, border colour and
                   muted description text all resolve to UCSD semantic tokens.
                 </p>
-                <div className="grid gap-extra-small">
+                <div className="grid gap-xxs-4">
                   <div className="flex justify-between text-body-sm">
                     <span>Sample progress</span>
                     <span className="text-muted-foreground">62%</span>
@@ -260,10 +260,10 @@ export function Page() {
                 <CardTitle>Loading state</CardTitle>
                 <CardDescription>Skeleton, avatar and separator</CardDescription>
               </CardHeader>
-              <CardContent className="grid gap-medium">
+              <CardContent className="grid gap-sm-12">
                 <div className="flex items-center gap-3">
                   <Avatar><AvatarFallback>UC</AvatarFallback></Avatar>
-                  <div className="grid gap-extra-small">
+                  <div className="grid gap-xxs-4">
                     <Skeleton className="h-4 w-[150px]" />
                     <Skeleton className="h-4 w-[100px]" />
                   </div>
@@ -318,7 +318,7 @@ export function Page() {
               <TabsTrigger value="summary">Summary</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="records" className="mt-large">
+            <TabsContent value="records" className="mt-md-16">
               <Card>
                 <CardContent>
                   <Table>
@@ -362,8 +362,8 @@ export function Page() {
                           Overlay, surface, border and focus ring all from the bridge.
                         </DialogDescription>
                       </DialogHeader>
-                      <div className="grid gap-medium">
-                        <div className="grid gap-extra-small">
+                      <div className="grid gap-sm-12">
+                        <div className="grid gap-xxs-4">
                           <Label htmlFor="ref">Reference</Label>
                           <Input id="ref" placeholder="SAMPLE-005" />
                         </div>
@@ -378,15 +378,15 @@ export function Page() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="summary" className="mt-large">
+            <TabsContent value="summary" className="mt-md-16">
               <Card>
                 <CardHeader>
                   <CardTitle>Summary</CardTitle>
                   <CardDescription>Placeholder totals — invented data</CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-medium sm:grid-cols-3">
+                <CardContent className="grid gap-sm-12 sm:grid-cols-3">
                   {[['Records', '4'], ['Complete', '2'], ['Blocked', '1']].map(([k, v]) => (
-                    <div key={k} className="rounded-md border border-border p-large">
+                    <div key={k} className="rounded-md border border-border p-md-16">
                       <p className="text-body-sm text-muted-foreground">{k}</p>
                       <p className="text-h2 font-h2 text-foreground-h2-heading">{v}</p>
                     </div>
@@ -409,8 +409,8 @@ export function Page() {
                 Visible persistent labels; errors in text, next to the field.
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid max-w-narrow gap-large">
-              <div className="grid gap-extra-small">
+            <CardContent className="grid max-w-narrow gap-md-16">
+              <div className="grid gap-xxs-4">
                 <Label htmlFor="email">Email address</Label>
                 <Input id="email" type="email" placeholder="you@ucsd.edu"
                   aria-describedby="email-help" />
@@ -418,7 +418,7 @@ export function Page() {
                   Only used for application updates.
                 </p>
               </div>
-              <div className="grid gap-extra-small">
+              <div className="grid gap-xxs-4">
                 <Label htmlFor="sid">Student ID</Label>
                 <Input id="sid" defaultValue="A0000" aria-invalid
                   aria-describedby="sid-error" />
@@ -438,7 +438,7 @@ export function Page() {
           title="Semantic colours"
           lede="The tokens everything above resolves to. Every swatch must move with the toggle; one that doesn't is hard-coded somewhere."
         >
-          <div className="mb-large grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div className="mb-md-16 grid grid-cols-2 gap-3 md:grid-cols-4">
             <Swatch className="border border-border bg-surface-1 text-foreground-body-text" label="surface-1 / body-text" />
             <Swatch className="border border-border bg-surface-2 text-component-menu" label="surface-2 / menu" />
             <Swatch className="bg-surface-3 text-foreground-heading-light" label="surface-3 / heading-light" />
@@ -461,7 +461,7 @@ export function Page() {
           title="Typography"
           lede="One class per role — text-h1 carries size, line-height and weight together. Until the Brix Sans and Refrigerator Deluxe web licences are confirmed these render from the fallback stacks, which is what a visitor sees today."
         >
-          <div className="grid gap-medium">
+          <div className="grid gap-sm-12">
             <p className="text-eyebrow font-eyebrow text-foreground-eyebrow">EYEBROW — Refrigerator Deluxe</p>
             <p className="text-h1 font-h1 text-foreground-h1-heading">H1 heading — Refrigerator Deluxe</p>
             <p className="text-h2 font-h2 text-foreground-h2-heading">H2 heading — Brix Sans</p>
@@ -475,7 +475,7 @@ export function Page() {
       </main>
 
       <footer className="bg-theme-secondary text-foreground-heading-light">
-        <div className="mx-auto max-w-base px-large py-3x-large text-center text-body-md">
+        <div className="mx-auto max-w-base px-md-16 py-xxxl-64 text-center text-body-md">
           UCSD Design System — unmodified shadcn/ui on @ucsd/tokens
         </div>
       </footer>

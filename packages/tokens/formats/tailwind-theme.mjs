@@ -62,10 +62,10 @@ const RESET_NAMESPACES = ['color', 'breakpoint'];
  * source of "the tokens aren't being applied".
  *
  * `--spacing` is the multiplier behind the whole numeric scale (`p-4` is
- * `calc(var(--spacing) * 4)`). At 5px it makes Tailwind `p-1`…`p-4` identical to
+ * `calc(var(--spacing) * 4)`). At 4px it makes Tailwind `p-1`…`p-4` identical to
  * Bootstrap `.p-1`…`.p-4` — the claim DESIGN.md already makes. Beyond 4 the two
- * diverge (Bootstrap jumps 20 -> 30 -> 45, Tailwind keeps stepping by 5), which is
- * why the named steps (`p-large`, `p-2x-large`) remain the way to say it exactly.
+ * diverge (Bootstrap jumps 16 -> 24 -> 32, Tailwind keeps stepping by 4), which is
+ * why the named steps (`p-lg-24`, `p-xxl-48`) remain the way to say it exactly.
  *
  * Radius follows _bridge.scss so a card is the same shape in both frameworks.
  *
@@ -73,11 +73,27 @@ const RESET_NAMESPACES = ['color', 'breakpoint'];
  * token and this throws rather than emitting a dangling var().
  */
 const BRIDGED_DEFAULTS = [
-  ['--spacing',   'space.extra-small'],
-  ['--radius-sm', 'radius.rounded-1'],
-  ['--radius-md', 'radius.rounded-2'],
-  ['--radius-lg', 'radius.rounded-3'],
-  ['--radius-xl', 'radius.rounded-3'],
+  ['--spacing',   'space.xxs-4'],
+  ['--radius-sm', 'radius.rounded-4'],
+  ['--radius-md', 'radius.rounded-8'],
+  ['--radius-lg', 'radius.rounded-12'],
+  ['--radius-xl', 'radius.rounded-12'],
+  // DESIGN.md: "Cards are not elevated by default" and "shadow is for things
+  // that float and can be dismissed." shadcn's Card has `shadow-sm` hardcoded;
+  // mapping it to elevation.0 (none) means cards render flat per the contract.
+  // shadow-sm and shadow-xs both → elevation.0 to match _bridge.scss's
+  // $box-shadow-sm = elevation.1 ONLY for $box-shadow (used by modals/dropdowns,
+  // not by the `shadow-sm` utility). The utility and the Sass var are different
+  // scales: Tailwind's shadow-sm ≈ Bootstrap's $box-shadow-sm is a naming
+  // coincidence, not a contract. What matters is that `shadow-sm` on a card
+  // produces no shadow, and `shadow-lg` on a dialog produces elevation.3.
+  ['--shadow-2xs', 'elevation.0'],
+  ['--shadow-xs', 'elevation.0'],
+  ['--shadow-sm', 'elevation.0'],
+  ['--shadow-md', 'elevation.2'],
+  ['--shadow-lg', 'elevation.3'],
+  ['--shadow-xl', 'elevation.4'],
+  ['--shadow-2xl', 'elevation.4'],
 ];
 
 /** Token path prefix -> Tailwind namespace. Order matters: first match wins. */

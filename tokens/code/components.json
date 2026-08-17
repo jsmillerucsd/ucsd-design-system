@@ -3,15 +3,17 @@
   "color": {
     "component": {
       "$description": "The tertiary button pair. DESIGN.md specifies three button treatments, but colors-semantic in Figma exports only primary and secondary, so the quiet third one lives here until the designer adds it.",
-      "btn-tertiary": {
-        "$type": "color",
-        "$description": "Quiet third button fill. Aliases the raised content surface rather than a primitive, so it re-aliases in dark mode for free.",
-        "$value": "{color.surface.2}"
-      },
-      "btn-label-tertiary": {
-        "$type": "color",
-        "$description": "Label for btn-tertiary. Aliases body text, so the pair inherits the already-gated `foreground.body-text on surface.2` contrast check in BOTH modes — see PAIRS in scripts/validate-tokens.mjs.",
-        "$value": "{color.foreground.body-text}"
+      "btn": {
+        "tertiary": {
+          "$type": "color",
+          "$description": "Quiet third button fill. Aliases the raised content surface rather than a primitive, so it re-aliases in dark mode for free.",
+          "$value": "{color.surface.2}"
+        },
+        "label-tertiary": {
+          "$type": "color",
+          "$description": "Label for btn.tertiary. Aliases body text, so the pair inherits the already-gated `foreground.body-text on surface.2` contrast check in BOTH modes — see PAIRS in scripts/validate-tokens.mjs.",
+          "$value": "{color.foreground.body-text}"
+        }
       }
     }
   }

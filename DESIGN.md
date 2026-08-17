@@ -10,7 +10,7 @@ colors:
   # never bind to a raw palette value. Dark mode is a re-alias of these same
   # tokens; see `modes` at the end of this block.
   primary: "{colors.theme-primary}"
-  component-btn-tertiary: "#fbf9f5"
+  component-btn-tertiary: "#f5f0e6"
   component-btn-label-tertiary: "#313232"
   component-btn-gold: "#c69214"
   component-btn-label-black: "#000000"
@@ -22,6 +22,10 @@ colors:
   component-btn-primary: "#ffcd00"
   component-btn-secondary: "#00629b"
   component-btn-turqoise: "#00c6d7"
+  component-card-blue: "#00629b"
+  component-card-navy: "#182b49"
+  component-card-semi-transparent-blue: "rgba(0, 98, 155, 0.8)"
+  component-card-semi-transparent-navy: "rgba(24, 43, 73, 0.8)"
   component-icon: "#182b49"
   component-link: "#00629b"
   component-menu: "#747678"
@@ -40,7 +44,7 @@ colors:
   status-good: "#109b00"
   status-warning: "#fc8900"
   surface-1: "#ffffff"
-  surface-2: "#fbf9f5"
+  surface-2: "#f5f0e6"
   surface-3: "#00629b"
   surface-4: "#182b49"
   surface-5: "#f8f8f9"
@@ -110,21 +114,22 @@ typography:
     fontSize: "12px"
     lineHeight: "18px"
 spacing:
-  3x-large: "64px"
-  2x-large: "48px"
-  extra-large: "32px"
-  large: "24px"
-  medium: "16px"
-  small: "12px"
-  extra-small: "8px"
-  2x-small: "4px"
-  zero: "0px"
+  "0": "0px"
+  lg-24: "24px"
+  md-16: "16px"
+  sm-12: "12px"
+  xl-32: "32px"
+  xs-8: "8px"
+  xxl-48: "48px"
+  xxs-4: "4px"
+  xxxl-64: "64px"
 rounded:
   rounded-0: "0px"
-  rounded-1: "4px"
-  rounded-2: "8px"
-  rounded-3: "12px"
+  rounded-12: "12px"
+  rounded-4: "4px"
+  rounded-8: "8px"
   rounded-circle: "100px"
+  pill: "999px"
 components:
   button-primary:
     backgroundColor: "{colors.component-btn-primary}"
@@ -145,6 +150,8 @@ breakpoints:
   xl: "1200px"
   xxl: "1400px"
 containers:
+  gutter: "24px"
+  margin: "12px"
   prose: "70ch"
   narrow: "768px"
   base: "1140px"
@@ -179,6 +186,10 @@ modes:
       component-btn-secondary: "#5496bc"
       component-btn-tertiary: "#404142"
       component-btn-turqoise: "#00c6d7"
+      component-card-blue: "#00629b"
+      component-card-navy: "#182b49"
+      component-card-semi-transparent-blue: "rgba(0, 98, 155, 0.8)"
+      component-card-semi-transparent-navy: "rgba(24, 43, 73, 0.8)"
       component-icon: "#f5f0e6"
       component-link: "#5496bc"
       component-menu: "#747678"
@@ -254,7 +265,7 @@ That is the target register: institutional confidence without corporate gloss. S
 
 The single most common failure mode is a generated page that is technically on-palette and tonally wrong: UCSD blue applied to a SaaS marketing layout. When a choice isn't covered by a token or a rule below, resolve it toward the building: structural, plain, and durable.
 
-## Color
+## Colors
 
 UC San Diego color should be applied as a structured system rather than as a set of interchangeable decorative colors.
 
@@ -972,7 +983,7 @@ The finished page should be recognizable as UC San Diego primarily because of it
 - Validate each foreground/background pairing independently.
 
 
-## Additional color information
+### Additional color information
 
 The palette is navy and blue carried forward from the university's identity, with gold as the single high-energy accent and a warm neutral ramp underneath. It is a restrained palette on purpose: the interest in a UCSD page should come from structure and typography, not from color.
 
@@ -1022,9 +1033,9 @@ Long-form content is constrained to `container.prose`, a measure chosen for read
 
 ## Layout
 
-One spacing scale, based on a five-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
+One spacing scale, based on a four-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
 
-Spacing steps are t-shirt sized — `space.extra-small` through `space.3x-large`. Both frameworks' numeric utilities are built on the same step, so `.p-4` in Bootstrap, `p-4` in Tailwind and `space.large` are one value reached three ways. That holds through step 4; beyond it the numeric scales diverge and the named step is the only way to say it exactly.
+Spacing steps carry their pixel value in the name — `space.xxs-4` through `space.xxxl-64`. Both frameworks' numeric utilities are built on the same step, so `.p-4` in Bootstrap, `p-4` in Tailwind and `space.md-16` are one value reached three ways. The alignment holds across the full scale.
 
 **Breakpoints are Bootstrap 5's**, matched exactly by `breakpoint.*`. This is not a preference — Bootstrap utilities and Tailwind variants both compile from these values, and a mismatch produces bugs that take days to find. Never invent a breakpoint, and never write a media query against a value that isn't in the scale.
 
@@ -1082,7 +1093,7 @@ Write idiomatic code for whichever stack you are in. Correctness comes from bind
 
 One primary action per screen. `button-primary` is the affirmative action; `button-secondary` carries everything else; a third, quieter treatment handles tertiary actions. A screen with three primary buttons has no primary button.
 
-Every button fill has a matching label token — `color.component.btn-primary` with `color.component.btn-label-primary`, and the same for secondary and tertiary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
+Every button fill has a matching label token — `color.component.btn.primary` with `color.component.btn.label-primary`, and the same for secondary and tertiary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
 
 Every interactive control has a visible hover state, a visible focus ring drawn from `color.theme.secondary`, and a disabled state that is legibly disabled rather than merely faded. Interactive controls meet the WCAG target-size minimum — never reduce it to fit a layout.
 

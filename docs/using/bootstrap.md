@@ -31,7 +31,7 @@ To trim the bundle, copy `packages/bootstrap/scss/ucsd-bootstrap.scss` and delet
 
 | Bootstrap default | UCSD |
 |---|---|
-| `$primary` #0d6efd | `color.component.btn-secondary` (UCSD Blue) |
+| `$primary` #0d6efd | `color.component.btn.primary` (UCSD Yellow) |
 | `$secondary` grey | `color.theme.primary` (UCSD Navy) |
 | System font stack | Brix Sans; headings in Refrigerator Deluxe (`type.h1.font-family`) |
 | `$spacer` 1rem, keys 0–5 | UCSD `space` scale mapped to keys 0–8 — `.p-4` is 16px |

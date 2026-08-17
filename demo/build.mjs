@@ -46,6 +46,21 @@ await fs.mkdir(OUT, { recursive: true });
 /** One entry per demo page. Each pairs with the .html of the same name. */
 export const PAGES = ['app', 'sidebar'];
 
+// --- 0. Copy the Bootstrap kitchen-sink into demo/dist -----------------------
+//
+// The kitchen-sink lives in packages/bootstrap/ because that is where its CSS is
+// built. Copying it here lets `demo/bootstrap.html` link a same-directory
+// stylesheet, so all three demos are reachable from one place.
+const bsSrc = path.join(REPO, 'packages', 'bootstrap', 'kitchen-sink.html');
+const bsCssSrc = path.join(REPO, 'packages', 'bootstrap', 'dist', 'ucsd-bootstrap.css');
+const bsCssOut = path.join(OUT, 'ucsd-bootstrap.css');
+await fs.copyFile(bsCssSrc, bsCssOut);
+await fs.writeFile(
+  path.join(OUT, 'bootstrap.html'),
+  (await fs.readFile(bsSrc, 'utf8')).replace('./dist/ucsd-bootstrap.css', './ucsd-bootstrap.css'),
+  'utf8',
+);
+
 // --- 1. Bundle the pages -----------------------------------------------------
 //
 // esbuild only, no framework: the vendored shadcn components are ordinary React,
@@ -75,6 +90,15 @@ await fs.writeFile(
     `@import "${posix(path.join(TOK, 'css', 'tokens.css'))}";`,
     `@import "${posix(path.join(TOK, 'tailwind', 'theme.css'))}";`,
     `@import "${posix(path.join(TOK, 'shadcn', 'theme.css'))}";`,
+    // The base layer shadcn's own `init` generates. Tailwind v4's bare `border`
+    // utility sets only border-width; without this, border-color falls back to
+    // currentColor and every card/input/separator renders with a text-colour border
+    // instead of the --border slot. This is shadcn's contract, not a UCSD override.
+    '@layer base {',
+    '  * {',
+    '    @apply border-border outline-ring/50;',
+    '  }',
+    '}',
     // Scan the SOURCES, not dist/. The bundle is minified and would feed Tailwind
     // mangled candidates; the components' own class strings are what matter here.
     // One stylesheet serves both pages, so both trees have to be scanned.
@@ -103,4 +127,5 @@ await run(process.execPath, [cli, '-i', input, '-o', out], { cwd: REPO });
 const kb = async (p) => ((await fs.stat(p)).size / 1024).toFixed(1);
 for (const p of PAGES) console.log(`demo: dist/${p}.js (${await kb(path.join(OUT, `${p}.js`))} kB)`);
 console.log(`demo: dist/shadcn.css (${await kb(out)} kB)`);
-console.log('demo: open demo/shadcn.html (component tour) or demo/sidebar.html (sidebar-08 block)');
+console.log(`demo: dist/bootstrap.html + dist/ucsd-bootstrap.css (${await kb(bsCssOut)} kB)`);
+console.log('demo: open demo/shadcn.html (component tour), demo/sidebar.html (sidebar-08), or demo/bootstrap.html (kitchen sink)');

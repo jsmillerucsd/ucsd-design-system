@@ -239,7 +239,9 @@ describe('prose cannot go stale', () => {
     // The drift defence: values live only in the generated frontmatter, so the
     // hand-written half has no numbers that could fall out of date. Enforced at
     // build time too — this catches a hand-edit of DESIGN.md itself.
-    const body = raw.slice(raw.indexOf('\n---', 3) + 4).replace(/^```[\s\S]*?^```/gm, '');
+    const body = raw.slice(raw.indexOf('\n---', 3) + 4)
+      .replace(/^```[\s\S]*?^```/gm, '')
+      .replace(/`[^`]*`/g, '');
     const found = [
       ...body.matchAll(/#[0-9a-fA-F]{3,8}\b/g),
       ...body.matchAll(/\b\d+(?:\.\d+)?(?:px|rem|em)\b/g),

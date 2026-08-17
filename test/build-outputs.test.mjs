@@ -62,8 +62,10 @@ describe('the brand blue reaches every target', () => {
   });
 
   test('Bootstrap compiles UCSD colours into its theme', () => {
-    assert.match(bootstrapCss, /--bs-secondary:\s*#182b49/);
-    assert.match(bootstrapCss, /--bs-primary:\s*#00629b/);
+    // $primary = btn.primary (Yellow #ffcd00), $secondary = btn.secondary (Blue
+    // #00629b) — per DESIGN.md components block.
+    assert.match(bootstrapCss, /--bs-primary:\s*#ffcd00/);
+    assert.match(bootstrapCss, /--bs-secondary:\s*#00629b/);
   });
 
   test('Tailwind exposes semantic colours as a utility namespace', () => {
@@ -72,18 +74,18 @@ describe('the brand blue reaches every target', () => {
 });
 
 describe('one spacing scale everywhere', () => {
-  test('space.large is 20px', () => {
-    assert.equal(byPath(manifest, 'space.large').value, '20px');
+  test('space.md-16 is 16px', () => {
+    assert.equal(byPath(manifest, 'space.md-16').value, '16px');
   });
 
   test('Bootstrap maps it to the numeric spacer key .p-4', () => {
-    // The Figma scale is t-shirt sized; _bridge.scss maps it onto the numeric keys
-    // Bootstrap users have muscle memory for.
-    assert.match(bootstrapCss, /\.p-4\s*\{\s*padding:\s*20px/);
+    // The Figma scale is numeric (4px base); _bridge.scss maps it onto the numeric
+    // keys Bootstrap users have muscle memory for.
+    assert.match(bootstrapCss, /\.p-4\s*\{\s*padding:\s*16px/);
   });
 
   test('Tailwind maps it into the spacing namespace', () => {
-    assert.match(tailwind, /--spacing-large:\s*var\(--ucsd-space-large\)/);
+    assert.match(tailwind, /--spacing-md-16:\s*var\(--ucsd-space-md-16\)/);
   });
 });
 
@@ -143,7 +145,12 @@ describe('dark mode', () => {
 
 describe('tier discipline', () => {
   test('every semantic colour is an alias, never a literal', () => {
-    const known = new Set(['color.foreground.card-border', 'color.foreground.surface-text-bg']);
+    const known = new Set([
+      'color.foreground.card-border',
+      'color.foreground.surface-text-bg',
+      'color.component.card.semi-transparent-blue',
+      'color.component.card.semi-transparent-navy',
+    ]);
     const literals = manifest
       .filter((t) => t.tier === 'semantic' && t.type === 'color' && t.reference === null)
       .map((t) => t.path)

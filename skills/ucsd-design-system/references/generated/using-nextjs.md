@@ -33,9 +33,9 @@ That's the whole configuration. No `tailwind.config.js` — Tailwind v4 reads th
 | `color.theme.primary` | `bg-theme-primary` `text-theme-primary` `border-theme-primary` |
 | `color.surface.1` | `bg-surface-1` |
 | `color.foreground.body-text` | `text-foreground-body-text` |
-| `color.component.btn-primary` | `bg-component-btn-primary` |
-| `space.large` | `p-large` `m-large` `gap-large` |
-| `radius.rounded-2` | `rounded-rounded-2`, or just `rounded-md` |
+| `color.component.btn.primary` | `bg-component-btn-primary` |
+| `space.md-16` | `p-md-16` `m-md-16` `gap-md-16` |
+| `radius.rounded-8` | `rounded-rounded-8`, or just `rounded-md` |
 | `elevation.2` | `shadow-2` |
 | `type.h1` | `text-h1` — size, line-height **and** weight together |
 | `container.base` | `max-w-base` |
@@ -46,7 +46,7 @@ The values are `var(--ucsd-*)` references, not literals. That's deliberate: util
 
 `p-4`, `rounded-md`, `h-9` and the rest still work, but they no longer mean what they mean in a stock Tailwind app:
 
-- **Spacing** is built on the 5px UCSD step, so `p-1`…`p-4` are the same values as Bootstrap's `.p-1`…`.p-4` (5/10/15/20px). Past 4 the two diverge — Bootstrap jumps to 30/45/60 while Tailwind keeps stepping by 5 — so use the named steps (`p-extra-large`, `p-2x-large`, `p-3x-large`) when you need those exactly.
+- **Spacing** is built on the 4px UCSD step, so `p-1`…`p-4` are the same values as Bootstrap's `.p-1`…`.p-4` (4/8/12/16px). Past 4 the two diverge — Bootstrap jumps to 24/32/48/64 while Tailwind keeps stepping by 4 — so use the named steps (`p-xl-32`, `p-xxl-48`, `p-xxxl-64`) when you need those exactly.
 - **`rounded-sm` / `rounded-md` / `rounded-lg`** come from the UCSD radius scale and match `_bridge.scss`, so a card is the same shape in both frameworks.
 
 This is what makes an unmodified `npx shadcn add button` render on-system.
@@ -71,22 +71,27 @@ The mapping is hand-written in `packages/tokens/formats/shadcn-theme.mjs` — wh
 
 | shadcn slot | UCSD token | Why |
 |---|---|---|
-| `--primary` | `color.component.btn-secondary` | The default button fill. `color.theme.*` are brand marks and not all usable as interactive fills. |
-| `--secondary` | `color.component.btn-tertiary` | shadcn's secondary button is the quiet one, which is our tertiary treatment. |
-| `--card` | `color.surface.1` | A card is a border and a padding contract. shadcn's card already draws the border; `surface.2` would double the treatment. |
+| `--primary` | `color.component.btn.primary` | The primary button fill (Yellow). DESIGN.md: "button-primary is the affirmative action." |
+| `--secondary` | `color.component.btn.secondary` | The secondary button fill (Blue). |
+| `--accent` | `color.surface.2` | Hover/active surface for ghost buttons, dropdowns, sidebar nav. NOT a feedback color — DESIGN.md: "using error as an accent because it looks good is a bug." |
+| `--card` | `color.surface.1` | DESIGN.md lists cards under White. A card is differentiated by border and padding, not by a surface change or shadow. |
+| `--link` | `color.component.link` | DESIGN.md: "Standard links → Blue." shadcn's link variant reads `text-primary` (Yellow) — override to `text-link`. |
 | `--ring` | `color.theme.secondary` | Change the token if you must. Never remove the ring. |
 
-### The one class that doesn't survive
+### Classes that need a call-site override
 
-shadcn hardcodes `text-white` in its **destructive** button and badge variants. Our theme removes Tailwind's palette, so that class compiles to nothing and the label falls back to inherited text on a red fill. Override it at the call site — `cn()` merges it away:
+shadcn hardcodes two things our token layer can't fix:
+
+1. **`text-white` on destructive buttons/badges.** Our theme removes Tailwind's palette, so that class compiles to nothing. Override: `className="text-destructive-foreground"`.
+
+2. **`text-primary` on link variants.** `--primary` is Yellow (the button fill), so `text-primary` renders invisible yellow text. Override: `className="text-link"`.
 
 ```tsx
 <Button variant="destructive" className="text-destructive-foreground">Withdraw</Button>
+<Button variant="link" className="text-link">Read more</Button>
 ```
 
-`destructive-foreground` is also the *correct* value, not just the compiling one: it is white in light mode and near-black in dark, where shadcn's white would sit at about 2.7:1 on the lightened red.
-
-That is the complete list. `demo/` renders fourteen vendored components and `npm test` fails if any other class stops resolving, so if this section still says "one class", it is still one class.
+That is the complete list. `demo/` renders fourteen vendored components and `npm test` fails if any other class stops resolving.
 
 ## Rules specific to this stack
 
@@ -128,7 +133,7 @@ const buttonVariants = cva(
 
 `text-button` carries the role's size, line-height and weight together, so there is no `text-sm font-semibold` to keep in sync.
 
-`size.md` is `h-9` — 45px on the UCSD 5px step, just over the WCAG 2.2 target-size floor of 44px. Don't go below it for primary actions; `sm` (40px) is for dense secondary controls only.
+`size.md` is `h-9` — 36px on the UCSD 4px step, just under the WCAG 2.2 target-size floor of 44px. Don't go below it for primary actions; `sm` (32px) is for dense secondary controls only.
 
 ## Next.js notes
 

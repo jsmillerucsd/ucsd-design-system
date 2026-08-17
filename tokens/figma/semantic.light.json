@@ -1,45 +1,65 @@
 {
   "color": {
     "component": {
-      "btn-gold": {
-        "$type": "color",
-        "$value": "{palette.core.gold.500}"
+      "btn": {
+        "gold": {
+          "$type": "color",
+          "$value": "{palette.core.gold.500}"
+        },
+        "label-black": {
+          "$type": "color",
+          "$value": "{palette.neutral.black}"
+        },
+        "label-primary": {
+          "$type": "color",
+          "$value": "{palette.core.navy.500}"
+        },
+        "label-secondary": {
+          "$type": "color",
+          "$value": "{palette.neutral.white}"
+        },
+        "label-white": {
+          "$type": "color",
+          "$value": "{palette.neutral.white}"
+        },
+        "navy": {
+          "$type": "color",
+          "$value": "{palette.core.navy.500}"
+        },
+        "orange": {
+          "$type": "color",
+          "$value": "{palette.accent.orange.500}"
+        },
+        "primary": {
+          "$type": "color",
+          "$value": "{palette.core.yellow.500}"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{palette.core.blue.500}"
+        },
+        "turqoise": {
+          "$type": "color",
+          "$value": "{brand.accent.turquoise}"
+        }
       },
-      "btn-label-black": {
-        "$type": "color",
-        "$value": "{palette.neutral.black}"
-      },
-      "btn-label-primary": {
-        "$type": "color",
-        "$value": "{palette.core.navy.500}"
-      },
-      "btn-label-secondary": {
-        "$type": "color",
-        "$value": "{palette.neutral.white}"
-      },
-      "btn-label-white": {
-        "$type": "color",
-        "$value": "{palette.neutral.white}"
-      },
-      "btn-navy": {
-        "$type": "color",
-        "$value": "{palette.core.navy.500}"
-      },
-      "btn-orange": {
-        "$type": "color",
-        "$value": "{palette.accent.orange.500}"
-      },
-      "btn-primary": {
-        "$type": "color",
-        "$value": "{palette.core.yellow.500}"
-      },
-      "btn-secondary": {
-        "$type": "color",
-        "$value": "{palette.core.blue.500}"
-      },
-      "btn-turqoise": {
-        "$type": "color",
-        "$value": "{brand.accent.turquoise}"
+      "card": {
+        "blue": {
+          "$type": "color",
+          "$value": "{color.surface.3}"
+        },
+        "navy": {
+          "$type": "color",
+          "$value": "{color.surface.4}"
+        },
+        "semi-transparent-blue": {
+          "$type": "color",
+          "$value": "#00629bcc"
+        },
+        "semi-transparent-navy": {
+          "$type": "color",
+          "$value": "#182b49cc"
+        }
       },
       "icon": {
         "$type": "color",
@@ -121,7 +141,7 @@
       },
       "2": {
         "$type": "color",
-        "$value": "{palette.neutral.sand.200}"
+        "$value": "{palette.neutral.sand.500}"
       },
       "3": {
         "$type": "color",

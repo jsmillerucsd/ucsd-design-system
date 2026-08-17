@@ -148,7 +148,7 @@ The format's authors say the same thing. Its [PHILOSOPHY.md](https://github.com/
 
 **Rejected: asking him to rename in Figma.** His component library is already bound to these names. The cost is a rebinding project; the benefit is cosmetic.
 
-**Consequence.** Some names are not what an engineer would choose. Typography is role-based (`type.h1`) rather than scale-based, which this document's own naming contract calls an anti-pattern; spacing is t-shirt sized rather than numeric. Both are coherent, both are what the design library is built on, and `_bridge.scss` absorbs the mismatch where Bootstrap needs numeric keys. The placeholder values that shipped before the first sync were also simply wrong — the real palette has colours we never had (`core/gold`, `accent/magenta`, `accent/citron`) and our `gold` was in fact his `yellow`.
+**Consequence.** Some names are not what an engineer would choose. Typography is role-based (`type.h1`) rather than scale-based, which this document's own naming contract calls an anti-pattern; spacing carries its pixel value in the name (`space.md-16`) rather than using a pure numeric index. Both are coherent, both are what the design library is built on, and `_bridge.scss` absorbs the mismatch where Bootstrap needs numeric keys. The placeholder values that shipped before the first sync were also simply wrong — the real palette has colours we never had (`core/gold`, `accent/magenta`, `accent/citron`) and our `gold` was in fact his `yellow`.
 
 ---
 

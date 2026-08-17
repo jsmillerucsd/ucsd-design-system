@@ -181,14 +181,14 @@ const rounded = under('radius')
 // the background/text pairs it resolves.
 //
 // The Figma file pairs each button fill with its own label colour
-// (`component/btn-primary` + `component/btn-label-primary`), which maps exactly onto
+// (`component/btn/primary` + `component/btn/label-primary`), which maps exactly onto
 // the spec's backgroundColor/textColor pair. Radius and typography come from the
 // shared scale, since the Figma file has no per-button values for them.
 const BUTTONS = ['primary', 'secondary', 'tertiary'];
 
 const components = BUTTONS.flatMap((variant) => {
-  const fill = byPath.get(`color.component.btn-${variant}`);
-  const label = byPath.get(`color.component.btn-label-${variant}`);
+  const fill = byPath.get(`color.component.btn.${variant}`);
+  const label = byPath.get(`color.component.btn.label-${variant}`);
   if (!fill) return [];
 
   // Reference the semantic colour by its DESIGN.md key rather than following the
@@ -284,10 +284,14 @@ const SECTIONS = [
  *
  * This is the whole drift defence. A value written into prose is a second copy
  * that no build step keeps honest, and a confidently stale hex is worse than no
- * documentation. Fenced code blocks are exempt so usage examples still work.
+ * documentation. Fenced code blocks and inline code spans are exempt so usage
+ * examples and short code references (e.g. a per-colour hex in `#182B49` form)
+ * still work — inline code is code, not prose, and the rule targets prose.
  */
 function assertNoLiterals(file, body) {
-  const withoutCode = body.replace(/^```[\s\S]*?^```/gm, '');
+  const withoutCode = body
+    .replace(/^```[\s\S]*?^```/gm, '')
+    .replace(/`[^`]*`/g, '');
   const found = [
     ...withoutCode.matchAll(/#[0-9a-fA-F]{3,8}\b/g),
     ...withoutCode.matchAll(/\b\d+(?:\.\d+)?(?:px|rem|em)\b/g),

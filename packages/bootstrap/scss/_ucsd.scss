@@ -9,17 +9,17 @@
 // Required on every page (WCAG 2.4.1). Visible only on focus.
 .ucsd-skip-link {
   position: absolute;
-  inset-inline-start: $ucsd-space-small;
+  inset-inline-start: $ucsd-space-xs-8;
   inset-block-start: -100%;
   z-index: 1080;
-  padding: $ucsd-space-small $ucsd-space-large;
+  padding: $ucsd-space-xs-8 $ucsd-space-md-16;
   background: $ucsd-color-surface-1;
   color: $ucsd-color-component-link;
   border: 2px solid $ucsd-color-theme-secondary;
-  border-radius: $ucsd-radius-rounded-2;
+  border-radius: $ucsd-radius-rounded-8;
 
   &:focus-visible {
-    inset-block-start: $ucsd-space-small;
+    inset-block-start: $ucsd-space-xs-8;
   }
 }
 
@@ -28,13 +28,13 @@
 .ucsd-masthead {
   background: $ucsd-color-theme-primary;
   color: $ucsd-color-foreground-heading-light;
-  padding-block: $ucsd-space-medium;
+  padding-block: $ucsd-space-sm-12;
 
   a { color: inherit; }
 
   &__wordmark {
     display: block;
-    height: 32px;
+    height: $ucsd-space-xl-32;
     width: auto;
   }
 }
@@ -45,7 +45,7 @@
 .ucsd-footer {
   background: $ucsd-color-theme-secondary;
   color: $ucsd-color-foreground-heading-light;
-  padding-block: $ucsd-space-3x-large;
+  padding-block: $ucsd-space-xxxl-64;
 
   a {
     color: inherit;
@@ -58,7 +58,7 @@
 // misreading of Decorator V5 and is called out in the old branding skill.
 .ucsd-page-title {
   background: $ucsd-color-surface-1;
-  padding-block: $ucsd-space-2x-large;
+  padding-block: $ucsd-space-xxl-48;
   border-bottom: 1px solid $ucsd-color-foreground-divider;
 }
 
@@ -68,35 +68,45 @@
 .ucsd-prose {
   max-width: $ucsd-container-prose;
 
-  > * + * { margin-block-start: $ucsd-space-large; }
+  > * + * { margin-block-start: $ucsd-space-md-16; }
 
   h2, h3, h4 {
-    margin-block-start: $ucsd-space-3x-large;
-    margin-block-end: $ucsd-space-medium;
+    margin-block-start: $ucsd-space-xxxl-64;
+    margin-block-end: $ucsd-space-sm-12;
   }
 
-  ul, ol { padding-inline-start: $ucsd-space-extra-large; }
-  li + li { margin-block-start: $ucsd-space-small; }
+  ul, ol { padding-inline-start: $ucsd-space-xl-32; }
+  li + li { margin-block-start: $ucsd-space-xs-8; }
 
-  img, figure { margin-block: $ucsd-space-2x-large; }
+  img, figure { margin-block: $ucsd-space-xxl-48; }
 
   blockquote {
-    border-inline-start: 4px solid $ucsd-color-theme-accent;
-    padding-inline-start: $ucsd-space-large;
+    border-inline-start: $ucsd-space-xxs-4 solid $ucsd-color-theme-accent;
+    padding-inline-start: $ucsd-space-md-16;
     color: $ucsd-color-component-menu;
   }
 }
 
 // --- Section rhythm ----------------------------------------------------------
 // Landing-page section spacing. Two sizes only, on purpose.
-.ucsd-section    { padding-block: $ucsd-space-3x-large; }
-.ucsd-section--sm { padding-block: $ucsd-space-3x-large; }
+.ucsd-section    { padding-block: $ucsd-space-xxxl-64; }
+.ucsd-section--sm { padding-block: $ucsd-space-xxl-48; }
+
+// --- Per-heading colors ------------------------------------------------------
+// Bootstrap has a single $headings-color; the Figma file defines h1=Blue,
+// h2/h3=Navy. Override h1 here so it matches the design without touching h2-h6.
+h1 { color: $ucsd-color-foreground-h1-heading; }
 
 // --- System color pairs ------------------------------------------------------
 // Bootstrap 5.3 auto-computes tints/shades from theme colors via Sass. We replace
 // those derived CSS variables with the Figma-designed UCSD system pairs so every
 // component that references them (alerts, badges, tables) uses intentional colors,
 // not math. Primary/secondary are left alone — they have no Figma system pair.
+//
+// These use var(--ucsd-*) references (not the Sass $ucsd-* literals from
+// _bridge.scss) so they re-alias automatically in dark mode. The same pattern is
+// applied below to the body, border, link and emphasis variables that Bootstrap
+// otherwise bakes as compile-time light-mode literals.
 :root {
   --bs-success-text-emphasis: var(--ucsd-color-system-foreground-success);
   --bs-success-bg-subtle:     var(--ucsd-color-system-bg-success);
@@ -113,6 +123,23 @@
   --bs-danger-text-emphasis:  var(--ucsd-color-system-foreground-error);
   --bs-danger-bg-subtle:      var(--ucsd-color-system-bg-error);
   --bs-danger-border-subtle:  var(--ucsd-color-system-error);
+
+  // Re-point the variables Bootstrap baked as light-mode literals so the dark
+  // selector in tokens.css (which re-aliases every --ucsd-* token) reaches them.
+  --bs-body-bg:               var(--ucsd-color-surface-1);
+  --bs-body-color:            var(--ucsd-color-foreground-body-text);
+  --bs-secondary-bg:          var(--ucsd-color-surface-2);
+  --bs-secondary-color:       var(--ucsd-color-component-menu);
+  --bs-tertiary-bg:           var(--ucsd-color-surface-5);
+  --bs-emphasis-color:        var(--ucsd-color-foreground-body-text-focus);
+  --bs-border-color:          var(--ucsd-color-foreground-divider);
+  --bs-border-color-translucent: var(--ucsd-color-foreground-subcard-border);
+  --bs-heading-color:         var(--ucsd-color-foreground-h2-heading);
+  --bs-link-color:            var(--ucsd-color-component-link);
+  --bs-link-hover-color:      var(--ucsd-color-theme-primary);
+  --bs-highlight-bg:          var(--ucsd-color-system-bg-warning);
+  --bs-highlight-color:       var(--ucsd-color-foreground-body-text);
+  --bs-code-color:            var(--ucsd-color-component-link);
 }
 
 // --- Reduced motion ----------------------------------------------------------

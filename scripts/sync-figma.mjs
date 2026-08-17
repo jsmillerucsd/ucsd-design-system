@@ -42,6 +42,7 @@ const COLLECTIONS = {
   'colors-primitive':     { file: 'primitive.json',          root: 'palette', tier: 'primitive' },
   'colors-semantic':      { file: null,                      root: 'color',  tier: 'semantic', byMode: true },
   'layout-primitive':     { file: 'layout.json',             root: null,     tier: 'primitive' },
+  'layout-semantic':      { file: 'layout-semantic.json',    root: null,     tier: 'semantic' },
   'typography-primitive': { file: 'typography-weights.json', root: 'weight', tier: 'primitive', numberType: 'fontWeight' },
   'typography-semantic':  { file: 'typography.json',         root: 'type',   tier: 'semantic',  numberType: 'fontWeight', leafSuffix: 'font-weight' },
 };
@@ -149,7 +150,14 @@ export function transform(inputs) {
   const referenceTo = (alias) => {
     const spec = COLLECTIONS[alias.targetVariableSetName];
     if (!spec) return null;
-    const segs = segmentsOf(alias.targetVariableName);
+    let segs = segmentsOf(alias.targetVariableName);
+    // layout-primitive renames its `spacing` group to `space` (see LAYOUT_RENAME
+    // below). A reference written from the Figma-side name would not resolve, so
+    // apply the same rename when the target is that collection.
+    if (alias.targetVariableSetName === 'layout-primitive') {
+      const rename = LAYOUT_RENAME[segs[0]];
+      if (rename) segs = [...rename, ...segs.slice(1)];
+    }
     return `{${[spec.root, ...segs].filter(Boolean).join('.')}}`;
   };
 
@@ -192,11 +200,24 @@ export function transform(inputs) {
 
       const name = segs.join('.');
       const alias = token.$extensions?.['com.figma.aliasData'];
-      const reference = alias ? referenceTo(alias) : null;
+      let reference = alias ? referenceTo(alias) : null;
 
       if (alias && !reference) {
         problems.push(`"${name}" aliases collection "${alias.targetVariableSetName}", which was not exported. Export it too.`);
         continue;
+      }
+
+      // Same-collection alias: Figma resolves these to a DTCG reference string in
+      // $value but omits aliasData (only cross-collection aliases get it). Rewrite
+      // with this collection's root and segment collapsing so it resolves in our tree.
+      if (!reference && typeof token.$value === 'string' && /^\{[^}]+\}$/.test(token.$value)) {
+        const inner = token.$value.slice(1, -1);
+        let refSegs = collapseRepeats(inner.split('.').map(slug));
+        if (collection === 'layout-primitive') {
+          const rename = LAYOUT_RENAME[refSegs[0]];
+          if (rename) refSegs = [...rename, ...refSegs.slice(1)];
+        }
+        reference = `{${[spec.root, ...refSegs].filter(Boolean).join('.')}}`;
       }
 
       let value;

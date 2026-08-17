@@ -55,13 +55,13 @@ Five, and this is the structure the sync expects:
 
 > **The rule everything depends on: a component layer binds only to `colors-semantic`. Never to `colors-primitive` or `colors-brand`.**
 
-If a button's fill points at `blue/500`, a brand decision is hard-coded into that button, and dark mode, a rebrand and a high-contrast theme each require touching every component. If it points at `component/btn-primary`, all three are a one-line change.
+If a button's fill points at `blue/500`, a brand decision is hard-coded into that button, and dark mode, a rebrand and a high-contrast theme each require touching every component. If it points at `component/btn/primary`, all three are a one-line change.
 
 The sync reports a semantic colour bound to a raw value, and `npm run test:tokens` fails on it.
 
 ### 2.2 Naming
 
-Slash-delimited: `component/btn-label-primary`. The sync lowercases, turns spaces into hyphens, and collapses a leaf that repeats its group (`navy/navy-500` → `navy.500`).
+Slash-delimited: `component/btn/label-primary`. The sync lowercases, turns spaces into hyphens, and collapses a leaf that repeats its group (`navy/navy-500` → `navy.500`).
 
 That means **spaces and stray capitals are tolerated but not encouraged** — `neutral/cool gray` and `Gray-950` both sync fine, they just read inconsistently next to their siblings. Renaming is cheap while the library is young.
 

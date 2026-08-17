@@ -13,11 +13,12 @@
 // of, `color.foreground.*` is text and rules, `color.surface.*` is what sits behind.
 
 // --- Brand / theme colors ----------------------------------------------------
+// DESIGN.md components block: button-primary = btn.primary (Yellow #ffcd00).
 // Bootstrap's $primary drives .btn-primary, links, focus and a dozen components.
-// It maps to the button fill rather than color.theme.primary, because the theme
-// tokens are the brand marks and are not all usable as interactive fills.
-$primary:   $ucsd-color-component-btn-secondary;
-$secondary: $ucsd-color-theme-primary;
+// It maps to btn.primary — the designed primary button fill — not color.theme.primary
+// (which is the Navy brand mark, reserved for identity per DESIGN.md line 992).
+$primary:   $ucsd-color-component-btn-primary;
+$secondary: $ucsd-color-component-btn-secondary;
 $success:   $ucsd-color-system-success;
 $info:      $ucsd-color-system-information;
 $warning:   $ucsd-color-system-warning;
@@ -57,9 +58,9 @@ $font-family-sans-serif: #{$ucsd-type-body-font-family}, #{$ucsd-type-fallback-s
 $font-family-monospace:  ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 $headings-font-family:   #{$ucsd-type-h1-font-family}, #{$ucsd-type-fallback-display};
 
-$font-weight-medium:   500;
-$font-weight-semibold: 600;
-$font-weight-bold:     $ucsd-type-h2-font-weight;
+$font-weight-medium:   $ucsd-weight-medium;
+$font-weight-semibold: $ucsd-weight-semi-bold;
+$font-weight-bold:     $ucsd-weight-bold;
 
 // Kept in rem so browser font-size settings are honoured. The Figma ramp is in px
 // and is exposed separately as --ucsd-type-*-font-size.
@@ -74,31 +75,34 @@ $h5-font-size: $ucsd-type-h2-small-font-size;
 $h6-font-size: $ucsd-type-eyebrow-font-size;
 
 $headings-font-weight: $ucsd-type-h1-font-weight;
-$headings-color:       $ucsd-color-foreground-h1-heading;
+// h1 is Blue (foreground.h1-heading); h2/h3 are Navy. Bootstrap has a single
+// $headings-color, so we set it to the majority (Navy) and override h1 in _ucsd.scss.
+$headings-color:       $ucsd-color-foreground-h2-heading;
 
 // --- Spacing -----------------------------------------------------------------
 // Bootstrap's $spacers map drives every .m-*/.p-*/.gap-* utility. The Figma scale
-// is t-shirt sized rather than numeric, so the numeric keys Bootstrap users expect
-// are mapped onto it here. Keys stay numeric because `.p-3` is muscle memory.
-$spacer: $ucsd-space-large;
+// is numeric (4px base), so the numeric keys Bootstrap users expect map directly.
+// Keys stay numeric because `.p-3` is muscle memory.
+$spacer: $ucsd-space-md-16;
 $spacers: (
   0: 0,
-  1: $ucsd-space-extra-small,  //  5px
-  2: $ucsd-space-small,        // 10px
-  3: $ucsd-space-medium,       // 15px
-  4: $ucsd-space-large,        // 20px
-  5: $ucsd-space-extra-large,  // 30px
-  6: $ucsd-space-2x-large,     // 45px
-  7: $ucsd-space-3x-large,     // 60px
+  1: $ucsd-space-xxs-4,   //  4px
+  2: $ucsd-space-xs-8,    //  8px
+  3: $ucsd-space-sm-12,   // 12px
+  4: $ucsd-space-md-16,   // 16px
+  5: $ucsd-space-lg-24,   // 24px
+  6: $ucsd-space-xl-32,   // 32px
+  7: $ucsd-space-xxl-48,  // 48px
+  8: $ucsd-space-xxxl-64, // 64px
 );
 
 // --- Radius ------------------------------------------------------------------
-// Figma exports a radius scale (rounded-0 through rounded-3, rounded-circle).
-// Only pill is code-owned. See tokens/code/layout.json.
-$border-radius:      $ucsd-radius-rounded-2;
-$border-radius-sm:   $ucsd-radius-rounded-1;
-$border-radius-lg:   $ucsd-radius-rounded-3;
-$border-radius-xl:   $ucsd-radius-rounded-3;
+// Figma exports a radius scale (rounded-0, rounded-4, rounded-8, rounded-12,
+// rounded-circle). Only pill is code-owned. See tokens/code/layout.json.
+$border-radius:      $ucsd-radius-rounded-8;
+$border-radius-sm:   $ucsd-radius-rounded-4;
+$border-radius-lg:   $ucsd-radius-rounded-12;
+$border-radius-xl:   $ucsd-radius-rounded-12;
 $border-radius-pill: $ucsd-radius-pill;
 
 // --- Elevation ---------------------------------------------------------------
@@ -120,6 +124,10 @@ $grid-breakpoints: (
   xl: $ucsd-breakpoint-xl,
   xxl: $ucsd-breakpoint-xxl,
 );
+// Breakpoints come from tokens. Container max-widths: only xl and xxl map to
+// UCSD container tokens (base=1140, wide=1320). The smaller breakpoints use
+// Bootstrap's defaults because our container tokens don't define intermediate
+// widths — narrow (768) would collide with md, and the map must be ascending.
 $container-max-widths: (
   sm: 540px,
   md: 720px,
@@ -127,22 +135,105 @@ $container-max-widths: (
   xl: $ucsd-container-base,
   xxl: $ucsd-container-wide,
 );
-$grid-gutter-width: $ucsd-space-extra-large;
+$grid-gutter-width: $ucsd-space-lg-24;
 
 // --- Components --------------------------------------------------------------
-$btn-border-radius: $ucsd-radius-rounded-2;
+// DESIGN.md: "no inner shadow" and "shadow is for things that float and can be
+// dismissed." Buttons are neither, so they get no box-shadow at all. The default
+// inset-white-highlight + drop-shadow is the single most off-brand thing Bootstrap
+// ships — it makes every button look like a 2014 web component.
+$btn-border-radius: $ucsd-radius-rounded-8;
 $btn-font-weight:   $ucsd-type-button-font-weight;
 $btn-font-size:     $ucsd-type-button-font-size;
+$btn-padding-x:     $ucsd-button-padding-x;
+$btn-padding-y:     $ucsd-button-padding-y;
+$btn-line-height:   $ucsd-type-button-line-height;
+$btn-box-shadow:    none;
+$btn-active-box-shadow: none;
 
-$card-border-radius: $ucsd-radius-rounded-2;
+$card-border-radius: $ucsd-radius-rounded-8;
 $card-border-color:  $ucsd-color-foreground-card-border;
+$card-bg:            $ucsd-color-surface-1;
 $card-cap-bg:        $ucsd-color-surface-2;
+$card-color:         $ucsd-color-foreground-body-text;
 
-$input-border-color:       $ucsd-color-foreground-subcard-border;
+$input-border-color:       $ucsd-color-foreground-card-border;
 $input-focus-border-color: $ucsd-color-theme-secondary;
-$input-border-radius:      $ucsd-radius-rounded-2;
+$input-border-radius:      $ucsd-radius-rounded-8;
+$input-bg:                 $ucsd-color-surface-1;
+$input-color:              $ucsd-color-foreground-body-text;
+$input-focus-bg:           $ucsd-color-surface-1;
+$input-focus-color:        $ucsd-color-foreground-body-text-focus;
+$input-box-shadow:         none;
 
-$progress-bg: $ucsd-color-surface-2;
+$progress-bg:    $ucsd-color-surface-2;
+$progress-color: $ucsd-color-theme-secondary;
+
+// $box-shadow-inset is used by form-control :invalid/:valid and active states.
+// DESIGN.md: "no inner shadow" — set to none.
+$box-shadow-inset: none;
+
+// $code-color — Bootstrap defaults to pink (#d63384). Map to the link token so
+// inline code reads as a UCSD interactive element in both modes.
+$code-color: $ucsd-color-component-link;
+
+// --- Navbar ------------------------------------------------------------------
+// Bootstrap defaults to rgba($black, .55) etc. — off-system. Map to UCSD tokens
+// so the navbar reads as UCSD in both light and dark modes.
+$navbar-light-color:                $ucsd-color-foreground-body-text;
+$navbar-light-hover-color:          $ucsd-color-component-link;
+$navbar-light-active-color:         $ucsd-color-component-link;
+$navbar-light-brand-color:          $ucsd-color-theme-primary;
+$navbar-light-brand-hover-color:    $ucsd-color-theme-primary;
+$navbar-light-disabled-color:       $ucsd-color-component-menu;
+
+$navbar-dark-color:                $ucsd-color-foreground-heading-light;
+$navbar-dark-hover-color:          $ucsd-color-theme-accent;
+$navbar-dark-active-color:         $ucsd-color-foreground-heading-light;
+$navbar-dark-brand-color:          $ucsd-color-foreground-heading-light;
+$navbar-dark-brand-hover-color:    $ucsd-color-foreground-heading-light;
+$navbar-dark-disabled-color:       $ucsd-color-component-menu;
+
+// --- Tooltip -----------------------------------------------------------------
+$tooltip-bg:    $ucsd-color-theme-primary;
+$tooltip-color: $ucsd-color-foreground-heading-light;
+$tooltip-border-radius: $ucsd-radius-rounded-4;
+
+// --- Dropdown ----------------------------------------------------------------
+$dropdown-border-color:    $ucsd-color-foreground-card-border;
+$dropdown-divider-bg:      $ucsd-color-foreground-divider;
+$dropdown-link-color:      $ucsd-color-foreground-body-text;
+$dropdown-link-hover-color: $ucsd-color-foreground-body-text-focus;
+$dropdown-link-hover-bg:   $ucsd-color-surface-2;
+$dropdown-link-active-color: $ucsd-color-foreground-heading-light;
+$dropdown-link-active-bg:   $ucsd-color-theme-secondary;
+$dropdown-header-color:     $ucsd-color-foreground-subheading;
+
+// --- Modal -------------------------------------------------------------------
+$modal-content-border-color: $ucsd-color-foreground-card-border;
+$modal-header-border-color:  $ucsd-color-foreground-divider;
+$modal-footer-border-color:  $ucsd-color-foreground-divider;
+
+// --- Breadcrumb --------------------------------------------------------------
+$breadcrumb-divider-color:  $ucsd-color-component-menu;
+$breadcrumb-active-color:   $ucsd-color-foreground-body-text;
+
+// --- List group --------------------------------------------------------------
+$list-group-border-color: $ucsd-color-foreground-card-border;
+$list-group-bg:           $ucsd-color-surface-1;
+$list-group-color:        $ucsd-color-foreground-body-text;
+$list-group-action-hover-color: $ucsd-color-foreground-body-text-focus;
+$list-group-action-hover-bg:    $ucsd-color-surface-2;
+$list-group-action-active-color: $ucsd-color-foreground-body-text;
+$list-group-action-active-bg:    $ucsd-color-surface-2;
+
+// --- Table -------------------------------------------------------------------
+$table-bg:           $ucsd-color-surface-1;
+$table-color:        $ucsd-color-foreground-body-text;
+$table-border-color: $ucsd-color-foreground-divider;
+$table-striped-bg:   $ucsd-color-surface-2;
+$table-active-bg:    $ucsd-color-surface-5;
+$table-hover-bg:     $ucsd-color-surface-5;
 
 // Enable Bootstrap's CSS-variable output so consumers can retheme at runtime.
 $enable-cssgrid: true;
