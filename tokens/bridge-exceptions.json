@@ -1,0 +1,10 @@
+{
+  "$comment": "Published tokens that are DELIBERATELY not bound into any framework surface (Bootstrap variable, Tailwind namespace, shadcn slot). Checked by scripts/audit-bridges.mjs, which fails when a published token is neither bound nor listed here — and when an entry goes stale (token removed, or bound after all). Every entry needs a reason and an owner. Tokens listed here are still published: they reach every consumer as var(--ucsd-*).",
+  "exceptions": [
+    {
+      "token": "button.gap",
+      "owner": "engineering",
+      "reason": "The icon-to-label gap inside a button. Bootstrap's .btn is inline-block with no gap concept (making it flex would change layout for every consumer), and Tailwind/shadcn size that gap with per-component utilities. Reachable as var(--ucsd-button-gap) for custom buttons."
+    }
+  ]
+}

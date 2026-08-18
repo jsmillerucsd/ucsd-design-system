@@ -212,7 +212,14 @@
   ],
   "tailwindClasses": {
     "max-w-prose": "max-w-[--ucsd-container-prose] — Tailwind hard-codes max-w-prose to 65ch and it wins over --container-prose (70ch); @utility cannot override it either",
-    "2xl:": "xxl: — the UCSD scale names the widest breakpoint xxl, and 2xl is reset, so 2xl: utilities silently never generate"
+    "2xl:": "xxl: — the UCSD scale names the widest breakpoint xxl, and 2xl is reset, so 2xl: utilities silently never generate",
+    "text-3xl": "a type role utility (text-h1, text-body-lg) — the UCSD ramp tops out at the h1/body-lg size, so this stock step generates no CSS at all",
+    "text-4xl": "a type role utility (text-h1, text-body-lg) — the UCSD ramp tops out at the h1/body-lg size, so this stock step generates no CSS at all",
+    "text-5xl": "a type role utility (text-h1, text-body-lg) — the UCSD ramp tops out at the h1/body-lg size, so this stock step generates no CSS at all",
+    "text-6xl": "a type role utility (text-h1, text-body-lg) — the UCSD ramp tops out at the h1/body-lg size, so this stock step generates no CSS at all",
+    "text-7xl": "a type role utility (text-h1, text-body-lg) — the UCSD ramp tops out at the h1/body-lg size, so this stock step generates no CSS at all",
+    "text-8xl": "a type role utility (text-h1, text-body-lg) — the UCSD ramp tops out at the h1/body-lg size, so this stock step generates no CSS at all",
+    "text-9xl": "a type role utility (text-h1, text-body-lg) — the UCSD ramp tops out at the h1/body-lg size, so this stock step generates no CSS at all"
   },
   "legacyDecoratorClasses": [
     "panel",

@@ -80,25 +80,14 @@ await esbuild.build({
   define: { 'process.env.NODE_ENV': '"production"' },
 });
 
-// Exactly the import order docs/using/nextjs.md gives consumers. theme.css resets
-// --color-* to initial, so the shadcn bridge has to come after it.
+// The exact stylesheet docs/using/nextjs.md gives consumers: the single full.css
+// entry, which carries the four imports in the only order that works and
+// shadcn's required base layer.
 const input = path.join(OUT, 'input.css');
 await fs.writeFile(
   input,
   [
-    '@import "tailwindcss";',
-    `@import "${posix(path.join(TOK, 'css', 'tokens.css'))}";`,
-    `@import "${posix(path.join(TOK, 'tailwind', 'theme.css'))}";`,
-    `@import "${posix(path.join(TOK, 'shadcn', 'theme.css'))}";`,
-    // The base layer shadcn's own `init` generates. Tailwind v4's bare `border`
-    // utility sets only border-width; without this, border-color falls back to
-    // currentColor and every card/input/separator renders with a text-colour border
-    // instead of the --border slot. This is shadcn's contract, not a UCSD override.
-    '@layer base {',
-    '  * {',
-    '    @apply border-border outline-ring/50;',
-    '  }',
-    '}',
+    `@import "${posix(path.join(TOK, 'full.css'))}";`,
     // Scan the SOURCES, not dist/. The bundle is minified and would feed Tailwind
     // mangled candidates; the components' own class strings are what matter here.
     // One stylesheet serves both pages, so both trees have to be scanned.

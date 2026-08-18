@@ -17,6 +17,10 @@
     "body": {
       "font-family": { "$value": "'Brix Sans'", "$type": "fontFamily" }
     },
+    "mono": {
+      "$description": "Code and tabular figures. UCSD licenses no monospace face, so the value IS the complete stack (no fallback token is appended). Backs Bootstrap's $font-family-monospace and Tailwind's font-mono, so both frameworks agree.",
+      "font-family": { "$value": "ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace", "$type": "fontFamily" }
+    },
     "body-lg": {
       "font-size": { "$value": "24px", "$type": "dimension" },
       "line-height": { "$value": "29px", "$type": "dimension" }

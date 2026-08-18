@@ -29,6 +29,10 @@ Hand-written, and the sync never touches it. These exist because **Figma Variabl
 
 Defects in the Figma file that are accepted for now, so the gate can stay green while design fixes them upstream. A debt ledger, not a mute button — `scripts/validate-tokens.mjs` fails if an entry stops matching, so a fixed issue must be deleted from the file.
 
+## `bridge-exceptions.json`
+
+Published tokens that deliberately bind into **no** framework surface (no Bootstrap variable, Tailwind namespace, or shadcn slot) and ship only as `var(--ucsd-*)`. `scripts/audit-bridges.mjs` fails when a published token is neither bound nor listed here — that is how a new Figma token is forced to get a downstream home — and, like `known-issues.json`, it fails on stale entries too.
+
 ## The tier rule
 
 ```

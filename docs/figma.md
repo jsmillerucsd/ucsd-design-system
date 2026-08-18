@@ -150,6 +150,18 @@ Accepted defects live in `tokens/known-issues.json` with an owner and a reason. 
 
 The contrast check earns its keep — on the first real sync it found four dark-mode failures in the Figma file, including a 2.79:1 information pair.
 
+### 3.4a The mirror is machine-checked
+
+CI re-runs the sync against the committed `figma-export/` and fails on any diff in `tokens/figma/`. That makes the mirror claim a property of the pipeline rather than of discipline: a hand edit to `tokens/figma/` — which the next real sync would silently revert — cannot merge.
+
+### 3.5 Bridge coverage audit (blocks the PR)
+
+`scripts/audit-bridges.mjs` closes the loop in the other direction. The gate above proves the sync read Figma faithfully; this one proves every published token then **lands somewhere** — a Bootstrap variable, a Tailwind `@theme` namespace, or a shadcn slot — or carries a reasoned entry in `tokens/bridge-exceptions.json` (self-cleaning, same rules as `known-issues.json`).
+
+Without it, a designer can add a collection in Figma, the sync mirrors it perfectly, every build stays green — and no framework ever shows the new tokens. That is exactly how the first `layout-semantic` export (button radius, grid gap, icon sizes) arrived bound to nothing.
+
+The audit also writes `packages/tokens/dist/coverage.json` — one row per published token with per-target booleans — which CI uploads as an artifact, so drift is inspectable by machine as well as by reviewer.
+
 ## 4. One source, N targets
 
 `packages/tokens` runs Style Dictionary over `tokens/` and emits `dist/css/tokens.css`, `dist/scss/_tokens.scss`, `dist/tailwind/theme.css`, `dist/js/tokens.js` + `.d.ts`, and `dist/tokens.json`.

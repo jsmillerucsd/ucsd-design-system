@@ -72,12 +72,24 @@ const load = async (matches) =>
 
 // Four tiers, mirroring the Figma collections: brand -> primitive -> semantic,
 // plus the code-owned tokens Figma cannot express. See tokens/README.md.
+const COLOR_FILES = new Set([
+  'figma/brand.json', 'figma/primitive.json',
+  'figma/semantic.light.json', 'figma/semantic.dark.json',
+]);
+
+// Token files live in figma/ and code/ — a POSITIVE rule, so the ledgers at the
+// tokens/ root (known-issues.json, bridge-exceptions.json, and whatever joins
+// them) are excluded by construction rather than by a name roster. A roster is
+// how layout-semantic.json and typography-weights.json once went silently
+// unloaded and unchecked while CI stayed green.
+const isTokenFile = (r) => r.startsWith('figma/') || r.startsWith('code/');
+
 const [brand, prim, light, dark, nonColorSemantic] = await Promise.all([
   load((r) => r === 'figma/brand.json'),
   load((r) => r === 'figma/primitive.json'),
   load((r) => r === 'figma/semantic.light.json'),
   load((r) => r === 'figma/semantic.dark.json'),
-  load((r) => r === 'figma/layout.json' || r === 'figma/typography.json' || r.startsWith('code/')),
+  load((r) => isTokenFile(r) && !COLOR_FILES.has(r)),
 ]);
 
 for (const [mode, map] of [['light', light], ['dark', dark]]) {
@@ -103,28 +115,32 @@ function resolve(refPath, universe, seen = new Set(), hops = 0) {
   return resolve(refTarget(token.$value), universe, new Set([...seen, refPath]), hops + 1);
 }
 
-for (const [modeName, modeMap] of [['Light', light], ['Dark', dark]]) {
-  const universe = merge(brand, prim, modeMap, nonColorSemantic);
+/** Every alias in `map` must resolve within `universe`. */
+const checkAliases = (map, universe, prefix = '') => {
+  for (const [name, token] of map) {
+    if (!isRef(token.$value)) continue;
+    const r = resolve(refTarget(token.$value), universe);
+    if (r.error) fail('unresolvable-alias', `${prefix}${name} — ${r.error}`);
+  }
+};
 
+for (const [modeName, modeMap] of [['Light', light], ['Dark', dark]]) {
   for (const [name, token] of modeMap) {
     if (!isRef(token.$value)) {
       fail('semantic-must-alias',
         `${modeName}: ${name} is the literal "${token.$value}". Semantic colors must alias a primitive — ` +
         `bind it to a colors-primitive variable in Figma.`);
-      continue;
-    }
-    const r = resolve(refTarget(token.$value), universe);
-    if (r.error) fail('unresolvable-alias', `${modeName}: ${name} — ${r.error}`);
-  }
-
-  // Primitives may alias brand (the -500 steps do); brand itself must be literal.
-  for (const [name, token] of prim) {
-    if (isRef(token.$value)) {
-      const r = resolve(refTarget(token.$value), universe);
-      if (r.error) fail('unresolvable-alias', `${modeName}: ${name} — ${r.error}`);
     }
   }
+  checkAliases(modeMap, merge(brand, prim, modeMap, nonColorSemantic), `${modeName}: `);
 }
+
+// Primitives (which may alias brand — the -500 steps do) and the non-colour
+// tiers (layout-semantic's {space.*}, typography's {weight.*}, code/) resolve
+// mode-invariantly, so one pass over one universe suffices.
+const invariantUniverse = merge(brand, prim, light, nonColorSemantic);
+checkAliases(prim, invariantUniverse);
+checkAliases(nonColorSemantic, invariantUniverse);
 
 for (const [name, token] of brand) {
   if (isRef(token.$value)) {

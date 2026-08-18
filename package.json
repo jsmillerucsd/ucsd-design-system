@@ -22,6 +22,8 @@
     "sync:figma": "node scripts/sync-figma.mjs",
     "test": "node --test test/*.test.mjs",
     "test:tokens": "node scripts/validate-tokens.mjs",
+    "audit:bridges": "node scripts/audit-bridges.mjs",
+    "check": "npm run build && npm run test:tokens && npm run audit:bridges && npm test && npm run lint:designmd",
     "lint:designmd": "designmd lint DESIGN.md",
     "validate": "node skills/ucsd-design-system/scripts/validate.mjs",
     "release:tokens": "npm run build:tokens && npm publish --workspace @ucsd/tokens",

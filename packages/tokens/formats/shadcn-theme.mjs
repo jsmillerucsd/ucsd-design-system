@@ -118,8 +118,15 @@ const RADIUS = 'radius.rounded-8';
 /** Slot rows only, with the `section` separators dropped. */
 const slots = MAP.filter(([slot]) => slot !== 'section');
 
-/** Every UCSD token path this bridge depends on. Consumed by the build's guard. */
-export const shadcnTokenPaths = [...slots.map(([, path]) => path), RADIUS];
+/** Motion tokens behind the accordion animation block below. */
+const MOTION = ['motion.duration.base', 'motion.easing.enter', 'motion.easing.exit'];
+
+/**
+ * Every UCSD token path this bridge depends on. cssVar() throws on any entry
+ * that stops resolving, and scripts/audit-bridges.mjs reads this list to know
+ * what the shadcn surface covers.
+ */
+export const shadcnTokenPaths = [...slots.map(([, path]) => path), RADIUS, ...MOTION];
 
 export const shadcnTheme = {
   name: 'css/ucsd-shadcn-theme',
@@ -176,6 +183,37 @@ export const shadcnTheme = {
       '   rather than adding another hop. */',
       '@theme inline {',
       ...themeLines,
+      '',
+      '  /* shadcn\'s Accordion animates via --animate-accordion-*, which its own',
+      '     setup gets from the tw-animate-css package. Provided here instead, on',
+      '     the UCSD motion tokens, so the documented three imports are complete',
+      '     and the curve matches the rest of the system: enter decelerates,',
+      '     exit accelerates. */',
+      `  --animate-accordion-down: accordion-down ${cssVar('motion.duration.base')} ${cssVar('motion.easing.enter')};`,
+      `  --animate-accordion-up: accordion-up ${cssVar('motion.duration.base')} ${cssVar('motion.easing.exit')};`,
+      '',
+      '  @keyframes accordion-down {',
+      '    from { height: 0; }',
+      '    to { height: var(--radix-accordion-content-height); }',
+      '  }',
+      '  @keyframes accordion-up {',
+      '    from { height: var(--radix-accordion-content-height); }',
+      '    to { height: 0; }',
+      '  }',
+      '}',
+      '',
+      "/* The base layer shadcn's own `init` writes into globals.css. Tailwind v4's",
+      '   bare `border` utility sets only border-width, so without this every',
+      '   card/input/separator border falls back to currentColor (text-coloured',
+      '   borders). Our docs tell consumers to DELETE the init-generated globals in',
+      '   favour of this bridge, so the bridge must carry the layer. Emitted as the',
+      "   compiled CSS rather than @apply so it cannot depend on utility resolution",
+      '   order. */',
+      '@layer base {',
+      '  * {',
+      '    border-color: var(--border);',
+      '    outline-color: color-mix(in oklab, var(--ring) 50%, transparent);',
+      '  }',
       '}',
       '',
     ].join('\n');

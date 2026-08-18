@@ -26,15 +26,13 @@ npm install @ucsd/bootstrap     # Bootstrap 5 sites
 
 ## Use it
 
-**Next.js / React / Tailwind** - [full guide](docs/using/nextjs.md)
+**Next.js / React / Tailwind / shadcn** - [full guide](docs/using/nextjs.md)
 
 ```css
-@import "tailwindcss";
-@import "@ucsd/tokens/css";
-@import "@ucsd/tokens/tailwind";
+@import "@ucsd/tokens/full";
 ```
 
-Then `bg-component-btn-primary`, `text-foreground-body-text`, `p-large`, `text-h1`. Dark mode needs no `dark:` variants.
+One import: Tailwind, the tokens (light and dark), the utility theme and the shadcn bridge, in the only order that works. Then `bg-component-btn-primary`, `text-foreground-body-text`, `p-md-16`, `text-h1` — and `npx shadcn add button` renders on-brand unedited. Dark mode needs no `dark:` variants.
 
 **Bootstrap 5 / CMS / static page** - [full guide](docs/using/bootstrap.md)
 
@@ -72,7 +70,18 @@ Figma owns the values. The designer never touches git:
 | Designer | In Figma: right-click each collection, Export modes, send the ZIPs |
 | You | Drop them in `figma-export/`, run `npm run sync:figma`, review the diff, open a PR |
 
-`npm run build` recompiles every target from that one source. The gate blocks a bad sync: aliases must resolve, every token must exist in both modes, names must match the contract, text/background pairs must pass WCAG 2.2 AA. Full detail in [docs/figma.md](docs/figma.md).
+`npm run build` recompiles every target from that one source. Two gates block a bad sync: aliases must resolve, every token must exist in both modes, names must match the contract, text/background pairs must pass WCAG 2.2 AA — and every published token must land in at least one framework surface (or carry a documented exception), so a new Figma token cannot arrive and silently reach nothing. Full detail in [docs/figma.md](docs/figma.md).
+
+### Where edits go
+
+**Never edit `DESIGN.md` directly** — every line of it is build output, and the next `npm run build` overwrites the file without warning. Everything in it has an editable home:
+
+| To change | Edit | Then |
+|---|---|---|
+| A **value** — a color, size, radius, weight | The Figma file | Designer exports, you run `npm run sync:figma` |
+| The **prose** — guidance, rules, voice, do's and don'ts | [`docs/design-md/*.md`](docs/design-md/README.md) (one file per section) | `npm run build` and commit the regenerated `DESIGN.md` with it |
+
+One rule for the prose: it names tokens, never their values — no hex, no px. The build fails otherwise; [docs/design-md/README.md](docs/design-md/README.md) explains why.
 
 ## Docs
 

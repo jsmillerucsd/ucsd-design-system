@@ -17,6 +17,19 @@ jobs:
 
       - run: npm ci
 
+      # tokens/figma/ must be EXACTLY the transform of figma-export/ — that is
+      # the whole "mirror of the Figma variables" claim. Re-running the sync and
+      # diffing proves it, and catches the one drift the other gates cannot see:
+      # a hand edit to tokens/figma/, which would pass every check and then be
+      # silently reverted by the next real sync.
+      - name: tokens/ mirrors the Figma export
+        run: |
+          npm run sync:figma
+          if ! git diff --exit-code --stat -- tokens/figma; then
+            echo "::error::tokens/figma/ does not match figma-export/. Never hand-edit tokens/figma/ — change Figma, re-export, and run 'npm run sync:figma'."
+            exit 1
+          fi
+
       - name: Build all targets
         run: npm run build
 
@@ -24,6 +37,22 @@ jobs:
       # modes. This is what blocks a bad Figma sync from merging.
       - name: Validate tokens
         run: npm run test:tokens
+
+      # The drift gate in the other direction: every published token must be
+      # bound into at least one framework surface (Bootstrap variable, Tailwind
+      # namespace, shadcn slot) or carry a reasoned entry in
+      # tokens/bridge-exceptions.json. This is what catches "the designer added
+      # a token in Figma and no bridge picked it up" — it emits a per-token,
+      # per-target coverage report as a machine-readable artifact.
+      - name: Audit bridge coverage
+        run: npm run audit:bridges
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: bridge-coverage
+          path: packages/tokens/dist/coverage.json
+          retention-days: 30
 
       - name: Unit and contract tests
         run: npm test
@@ -45,9 +74,9 @@ jobs:
       #   ~30  orphaned-tokens    a semantic colour no component happens to reference.
       #                           Normal for a real design system; the alternative is
       #                           deleting useful tokens to quieten a linter.
-      #     4  token-like-ignored breakpoints / containers / motion / modes. Custom
-      #                           keys are encouraged by the format's PHILOSOPHY.md,
-      #                           but this rule still flags them.
+      #     6  token-like-ignored breakpoints / containers / icons / grid / motion /
+      #                           modes. Custom keys are encouraged by the format's
+      #                           PHILOSOPHY.md, but this rule still flags them.
       #     1  borderColor        not one of the spec's eight component sub-tokens.
       # A non-zero exit here means a real error, not drift in that count.
       - name: Validate DESIGN.md against the spec

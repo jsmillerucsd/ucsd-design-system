@@ -6,8 +6,15 @@ For people working **on** the design system. If you're building an app **with** 
 
 ```bash
 npm install
+npm run check          # build + every gate below, in order
+```
+
+Which is shorthand for:
+
+```bash
 npm run build          # tokens → every target, then DESIGN.md, then the skill
 npm run test:tokens    # the validation gate
+npm run audit:bridges  # every published token lands in a framework surface; no no-op Bootstrap variables
 npm test               # contract tests + link check
 npm run lint:designmd  # DESIGN.md against the format spec
 ```
@@ -19,7 +26,7 @@ npm run demo           # compiles demo/dist/shadcn.css with the real Tailwind co
 ```
 
 - `packages/bootstrap/kitchen-sink.html` — Bootstrap 5, straight off the compiled `dist/`. No JavaScript.
-- `demo/shadcn.html` — a tour of **unmodified shadcn/ui components**: buttons, alerts, cards, a Recharts chart, tabs, table, dialog, form controls.
+- `demo/shadcn.html` — a tour of **unmodified shadcn/ui components**: buttons, alerts, cards, a Recharts chart, tabs, table with pagination, dialog, the full form-control set (input, select, radio group, checkbox, switch, slider, textarea), accordion, breadcrumb, dropdown menu, popover and tooltip.
 - `demo/sidebar.html` — shadcn's **`sidebar-08` block**, rendered whole. Stronger evidence than the tour, because the layout and every class in it are shadcn's rather than ours, and it exercises the `--sidebar-*` slot family the tour never touches.
 
 Everything under `demo/` is vendored from shadcn's own registry by `npm run demo:vendor`, which resolves `registryDependencies` recursively. Stylesheets are compiled from the same `dist/` files a consumer imports, in the order the docs prescribe. Nothing uses inline styles or hand-written component classes — a demo that renders from its own CSS can look perfect while the pipeline behind it is broken, which is exactly what happened to the first version of the shadcn page.
@@ -31,6 +38,7 @@ Everything under `demo/` is vendored from shadcn's own registry by `npm run demo
 | Check | Command | Why it exists |
 |---|---|---|
 | Token validation | `npm run test:tokens` | Aliases resolve; every semantic token exists in **both** modes; names match the contract; text/background pairs pass **WCAG 2.2 AA** in both modes. This is what blocks a bad Figma sync from merging. |
+| Bridge coverage | `npm run audit:bridges` | Every published token is **bound into at least one framework surface** (Bootstrap variable, Tailwind namespace, shadcn slot) or carries a reasoned entry in `tokens/bridge-exceptions.json`. Catches a Figma token arriving with no downstream home; emits `dist/coverage.json` (per token, per target) as a CI artifact. The ledger is self-cleaning — a stale entry fails the audit. |
 | Build contracts | `npm test` | The same value reaches Bootstrap, Tailwind, CSS and JS. Pins the promise the whole system makes. |
 | Link check | `npm test` | Every relative link in every `.md` resolves, and no doc is orphaned. |
 | Generated files are current | `git diff --exit-code` | `DESIGN.md`, `llms.txt` and `skills/` are committed build artifacts. A diff after rebuild means someone edited a generated file or forgot to rebuild. |
@@ -55,7 +63,8 @@ When you do change the token *set* (not just values):
 2. Give it a value in **both** `tokens/semantic/color/light.json` and `dark.json`. Mode parity is enforced.
 3. Semantic tokens must **alias a primitive**, never carry a literal.
 4. If it's a new text/background pairing, add it to `PAIRS` in `scripts/validate-tokens.mjs` — the contrast check only covers pairs it's told about.
-5. `npm run build && npm run test:tokens && npm test`, and commit the regenerated files with your change.
+5. Decide where the token **lands**: bind it in `packages/bootstrap/scss/_bridge.scss` and/or the Tailwind/shadcn formats in `packages/tokens/formats/`, or record why it stays var-only in `tokens/bridge-exceptions.json`. `npm run audit:bridges` fails until you have done one or the other.
+6. `npm run build && npm run test:tokens && npm run audit:bridges && npm test`, and commit the regenerated files with your change.
 
 Versioning on `@ucsd/tokens`: **patch** = value changed, **minor** = token added, **major** = token renamed, removed, or its meaning changed.
 

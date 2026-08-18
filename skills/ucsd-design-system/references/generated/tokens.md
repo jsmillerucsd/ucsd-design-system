@@ -4,7 +4,7 @@
 > from `packages/tokens/dist/tokens.json`. To change a value, change it in Figma
 > and run the sync; see `docs/figma.md`.
 
-Semantic tokens: **148** · component: **0** · primitives: **105**
+Semantic tokens: **140** · component: **0** · primitives: **114**
 
 ## How to reference a token
 
@@ -154,10 +154,10 @@ with light/dark mode automatically.
 
 | Token | CSS variable | Tailwind | Value | Use for |
 | --- | --- | --- | --- | --- |
-| `icon.lg-16` | `--ucsd-icon-lg-16` | — | `16px` | — |
-| `icon.lg-20` | `--ucsd-icon-lg-20` | — | `20px` | — |
-| `icon.sm-8` | `--ucsd-icon-sm-8` | — | `8px` | — |
-| `icon.xl-24` | `--ucsd-icon-xl-24` | — | `24px` | — |
+| `icon.lg-16` | `--ucsd-icon-lg-16` | `p-icon-lg-16` `m-icon-lg-16` `gap-icon-lg-16` | `16px` | — |
+| `icon.lg-20` | `--ucsd-icon-lg-20` | `p-icon-lg-20` `m-icon-lg-20` `gap-icon-lg-20` | `20px` | — |
+| `icon.sm-8` | `--ucsd-icon-sm-8` | `p-icon-sm-8` `m-icon-sm-8` `gap-icon-sm-8` | `8px` | — |
+| `icon.xl-24` | `--ucsd-icon-xl-24` | `p-icon-xl-24` `m-icon-xl-24` `gap-icon-xl-24` | `24px` | — |
 
 ### `motion`
 
@@ -231,6 +231,7 @@ with light/dark mode automatically.
 | `type.fallback.sans` | `--ucsd-type-fallback-sans` | — | `system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif` | For roles set in the working face (Brix Sans). |
 | `type.fallback.display` | `--ucsd-type-fallback-display` | — | `'Arial Narrow', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif` | For roles set in the condensed display face (Refrigerator Deluxe). Leads with a condensed face so headings keep roughly their intended width. |
 | `type.body.font-family` | `--ucsd-type-body-font-family` | `font-body` | `'Brix Sans'` | — |
+| `type.mono.font-family` | `--ucsd-type-mono-font-family` | `font-mono` | `ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace` | — |
 | `type.button.font-family` | `--ucsd-type-button-font-family` | `font-button` | `'Brix Sans'` | — |
 | `type.button.font-size` | `--ucsd-type-button-font-size` | `text-button` | `14px` | — |
 | `type.button.font-weight` | `--ucsd-type-button-font-weight` | `text-button--font-weight` | `700` | — |
@@ -238,20 +239,6 @@ with light/dark mode automatically.
 | `type.h2-small.font-family` | `--ucsd-type-h2-small-font-family` | `font-h2-small` | `'Brix Sans'` | — |
 | `type.h2-small.font-size` | `--ucsd-type-h2-small-font-size` | `text-h2-small` | `12px` | — |
 | `type.h2-small.line-height` | `--ucsd-type-h2-small-line-height` | paired with `text-h2-small` | `18px` | — |
-
-### `weight`
-
-| Token | CSS variable | Tailwind | Value | Use for |
-| --- | --- | --- | --- | --- |
-| `weight.black` | `--ucsd-weight-black` | — | `900` | — |
-| `weight.bold` | `--ucsd-weight-bold` | — | `700` | — |
-| `weight.extra-bold` | `--ucsd-weight-extra-bold` | — | `800` | — |
-| `weight.extra-light` | `--ucsd-weight-extra-light` | — | `200` | — |
-| `weight.light` | `--ucsd-weight-light` | — | `300` | — |
-| `weight.medium` | `--ucsd-weight-medium` | — | `500` | — |
-| `weight.regular` | `--ucsd-weight-regular` | — | `400` | — |
-| `weight.semi-bold` | `--ucsd-weight-semi-bold` | — | `600` | — |
-| `weight.thin` | `--ucsd-weight-thin` | — | `100` | — |
 
 ## Component tokens
 
@@ -374,5 +361,14 @@ hard-codes a brand decision and breaks dark mode. Always use a semantic token.
 | `palette.utility.red.700` | `#861200` |
 | `palette.utility.red.800` | `#680e00` |
 | `palette.utility.red.900` | `#4f0b00` |
+| `weight.black` | `900` |
+| `weight.bold` | `700` |
+| `weight.extra-bold` | `800` |
+| `weight.extra-light` | `200` |
+| `weight.light` | `300` |
+| `weight.medium` | `500` |
+| `weight.regular` | `400` |
+| `weight.semi-bold` | `600` |
+| `weight.thin` | `100` |
 
 </details>

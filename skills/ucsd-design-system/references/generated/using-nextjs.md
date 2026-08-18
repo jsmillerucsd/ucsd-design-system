@@ -12,15 +12,23 @@ npm install @ucsd/tokens
 
 ```css
 /* app/globals.css */
+@import "@ucsd/tokens/full";
+```
+
+That's the whole configuration — Tailwind itself, the tokens (light and dark), the Tailwind theme and the shadcn bridge, in the one order that works. No `tailwind.config.js`; Tailwind v4 reads the `@theme` block from the imported CSS.
+
+<details><summary>Composing the imports yourself instead</summary>
+
+```css
 @import "tailwindcss";
 @import "@ucsd/tokens/css";       /* defines --ucsd-*, light and dark */
 @import "@ucsd/tokens/tailwind";  /* maps them into Tailwind utilities */
-@import "@ucsd/tokens/shadcn";    /* only if you use shadcn — see below */
+@import "@ucsd/tokens/shadcn";    /* the shadcn slot bridge */
 ```
 
-That's the whole configuration. No `tailwind.config.js` — Tailwind v4 reads the `@theme` block from the imported CSS.
+**The order is not cosmetic.** `@ucsd/tokens/tailwind` resets `--color-*` to `initial` so Tailwind's own palette cannot be used. Anything importing colours has to come after it, or the reset wipes it. `full` bakes this in; composing by hand, it is yours to hold. Asserted in `test/tailwind-compile.test.mjs`.
 
-**The order is not cosmetic.** `@ucsd/tokens/tailwind` resets `--color-*` to `initial` so Tailwind's own palette cannot be used. Anything importing colours has to come after it, or the reset wipes it. This is asserted in `test/tailwind-compile.test.mjs`.
+</details>
 
 > **Components:** there is **no UCSD React component package and no shadcn registry.** This is the design — not a gap. Install shadcn's own components with `npx shadcn@latest add button`. You own the code; we own the tokens. See architecture D4 (`docs/architecture.md`) for why a registry was rejected.
 
@@ -80,18 +88,21 @@ The mapping is hand-written in `packages/tokens/formats/shadcn-theme.mjs` — wh
 
 ### Classes that need a call-site override
 
-shadcn hardcodes two things our token layer can't fix:
+shadcn hardcodes three things our token layer can't fix:
 
 1. **`text-white` on destructive buttons/badges.** Our theme removes Tailwind's palette, so that class compiles to nothing. Override: `className="text-destructive-foreground"`.
 
 2. **`text-primary` on link variants.** `--primary` is Yellow (the button fill), so `text-primary` renders invisible yellow text. Override: `className="text-link"`.
 
+3. **`bg-white` on the slider thumb.** Same story as `text-white`, on a child element. Override on the root: `className="[&_[data-slot=slider-thumb]]:bg-background"`.
+
 ```tsx
 <Button variant="destructive" className="text-destructive-foreground">Withdraw</Button>
 <Button variant="link" className="text-link">Read more</Button>
+<Slider className="[&_[data-slot=slider-thumb]]:bg-background" />
 ```
 
-That is the complete list. `demo/` renders fourteen vendored components and `npm test` fails if any other class stops resolving.
+That is the complete list. `demo/` renders two dozen vendored components and `npm test` fails if any other class stops resolving.
 
 ## Rules specific to this stack
 
@@ -137,7 +148,7 @@ const buttonVariants = cva(
 
 ## Next.js notes
 
-- Import `@ucsd/tokens/css` once in the root layout's global stylesheet, not per route.
+- Import `@ucsd/tokens/full` once in the root layout's global stylesheet, not per route.
 - Self-host Brix Sans and Refrigerator Deluxe via `next/font`. Both are **licensed** faces, not Google Fonts — confirm the web licence before shipping.
 - Server Components by default; `"use client"` only where you need interactivity. Most primitives need it, most layout does not.
 - Set the initial theme before paint (an inline script in `<head>`) or you get a flash of the wrong mode.

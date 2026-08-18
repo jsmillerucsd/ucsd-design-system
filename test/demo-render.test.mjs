@@ -80,11 +80,27 @@ const decode = (s) => s.replace(/&(?:#x27|quot|gt|lt|amp);/g, (e) => ENTITIES[e]
  */
 const NOT_UTILITIES = /^(lucide|recharts)(-|$)|^(group|peer)(\/|$)/;
 
+/**
+ * Palette literals shadcn hardcodes on CHILD elements a call-site className
+ * cannot reach. Where the literal sits on the styled element itself (the
+ * destructive button's `text-white`), the demo's override goes through
+ * tailwind-merge, which REMOVES the dead class — so it never appears here and
+ * stays fully checked. A child element's own class string is out of
+ * tailwind-merge's reach: the demo neutralises it with a higher-specificity
+ * `[&_[data-slot=...]]` override, but the dead literal still renders.
+ *
+ * Every entry must correspond to an annotated Override in app.tsx. Exact
+ * strings only — a pattern would silently grow the exemption.
+ */
+const NEUTRALIZED_VENDOR_LITERALS = new Set([
+  'bg-white', // slider thumb; overridden to bg-background in app.tsx
+]);
+
 const classesOn = (markup) =>
   new Set(
     [...markup.matchAll(/class="([^"]*)"/g)]
       .flatMap((m) => decode(m[1]).split(/\s+/))
-      .filter((c) => c && !NOT_UTILITIES.test(c)),
+      .filter((c) => c && !NOT_UTILITIES.test(c) && !NEUTRALIZED_VENDOR_LITERALS.has(c)),
   );
 
 before(async () => {

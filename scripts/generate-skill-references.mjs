@@ -25,7 +25,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { tailwindName } from '../packages/tokens/formats/tailwind-theme.mjs';
+import { bridgedTextSteps, tailwindName } from '../packages/tokens/formats/tailwind-theme.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(REPO, 'packages', 'tokens', 'dist');
@@ -279,6 +279,19 @@ const banned = {
     '2xl:':
       'xxl: — the UCSD scale names the widest breakpoint xxl, and 2xl is reset, so ' +
       '2xl: utilities silently never generate',
+    // The complement of the bridged steps, COMPUTED from the same rows the
+    // theme emits (bridgedTextSteps) so bridging a step tomorrow un-bans it
+    // with no edit here. The text namespace is reset, so an unbridged step
+    // compiles to NOTHING and the element silently inherits its parent's size.
+    ...Object.fromEntries(
+      ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl', '7xl', '8xl', '9xl']
+        .filter((s) => !bridgedTextSteps.has(s))
+        .map((s) => [
+          `text-${s}`,
+          'a type role utility (text-h1, text-body-lg) — the UCSD ramp tops out at ' +
+          'the h1/body-lg size, so this stock step generates no CSS at all',
+        ]),
+    ),
   },
   legacyDecoratorClasses: [
     'panel', 'panel-body', 'panel-heading', 'panel-default',

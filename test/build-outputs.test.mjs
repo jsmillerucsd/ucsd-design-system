@@ -170,6 +170,126 @@ describe('tier discipline', () => {
   });
 });
 
+describe('the body role reaches both targets', () => {
+  // DESIGN.md typography block: body copy is body-md (18px/23px). Bootstrap
+  // compiles $font-size-base from the token (÷16 -> rem); Tailwind sets <body>
+  // in a base layer from the same two tokens. Neither may fall back to the
+  // browser's 16px default.
+  test('Bootstrap body is body-md, in rem', () => {
+    assert.match(bootstrapCss, /--bs-body-font-size:\s*1\.125rem/);
+  });
+
+  test('Tailwind sets body from the body-md tokens', () => {
+    assert.match(tailwind, /body\s*\{\s*font-size:\s*var\(--ucsd-type-body-md-font-size\);\s*line-height:\s*var\(--ucsd-type-body-md-line-height\)/);
+  });
+
+  // Stock text-* re-pointing is asserted through the real compiler in
+  // test/tailwind-compile.test.mjs (resolvesTo('text-base', ...)).
+});
+
+describe('Bootstrap surfaces follow the Sand rules', () => {
+  test('the card header cap is not a surface change', () => {
+    // DESIGN.md: "a card is differentiated by its border and padding, not by a
+    // surface change." A Sand cap was the mechanical tinting the Sand rules
+    // forbid, and disagreed with the shadcn card.
+    assert.match(bootstrapCss, /--bs-card-cap-bg:\s*transparent/);
+  });
+
+  test("Bootstrap's gray ramp is the designer's ramp", () => {
+    // $gray-600 backs most of Bootstrap's derived muted colours; stock it is
+    // the blue-tinted #6c757d. palette.neutral.gray.500 is the designed step.
+    assert.match(bootstrapCss, /--bs-gray-600:\s*#747678/);
+    assert.ok(!bootstrapCss.includes('#6c757d'), "stock Bootstrap gray-600 survived in the bundle");
+  });
+
+  test('component surfaces re-alias in dark mode', () => {
+    // The regression this guards: a component variable bound to a Sass LITERAL
+    // compiles the light value into .card { --bs-card-bg: #ffffff } and stays
+    // white in dark mode — the token layer's dark selector can never reach it.
+    // Bound as var(--ucsd-*), the cascade resolves it to the dark literal.
+    // This resolves each variable exactly as a dark-mode browser would.
+    // Comments stripped first: the tokens.css banner mentions the dark selector
+    // in prose, which would otherwise classify the first :root block as dark.
+    // Last declaration wins, like the cascade.
+    const stripped = bootstrapCss.replace(/\/\*[\s\S]*?\*\//g, '');
+    const defs = { light: new Map(), dark: new Map() };
+    for (const [, sel, body] of stripped.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      const mode = /data-bs-theme="dark"|\.dark/.test(sel) ? 'dark'
+        : /:root/.test(sel) ? 'light' : null;
+      if (!mode) continue;
+      for (const [, n, v] of body.matchAll(/(--ucsd-[a-z0-9-]+):\s*([^;]+);/g)) {
+        defs[mode].set(n, v.trim());
+      }
+    }
+    const resolve = (v, depth = 0) => {
+      const ref = String(v).match(/var\((--ucsd-[a-z0-9-]+)/)?.[1];
+      if (!ref || depth > 8) return v;
+      return resolve(defs.dark.get(ref) ?? defs.light.get(ref), depth + 1);
+    };
+    const darkVal = (p) => darkManifest.find((t) => t.path === p).value;
+
+    for (const [bsVar, tokenPath] of [
+      ['--bs-card-bg', 'color.surface.1'],
+      ['--bs-dropdown-bg', 'color.surface.1'],
+      ['--bs-list-group-bg', 'color.surface.1'],
+      ['--bs-popover-bg', 'color.surface.1'],
+      ['--bs-toast-bg', 'color.surface.1'],
+      ['--bs-table-striped-bg', 'color.surface.5'],
+      ['--bs-accordion-active-bg', 'color.surface.2'],
+    ]) {
+      const decl = bootstrapCss.match(new RegExp(`${bsVar}:\\s*([^;]+);`))?.[1];
+      assert.ok(decl, `${bsVar} not found in the bundle`);
+      assert.equal(resolve(decl), darkVal(tokenPath),
+        `${bsVar} must resolve to the dark ${tokenPath} literal in dark mode`);
+    }
+  });
+
+  test("Bootstrap's own dark block carries the dark token literals", () => {
+    // $enable-dark-mode emits [data-bs-theme=dark] from the $*-dark variables.
+    // Stock, that is a second gray palette fighting the token layer; bound,
+    // it must equal the dark manifest exactly.
+    const darkBody = darkManifest.find((t) => t.path === 'color.foreground.body-text').value;
+    const block = bootstrapCss.slice(bootstrapCss.indexOf('[data-bs-theme=dark]'));
+    assert.ok(block.includes(`--bs-body-color: ${darkBody}`),
+      `dark --bs-body-color should be ${darkBody} (the dark token literal)`);
+  });
+});
+
+describe('per-role heading fidelity in Bootstrap', () => {
+  // Bootstrap has ONE $headings-font-family (the display face, from h1); the
+  // Figma roles put h2/h4/h5 in the working face. _ucsd.scss overrides them.
+  test('h2 is the working face, not the display face', () => {
+    assert.match(bootstrapCss, /h2,\s*\.h2\s*\{\s*font-family:\s*Brix Sans/);
+  });
+
+  test('h3 carries its own designed weight', () => {
+    assert.match(bootstrapCss, /h3,\s*\.h3\s*\{\s*font-weight:\s*900/);
+  });
+});
+
+describe('the layout-semantic collection is bound', () => {
+  test('button.radius reaches the Bootstrap button', () => {
+    assert.equal(byPath(manifest, 'button.radius').reference, '{radius.rounded-8}');
+    assert.match(bootstrapCss, /--bs-btn-border-radius:\s*8px/);
+  });
+
+  test('grid.gap reaches Bootstrap CSS grid', () => {
+    assert.match(bootstrapCss, /\.grid\s*\{\s*--bs-gap:\s*var\(--ucsd-grid-gap\)/);
+  });
+
+  test('icon sizes reach the Tailwind spacing namespace', () => {
+    assert.match(tailwind, /--spacing-icon-sm-8:\s*var\(--ucsd-icon-sm-8\)/);
+  });
+});
+
+describe('motion defaults are on-system', () => {
+  test('Tailwind default transition and easings come from the motion tokens', () => {
+    assert.match(tailwind, /--default-transition-duration:\s*var\(--ucsd-motion-duration-base\)/);
+    assert.match(tailwind, /--ease-out:\s*var\(--ucsd-motion-easing-enter\)/);
+    assert.match(tailwind, /--ease-in:\s*var\(--ucsd-motion-easing-exit\)/);
+  });
+});
+
 describe('typography', () => {
   test('roles carry size and line-height together', () => {
     assert.equal(byPath(manifest, 'type.h1.font-size').value, '24px');

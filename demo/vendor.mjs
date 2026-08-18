@@ -35,8 +35,10 @@ const STYLE = 'new-york-v4';
  *   sidebar.html — the sidebar-08 block, an application shell shadcn ships whole
  */
 const ITEMS = [
-  'alert', 'avatar', 'badge', 'button', 'card', 'chart', 'dialog', 'input',
-  'label', 'progress', 'separator', 'skeleton', 'table', 'tabs',
+  'accordion', 'alert', 'avatar', 'badge', 'breadcrumb', 'button', 'card',
+  'chart', 'checkbox', 'dialog', 'input', 'label', 'pagination', 'popover',
+  'progress', 'radio-group', 'select', 'separator', 'skeleton', 'slider',
+  'switch', 'table', 'tabs', 'textarea',
   'sidebar-08',
 ];
 
@@ -119,6 +121,11 @@ const BANNER = `// Vendored from the shadcn/ui registry (style: ${STYLE}) by dem
 // Do not edit. If this looks wrong, fix the token bridge, not this file.
 `;
 
+// A leftover alias means a rewrite rule is missing and the bundle will fail with a
+// far less obvious error, so collect and fail here instead. Checked against the
+// REWRITTEN source — testing the raw registry content flagged every file.
+const leftovers = [];
+
 for (const [file, content] of written) {
   const dir = path.dirname(file);
   let src = content;
@@ -132,16 +139,11 @@ for (const [file, content] of written) {
     );
   }
 
+  if (/from\s+["']@\//.test(src)) leftovers.push(file);
+
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(file, BANNER + src, 'utf8');
 }
-
-// A leftover alias means a rewrite rule is missing and the bundle will fail with a
-// far less obvious error, so fail here instead.
-const leftovers = [...written.keys()].filter((f) => {
-  const src = BANNER + written.get(f);
-  return /from\s+["']@\//.test(src);
-});
 
 const byDir = [...written.keys()].reduce((m, f) => {
   const k = posix(path.relative(HERE, path.dirname(f)));

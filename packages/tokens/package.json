@@ -22,8 +22,10 @@
       "types": "./dist/js/tokens.d.ts",
       "default": "./dist/js/tokens.js"
     },
+    "./full": "./dist/full.css",
     "./css": "./dist/css/tokens.css",
     "./scss": "./dist/scss/_tokens.scss",
+    "./scss-dark": "./dist/scss/_tokens-dark.scss",
     "./tailwind": "./dist/tailwind/theme.css",
     "./shadcn": "./dist/shadcn/theme.css",
     "./json": "./dist/tokens.json"

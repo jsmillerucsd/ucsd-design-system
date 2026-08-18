@@ -92,10 +92,61 @@
 .ucsd-section    { padding-block: $ucsd-space-xxxl-64; }
 .ucsd-section--sm { padding-block: $ucsd-space-xxl-48; }
 
-// --- Per-heading colors ------------------------------------------------------
-// Bootstrap has a single $headings-color; the Figma file defines h1=Blue,
-// h2/h3=Navy. Override h1 here so it matches the design without touching h2-h6.
-h1 { color: $ucsd-color-foreground-h1-heading; }
+// --- Per-heading type roles --------------------------------------------------
+// Bootstrap has ONE $headings-font-family / -color / -weight / -line-height;
+// the Figma roles differ per level: h1/h3/eyebrow are the display face,
+// h2/subheading/h2-small are the working face, and each carries its own weight
+// and line height. $h1-$h6 font sizes come from _bridge.scss; everything
+// Bootstrap cannot express per-level is bound here, straight from the role
+// tokens. Line height is emitted as the role's designed ratio (line-height ÷
+// size) rather than fixed px, so Bootstrap's fluid font sizing (RFS) keeps the
+// proportions instead of fighting a hard-coded height. $family/$weight are
+// passed only where the role differs from the $headings-* default (the h1
+// role's display face and weight).
+@mixin ucsd-type-role($size, $line-height, $family: null, $weight: null) {
+  @if $family { font-family: #{$family}, #{$ucsd-type-fallback-sans}; }
+  @if $weight { font-weight: $weight; }
+  line-height: divide($line-height, $size);
+}
+
+h1 {
+  // h1 is Blue; $headings-color covers the Navy majority (see _bridge.scss).
+  color: $ucsd-color-foreground-h1-heading;
+  @include ucsd-type-role($ucsd-type-h1-font-size, $ucsd-type-h1-line-height);
+}
+h2 {
+  @include ucsd-type-role($ucsd-type-h2-font-size, $ucsd-type-h2-line-height,
+    $family: $ucsd-type-h2-font-family);
+}
+h3 {
+  @include ucsd-type-role($ucsd-type-h3-font-size, $ucsd-type-h3-line-height,
+    $weight: $ucsd-type-h3-font-weight);
+}
+h4 {
+  @include ucsd-type-role($ucsd-type-subheading-font-size, $ucsd-type-subheading-line-height,
+    $family: $ucsd-type-subheading-font-family, $weight: $ucsd-type-subheading-font-weight);
+}
+h5 {
+  @include ucsd-type-role($ucsd-type-h2-small-font-size, $ucsd-type-h2-small-line-height,
+    $family: $ucsd-type-h2-small-font-family);
+}
+h6 {
+  @include ucsd-type-role($ucsd-type-eyebrow-font-size, $ucsd-type-eyebrow-line-height,
+    $weight: $ucsd-type-eyebrow-font-weight);
+}
+
+// .lead / <small> font sizes are bound in _bridge.scss ($lead-font-size,
+// $small-font-size). <small> is inline, so its designed line height does not
+// apply; .lead gets the body-lg ratio the same way the headings do.
+.lead {
+  @include ucsd-type-role($ucsd-type-body-lg-font-size, $ucsd-type-body-lg-line-height);
+}
+
+// --- CSS grid gap ------------------------------------------------------------
+// Bootstrap's opt-in CSS grid reads var(--bs-gap, $grid-gutter-width). The Figma
+// file distinguishes the row/column gutter (container.gutter, bound in
+// _bridge.scss) from the grid cell gap (grid.gap) — bind the latter here.
+.grid { --bs-gap: var(--ucsd-grid-gap); }
 
 // --- System color pairs ------------------------------------------------------
 // Bootstrap 5.3 auto-computes tints/shades from theme colors via Sass. We replace

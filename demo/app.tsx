@@ -21,10 +21,37 @@ import {
 } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
+import {
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
+} from './components/ui/accordion';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { Avatar, AvatarFallback } from './components/ui/avatar';
 import { Badge } from './components/ui/badge';
+import {
+  Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
+  BreadcrumbSeparator,
+} from './components/ui/breadcrumb';
 import { Button } from './components/ui/button';
+import { Checkbox } from './components/ui/checkbox';
+import {
+  DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+} from './components/ui/dropdown-menu';
+import {
+  Pagination, PaginationContent, PaginationEllipsis, PaginationItem,
+  PaginationLink, PaginationNext, PaginationPrevious,
+} from './components/ui/pagination';
+import { Popover, PopoverContent, PopoverTrigger } from './components/ui/popover';
+import { RadioGroup, RadioGroupItem } from './components/ui/radio-group';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from './components/ui/select';
+import { Slider } from './components/ui/slider';
+import { Switch } from './components/ui/switch';
+import { Textarea } from './components/ui/textarea';
+import {
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
+} from './components/ui/tooltip';
 import {
   Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
 } from './components/ui/card';
@@ -174,8 +201,9 @@ export function Page() {
           </div>
           <Override>
             <code>text-white</code> on the destructive variant — see the comment in{' '}
-            <code>app.tsx</code>. It is the only colour class in the whole vendored set
-            that does not resolve through the bridge.
+            <code>app.tsx</code>. The vendored set hardcodes a literal palette colour in
+            exactly three places: here, the destructive badge, and the slider thumb's{' '}
+            <code>bg-white</code>. Everything else resolves through the bridge.
           </Override>
         </Section>
 
@@ -352,7 +380,16 @@ export function Page() {
                     </TableBody>
                   </Table>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex-wrap justify-between gap-sm-12">
+                  <Pagination className="mx-0 w-auto justify-start">
+                    <PaginationContent>
+                      <PaginationItem><PaginationPrevious href="#s-data" /></PaginationItem>
+                      <PaginationItem><PaginationLink href="#s-data" isActive>1</PaginationLink></PaginationItem>
+                      <PaginationItem><PaginationLink href="#s-data">2</PaginationLink></PaginationItem>
+                      <PaginationItem><PaginationEllipsis /></PaginationItem>
+                      <PaginationItem><PaginationNext href="#s-data" /></PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
                   <Dialog>
                     <DialogTrigger asChild><Button>Add a record</Button></DialogTrigger>
                     <DialogContent>
@@ -428,6 +465,172 @@ export function Page() {
                 <p id="sid-error" className="text-body-sm text-system-foreground-error">
                   Enter a valid nine-character student ID.
                 </p>
+              </div>
+
+              <div className="grid gap-xxs-4">
+                <Label htmlFor="term">Starting term</Label>
+                <Select defaultValue="fall">
+                  <SelectTrigger id="term" className="w-full">
+                    <SelectValue placeholder="Choose a term" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="fall">Fall 2026</SelectItem>
+                    <SelectItem value="winter">Winter 2027</SelectItem>
+                    <SelectItem value="spring">Spring 2027</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <fieldset className="grid gap-xs-8">
+                <legend className="text-body-sm font-medium">Enrollment</legend>
+                <RadioGroup defaultValue="full" className="gap-xs-8">
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="full" id="enroll-full" />
+                    <Label htmlFor="enroll-full">Full-time</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RadioGroupItem value="part" id="enroll-part" />
+                    <Label htmlFor="enroll-part">Part-time</Label>
+                  </div>
+                </RadioGroup>
+              </fieldset>
+
+              <div className="grid gap-xxs-4">
+                <div className="flex justify-between text-body-sm">
+                  <Label htmlFor="units">Planned units</Label>
+                  <span className="text-muted-foreground">12</span>
+                </div>
+                {/* Override: shadcn hardcodes `bg-white` on the slider thumb —
+                    the same class of defect as `text-white` on destructive. Our
+                    theme drops Tailwind's palette, and a literal white thumb
+                    would vanish in dark mode anyway; bg-background flips. */}
+                <Slider id="units" defaultValue={[12]} max={22} step={1}
+                  aria-label="Planned units"
+                  className="[&_[data-slot=slider-thumb]]:bg-background" />
+              </div>
+
+              <div className="grid gap-xxs-4">
+                <Label htmlFor="statement">Personal statement</Label>
+                <Textarea id="statement" placeholder="A few sentences about your goals."
+                  aria-describedby="statement-help" />
+                <p id="statement-help" className="text-body-sm text-muted-foreground">
+                  Optional at this stage.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Checkbox id="terms" />
+                <Label htmlFor="terms">I confirm the information above is accurate</Label>
+              </div>
+
+              <div className="flex items-center justify-between rounded-md border border-border p-sm-12">
+                <Label htmlFor="updates" className="grid gap-xxs-4">
+                  Email me application updates
+                  <span className="text-body-sm font-normal text-muted-foreground">
+                    Sent from the admissions office only.
+                  </span>
+                </Label>
+                <Switch id="updates" defaultChecked />
+              </div>
+            </CardContent>
+          </Card>
+        </Section>
+
+        <Section
+          id="s-accordion"
+          title="Accordion"
+          lede="Radix disclosure underneath — arrow keys, Home and End all work. The divider and muted body text come from the bridge."
+        >
+          <Accordion type="single" collapsible defaultValue="a-1"
+            className="max-w-narrow">
+            <AccordionItem value="a-1">
+              <AccordionTrigger>When does registration open?</AccordionTrigger>
+              <AccordionContent>
+                Placeholder answer — registration dates are announced each term on the
+                enrollment calendar.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="a-2">
+              <AccordionTrigger>Can I change my starting term?</AccordionTrigger>
+              <AccordionContent>
+                Placeholder answer — starting terms can be deferred once before the
+                statement of intent deadline.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="a-3">
+              <AccordionTrigger>Who can I contact for help?</AccordionTrigger>
+              <AccordionContent>
+                Placeholder answer — the admissions office handles application
+                questions; financial aid has its own contact form.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Section>
+
+        <Section
+          id="s-overlays"
+          title="Wayfinding and overlays"
+          lede="Breadcrumb, dropdown menu, popover and tooltip. The floating surfaces share the popover slot pair, so all of them re-theme together in dark mode."
+        >
+          <Card>
+            <CardContent className="grid gap-md-16">
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="#main">Admissions</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="#main">Undergraduate</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>Application</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Actions</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    <DropdownMenuLabel>This application</DropdownMenuLabel>
+                    <DropdownMenuItem>Download PDF</DropdownMenuItem>
+                    <DropdownMenuItem>Share with advisor</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuCheckboxItem checked>
+                      Email updates
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive">
+                      Withdraw application
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline">What counts as full-time?</Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="text-body-sm">
+                    Placeholder definition — full-time enrollment is twelve or more
+                    units in a term. The surface and border here are the popover slot
+                    pair from the bridge.
+                  </PopoverContent>
+                </Popover>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" aria-label="About deadlines">
+                        <Info />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Deadlines are 11:59pm Pacific.</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </CardContent>
           </Card>

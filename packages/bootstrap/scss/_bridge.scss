@@ -6,11 +6,31 @@
 // mechanical transform. Keeping it small, explicit and reviewable is the point.
 //
 // Everything on the right-hand side comes from @ucsd/tokens (generated).
-// Everything on the left is Bootstrap's own API.
+// Everything on the left is Bootstrap's own API — and is verified to BE
+// Bootstrap's API by scripts/audit-bridges.mjs, because Sass accepts an
+// assignment to a variable Bootstrap never reads as a silent no-op.
 //
 // Token names follow the Figma collections — see docs/token-naming-contract.md.
 // `color.theme.*` is brand identity, `color.component.*` is what a control is made
 // of, `color.foreground.*` is text and rules, `color.surface.*` is what sits behind.
+
+// --- The gray ramp -----------------------------------------------------------
+// Bootstrap derives dozens of values (subtle borders, disabled states, its own
+// dark palette, the exported --bs-gray-* variables) from $gray-100..$gray-900.
+// Left stock, every one of those is an off-system blue-tinted gray. This is a
+// RAMP-TO-RAMP binding — Bootstrap's internal gray scale onto the designer's
+// palette.neutral.gray scale, nearest step by value — the same tier-to-tier
+// move as primitives aliasing brand. Components still bind semantic tokens
+// only; this just makes Bootstrap's own math run on the designed neutrals.
+$gray-100: $ucsd-palette-neutral-gray-25;
+$gray-200: $ucsd-palette-neutral-gray-50;
+$gray-300: $ucsd-palette-neutral-gray-100;
+$gray-400: $ucsd-palette-neutral-gray-200;
+$gray-500: $ucsd-palette-neutral-gray-300;
+$gray-600: $ucsd-palette-neutral-gray-500;
+$gray-700: $ucsd-palette-neutral-gray-700;
+$gray-800: $ucsd-palette-neutral-gray-800;
+$gray-900: $ucsd-palette-neutral-gray-900;
 
 // --- Brand / theme colors ----------------------------------------------------
 // DESIGN.md components block: button-primary = btn.primary (Yellow #ffcd00).
@@ -31,7 +51,11 @@ $dark:      $ucsd-color-theme-primary;
 $body-bg:              $ucsd-color-surface-1;
 $body-color:           $ucsd-color-foreground-body-text;
 $body-secondary-color: $ucsd-color-component-menu;
-$body-tertiary-bg:     $ucsd-color-surface-2;
+// surface.5 (near-white gray), NOT Sand: tertiary-bg feeds mechanical fills —
+// disabled inputs, stripes, subtle chrome. DESIGN.md's Sand rules reserve it
+// for MEANINGFUL grouping, and _ucsd.scss re-points the runtime --bs-tertiary-bg
+// to the same token; the two layers previously disagreed.
+$body-tertiary-bg:     $ucsd-color-surface-5;
 $border-color:         $ucsd-color-foreground-divider;
 $border-color-translucent: $ucsd-color-foreground-subcard-border;
 
@@ -55,17 +79,27 @@ $focus-ring-color:   $ucsd-color-theme-secondary;
 // machine without the licensed faces rendered Bootstrap in system-ui and Tailwind in
 // Times. Both targets now degrade identically because both compile from these.
 $font-family-sans-serif: #{$ucsd-type-body-font-family}, #{$ucsd-type-fallback-sans};
-$font-family-monospace:  ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+// The mono token's value is a complete stack (tokens/code/typography.json), so
+// no fallback is appended. Tailwind's font-mono compiles from the same token.
+$font-family-monospace:  #{$ucsd-type-mono-font-family};
 $headings-font-family:   #{$ucsd-type-h1-font-family}, #{$ucsd-type-fallback-display};
 
 $font-weight-medium:   $ucsd-weight-medium;
 $font-weight-semibold: $ucsd-weight-semi-bold;
 $font-weight-bold:     $ucsd-weight-bold;
 
-// Kept in rem so browser font-size settings are honoured. The Figma ramp is in px
-// and is exposed separately as --ucsd-type-*-font-size.
-$font-size-base:   1rem;
-$line-height-base: 1.5;
+// Body copy is the body-md role, per the DESIGN.md typography block. Converted
+// px -> rem (÷16, the browser default root) so user font-size settings are still
+// honoured; divide() is Bootstrap's own polyfill, loaded before this file.
+// Tailwind's theme sets <body> from the same two tokens, so unclassed body text
+// is identical in both targets.
+$font-size-base:   divide($ucsd-type-body-md-font-size, 16px) * 1rem;
+$line-height-base: divide($ucsd-type-body-md-line-height, $ucsd-type-body-md-font-size);
+
+// .lead and <small> map to the large and small body roles. Their line heights
+// are set in _ucsd.scss (Bootstrap has no per-role line-height variables).
+$lead-font-size:  $ucsd-type-body-lg-font-size;
+$small-font-size: $ucsd-type-body-sm-font-size;
 
 $h1-font-size: $ucsd-type-h1-font-size;
 $h2-font-size: $ucsd-type-h2-font-size;
@@ -113,6 +147,7 @@ $box-shadow-lg: $ucsd-elevation-3;
 // --- Motion ------------------------------------------------------------------
 $transition-base:     all $ucsd-motion-duration-base $ucsd-motion-easing-standard;
 $transition-collapse: height $ucsd-motion-duration-slow $ucsd-motion-easing-standard;
+$transition-fade:     opacity $ucsd-motion-duration-fast linear;
 
 // --- Grid --------------------------------------------------------------------
 // MUST match tokens/code/layout.json exactly. See docs/token-naming-contract.md.
@@ -135,14 +170,19 @@ $container-max-widths: (
   xl: $ucsd-container-base,
   xxl: $ucsd-container-wide,
 );
-$grid-gutter-width: $ucsd-space-lg-24;
+// The SEMANTIC gutter token (layout-semantic collection), not the raw spacing
+// step it aliases. Figma's grid.gap (CSS-grid cell gap) is bound in _ucsd.scss.
+$grid-gutter-width: $ucsd-container-gutter;
 
 // --- Components --------------------------------------------------------------
 // DESIGN.md: "no inner shadow" and "shadow is for things that float and can be
 // dismissed." Buttons are neither, so they get no box-shadow at all. The default
 // inset-white-highlight + drop-shadow is the single most off-brand thing Bootstrap
 // ships — it makes every button look like a 2014 web component.
-$btn-border-radius: $ucsd-radius-rounded-8;
+// button.radius is the SEMANTIC radius the Figma file assigns to buttons
+// (layout-semantic collection) — bind to it, not to the raw scale step it
+// happens to alias, so a designer re-pointing it in Figma flows through.
+$btn-border-radius: $ucsd-button-radius;
 $btn-font-weight:   $ucsd-type-button-font-weight;
 $btn-font-size:     $ucsd-type-button-font-size;
 $btn-padding-x:     $ucsd-button-padding-x;
@@ -151,23 +191,45 @@ $btn-line-height:   $ucsd-type-button-line-height;
 $btn-box-shadow:    none;
 $btn-active-box-shadow: none;
 
+// Component colours are bound as var(--ucsd-*) REFERENCES from here down, not
+// Sass literals: these all land in property positions (--bs-card-bg and
+// friends), where a reference is legal and buys dark mode for free — the dark
+// selector in tokens.css re-aliases the underlying token and the component
+// follows. A Sass literal here freezes the LIGHT value into the compiled CSS,
+// which is exactly why cards, tables and dropdowns used to stay white in dark
+// mode. Literals remain only where Bootstrap consumes the value at compile
+// time — Sass colour math (to-rgb, tint-color) or SVG data URIs — each marked.
 $card-border-radius: $ucsd-radius-rounded-8;
-$card-border-color:  $ucsd-color-foreground-card-border;
-$card-bg:            $ucsd-color-surface-1;
-$card-cap-bg:        $ucsd-color-surface-2;
-$card-color:         $ucsd-color-foreground-body-text;
+$card-border-color:  var(--ucsd-color-foreground-card-border);
+$card-bg:            var(--ucsd-color-surface-1);
+// DESIGN.md: "a card is differentiated by its border and padding, not by a
+// surface change." The header cap inherits the card's own surface (correct in
+// both modes) and is separated by its border — a Sand cap was exactly the
+// mechanical surface change the Sand rules forbid, and disagreed with the
+// shadcn card, which has no cap tint.
+$card-cap-bg:        transparent;
+$card-color:         var(--ucsd-color-foreground-body-text);
 
-$input-border-color:       $ucsd-color-foreground-card-border;
+$input-border-color:       var(--ucsd-color-foreground-card-border);
 $input-focus-border-color: $ucsd-color-theme-secondary;
 $input-border-radius:      $ucsd-radius-rounded-8;
-$input-bg:                 $ucsd-color-surface-1;
-$input-color:              $ucsd-color-foreground-body-text;
-$input-focus-bg:           $ucsd-color-surface-1;
-$input-focus-color:        $ucsd-color-foreground-body-text-focus;
+$input-bg:                 var(--ucsd-color-surface-1);
+$input-color:              var(--ucsd-color-foreground-body-text);
+$input-focus-bg:           var(--ucsd-color-surface-1);
+$input-focus-color:        var(--ucsd-color-foreground-body-text-focus);
 $input-box-shadow:         none;
 
-$progress-bg:    $ucsd-color-surface-2;
-$progress-color: $ucsd-color-theme-secondary;
+$progress-bg:        var(--ucsd-color-surface-2);
+$progress-bar-bg:    var(--ucsd-color-theme-secondary);
+$progress-bar-color: var(--ucsd-color-component-btn-label-secondary);
+
+// --- Active / selected states ------------------------------------------------
+// Bootstrap defaults both to $primary + white. Our $primary is Yellow, and
+// white-on-yellow fails WCAG outright — every checked checkbox, active pill,
+// active list item and pagination page was affected. Blue + white is the
+// designed selected pair (same as the secondary button, contrast-gated).
+$component-active-bg:    $ucsd-color-theme-secondary;
+$component-active-color: $ucsd-color-component-btn-label-secondary;
 
 // $box-shadow-inset is used by form-control :invalid/:valid and active states.
 // DESIGN.md: "no inner shadow" — set to none.
@@ -195,45 +257,142 @@ $navbar-dark-brand-hover-color:    $ucsd-color-foreground-heading-light;
 $navbar-dark-disabled-color:       $ucsd-color-component-menu;
 
 // --- Tooltip -----------------------------------------------------------------
-$tooltip-bg:    $ucsd-color-theme-primary;
-$tooltip-color: $ucsd-color-foreground-heading-light;
+$tooltip-bg:    var(--ucsd-color-theme-primary);
+$tooltip-color: var(--ucsd-color-foreground-heading-light);
 $tooltip-border-radius: $ucsd-radius-rounded-4;
 
 // --- Dropdown ----------------------------------------------------------------
-$dropdown-border-color:    $ucsd-color-foreground-card-border;
-$dropdown-divider-bg:      $ucsd-color-foreground-divider;
-$dropdown-link-color:      $ucsd-color-foreground-body-text;
-$dropdown-link-hover-color: $ucsd-color-foreground-body-text-focus;
-$dropdown-link-hover-bg:   $ucsd-color-surface-2;
-$dropdown-link-active-color: $ucsd-color-foreground-heading-light;
-$dropdown-link-active-bg:   $ucsd-color-theme-secondary;
-$dropdown-header-color:     $ucsd-color-foreground-subheading;
+$dropdown-border-color:    var(--ucsd-color-foreground-card-border);
+$dropdown-divider-bg:      var(--ucsd-color-foreground-divider);
+$dropdown-link-color:      var(--ucsd-color-foreground-body-text);
+$dropdown-link-hover-color: var(--ucsd-color-foreground-body-text-focus);
+$dropdown-link-hover-bg:   var(--ucsd-color-surface-2);
+// The selected item uses the secondary-button pair — the one blue-fill/label
+// combination the contrast gate checks in BOTH modes.
+$dropdown-link-active-color: var(--ucsd-color-component-btn-label-secondary);
+$dropdown-link-active-bg:   var(--ucsd-color-component-btn-secondary);
+$dropdown-header-color:     var(--ucsd-color-foreground-subheading);
 
 // --- Modal -------------------------------------------------------------------
-$modal-content-border-color: $ucsd-color-foreground-card-border;
-$modal-header-border-color:  $ucsd-color-foreground-divider;
-$modal-footer-border-color:  $ucsd-color-foreground-divider;
+$modal-content-border-color: var(--ucsd-color-foreground-card-border);
+$modal-header-border-color:  var(--ucsd-color-foreground-divider);
+$modal-footer-border-color:  var(--ucsd-color-foreground-divider);
 
 // --- Breadcrumb --------------------------------------------------------------
-$breadcrumb-divider-color:  $ucsd-color-component-menu;
-$breadcrumb-active-color:   $ucsd-color-foreground-body-text;
+$breadcrumb-divider-color:  var(--ucsd-color-component-menu);
+$breadcrumb-active-color:   var(--ucsd-color-foreground-body-text);
 
 // --- List group --------------------------------------------------------------
-$list-group-border-color: $ucsd-color-foreground-card-border;
-$list-group-bg:           $ucsd-color-surface-1;
-$list-group-color:        $ucsd-color-foreground-body-text;
-$list-group-action-hover-color: $ucsd-color-foreground-body-text-focus;
-$list-group-action-hover-bg:    $ucsd-color-surface-2;
-$list-group-action-active-color: $ucsd-color-foreground-body-text;
-$list-group-action-active-bg:    $ucsd-color-surface-2;
+$list-group-border-color: var(--ucsd-color-foreground-card-border);
+$list-group-bg:           var(--ucsd-color-surface-1);
+$list-group-color:        var(--ucsd-color-foreground-body-text);
+$list-group-action-hover-color: var(--ucsd-color-foreground-body-text-focus);
+$list-group-hover-bg:            var(--ucsd-color-surface-2);
+$list-group-action-active-color: var(--ucsd-color-foreground-body-text);
+$list-group-action-active-bg:    var(--ucsd-color-surface-2);
 
 // --- Table -------------------------------------------------------------------
-$table-bg:           $ucsd-color-surface-1;
-$table-color:        $ucsd-color-foreground-body-text;
-$table-border-color: $ucsd-color-foreground-divider;
-$table-striped-bg:   $ucsd-color-surface-2;
-$table-active-bg:    $ucsd-color-surface-5;
-$table-hover-bg:     $ucsd-color-surface-5;
+// Stripes are MECHANICAL alternation -> the near-white gray (surface.5).
+// Hover/active are the user's focus -> Sand (surface.2), matching the dropdown
+// and list-group hover surfaces. The previous assignment had the hierarchy
+// inverted: sand stripes louder than the gray hover.
+$table-bg:           var(--ucsd-color-surface-1);
+$table-color:        var(--ucsd-color-foreground-body-text);
+$table-border-color: var(--ucsd-color-foreground-divider);
+$table-striped-bg:   var(--ucsd-color-surface-5);
+$table-active-bg:    var(--ucsd-color-surface-2);
+$table-hover-bg:     var(--ucsd-color-surface-2);
+
+// --- Remaining stock grays and whites ----------------------------------------
+// Bootstrap's $gray-100..$gray-900 ramp and bare $white/$black leak into a long
+// tail of component defaults. Every one below otherwise ships an off-system
+// literal. The UCSD grays are color.component.menu (mid gray, text-safe on
+// surface.1) and surface.5 (near-white).
+$input-placeholder-color:  var(--ucsd-color-component-menu);
+$input-disabled-bg:        var(--ucsd-color-surface-5);
+$form-select-indicator-color: $ucsd-color-foreground-body-text;
+$form-range-track-bg:      var(--ucsd-color-surface-2);
+
+$nav-tabs-border-color:             var(--ucsd-color-foreground-card-border);
+$nav-tabs-link-active-color:        var(--ucsd-color-foreground-body-text-focus);
+$nav-tabs-link-active-bg:           var(--ucsd-color-surface-1);
+$nav-tabs-link-active-border-color: $ucsd-color-foreground-card-border $ucsd-color-foreground-card-border $nav-tabs-link-active-bg;
+$nav-tabs-link-hover-border-color:  $ucsd-color-surface-5 $ucsd-color-surface-5 $nav-tabs-border-color;
+
+$btn-link-disabled-color:   var(--ucsd-color-component-menu);
+$figure-caption-color:      var(--ucsd-color-component-menu);
+$blockquote-footer-color:   var(--ucsd-color-component-menu);
+$list-group-disabled-color: var(--ucsd-color-component-menu);
+$pagination-disabled-color: var(--ucsd-color-component-menu);
+
+// The close button's glyph is an inline SVG stroked with $btn-close-color;
+// stock is bare black. color.component.icon is the designed icon colour.
+$btn-close-color: $ucsd-color-component-icon;
+
+// <kbd>: stock is white-on-$gray-900. Navy is the on-brand dark surface.
+$kbd-color: var(--ucsd-color-foreground-heading-light);
+$kbd-bg:    var(--ucsd-color-theme-primary);
+
+// Popover and toast surfaces: stock is bare/translucent white with gray-ish
+// borders, which also ignores dark mode. Same surface language as cards.
+$popover-bg:           var(--ucsd-color-surface-1);
+$popover-header-bg:    var(--ucsd-color-surface-2);
+$popover-border-color: var(--ucsd-color-foreground-card-border);
+$toast-background-color:        var(--ucsd-color-surface-1);
+$toast-header-background-color: var(--ucsd-color-surface-2);
+$toast-border-color:            var(--ucsd-color-foreground-card-border);
+
+$dropdown-bg:            var(--ucsd-color-surface-1);
+$thumbnail-border-color: var(--ucsd-color-foreground-card-border);
+
+// Accordion: Bootstrap derives the active state from $primary — with a Yellow
+// primary that produces a pale-yellow bg and an olive icon (shade-color math,
+// not a designed value). Sand is the designed soft-emphasis surface, same as
+// the dropdown/list-group active language.
+$accordion-button-active-bg:    var(--ucsd-color-surface-2);
+$accordion-button-active-color: var(--ucsd-color-foreground-body-text-focus);
+$accordion-icon-active-color:   $ucsd-color-foreground-body-text-focus;
+
+// DESIGN.md: shadows are navy-tinted so they sit in the palette. The modal
+// scrim is the largest "shadow" in the system — stock bare black reads colder
+// than everything else; navy keeps it in the same family.
+$modal-backdrop-bg: var(--ucsd-color-theme-primary);
+
+// --- Bootstrap's own dark palette --------------------------------------------
+// $enable-dark-mode makes Bootstrap emit a [data-bs-theme="dark"] block from
+// the $*-dark variables — stock, an entire second gray palette that fights the
+// token layer. Bound here to the DARK token literals ($ucsd-dark-*, from
+// @ucsd/tokens/scss-dark) — literals rather than var() because Bootstrap
+// passes several through to-rgb() and into SVG data URIs at compile time.
+// This matters beyond tidiness for SUBTREE theming: on <div data-bs-theme=
+// "dark">, Bootstrap's block outranks the :root re-points in _ucsd.scss.
+$body-color-dark:              $ucsd-dark-color-foreground-body-text;
+$body-bg-dark:                 $ucsd-dark-color-surface-1;
+$body-secondary-color-dark:    $ucsd-dark-color-component-menu;
+$body-secondary-bg-dark:       $ucsd-dark-color-surface-2;
+$body-tertiary-bg-dark:        $ucsd-dark-color-surface-5;
+$body-emphasis-color-dark:     $ucsd-dark-color-foreground-body-text-focus;
+$border-color-dark:            $ucsd-dark-color-foreground-divider;
+$border-color-translucent-dark: $ucsd-dark-color-foreground-subcard-border;
+$headings-color-dark:          $ucsd-dark-color-foreground-h2-heading;
+$link-color-dark:              $ucsd-dark-color-component-link;
+$link-hover-color-dark:        $ucsd-dark-color-theme-accent;
+$code-color-dark:              $ucsd-dark-color-component-link;
+$mark-bg-dark:                 $ucsd-dark-color-system-bg-warning;
+$form-select-indicator-color-dark: $ucsd-dark-color-foreground-body-text;
+
+$success-text-emphasis-dark:   $ucsd-dark-color-system-foreground-success;
+$success-bg-subtle-dark:       $ucsd-dark-color-system-bg-success;
+$success-border-subtle-dark:   $ucsd-dark-color-system-success;
+$info-text-emphasis-dark:      $ucsd-dark-color-system-foreground-information;
+$info-bg-subtle-dark:          $ucsd-dark-color-system-bg-information;
+$info-border-subtle-dark:      $ucsd-dark-color-system-information;
+$warning-text-emphasis-dark:   $ucsd-dark-color-system-foreground-warning;
+$warning-bg-subtle-dark:       $ucsd-dark-color-system-bg-warning;
+$warning-border-subtle-dark:   $ucsd-dark-color-system-warning;
+$danger-text-emphasis-dark:    $ucsd-dark-color-system-foreground-error;
+$danger-bg-subtle-dark:        $ucsd-dark-color-system-bg-error;
+$danger-border-subtle-dark:    $ucsd-dark-color-system-error;
 
 // Enable Bootstrap's CSS-variable output so consumers can retheme at runtime.
 $enable-cssgrid: true;

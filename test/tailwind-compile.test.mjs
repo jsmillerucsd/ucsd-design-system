@@ -61,8 +61,13 @@ const CANDIDATES = [
   'text-muted-foreground', 'border-border', 'ring-ring', 'bg-card', 'bg-sidebar', 'bg-chart-1',
   'bg-accent', 'text-accent-foreground', 'text-link', 'bg-success',
   'text-success-foreground', 'text-warning-foreground', 'bg-warning',
+  // Bridged stock type steps and faces
+  'text-base', 'text-xs', 'font-mono', 'max-w-narrow',
+  // The accordion animation the shadcn bridge supplies (normally tw-animate-css's job)
+  'animate-accordion-down',
   // Must NOT compile
   'bg-blue-500', 'text-slate-700', 'bg-white', 'text-black', '2xl:p-md-16',
+  'text-5xl', 'font-serif', 'max-w-xl',
 ];
 
 let out = '';
@@ -127,17 +132,15 @@ before(async () => {
   await fs.rm(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
   await fs.mkdir(dir, { recursive: true });
 
-  // Import order is the one the docs tell consumers to use. It matters: the
-  // Tailwind theme resets --color-* to initial, so the shadcn bridge must land
-  // after it or every shadcn slot is wiped.
+  // Compile through the single entry consumers import. full.css carries the
+  // four imports in the only order that works (the theme resets --color-* to
+  // initial, so the shadcn bridge must land after it) — using it here means the
+  // shipped file, order included, is what these tests hold.
   const posix = (p) => p.split(path.sep).join('/');
   await fs.writeFile(
     path.join(dir, 'input.css'),
     [
-      '@import "tailwindcss";',
-      `@import "${posix(path.join(TOK, 'css', 'tokens.css'))}";`,
-      `@import "${posix(path.join(TOK, 'tailwind', 'theme.css'))}";`,
-      `@import "${posix(path.join(TOK, 'shadcn', 'theme.css'))}";`,
+      `@import "${posix(path.join(TOK, 'full.css'))}";`,
       `@source inline("${CANDIDATES.join(' ')}");`,
     ].join('\n'),
     'utf8',
@@ -218,17 +221,26 @@ describe('text does not fall back to serif', () => {
   // resolves to the browser's default SERIF — so the Tailwind demo rendered in Times
   // while the Bootstrap page beside it, which has always appended a stack, looked
   // correct. Same tokens, wildly different pages.
-  test('every font role carries a fallback stack', async () => {
+  test('every font role carries a fallback stack or is itself a complete stack', async () => {
+    // The invariant, not a roster: a --font-* role must either append a UCSD
+    // fallback stack, or resolve to a token whose own value ends in a CSS
+    // generic family (the mono role). An exemption list by name would stop
+    // catching a NEW complete-stack role that forgot its fallback.
+    const { isCompleteStack } = await import('../packages/tokens/formats/tailwind-theme.mjs');
     const theme = await fs.readFile(path.join(TOK, 'tailwind', 'theme.css'), 'utf8');
+    const manifest = JSON.parse(await fs.readFile(path.join(TOK, 'tokens.json'), 'utf8'));
+    const valueOfVar = new Map(manifest.map((t) => [`--${t.name}`, t.value]));
+
     const roles = [...theme.matchAll(/^\s*(--font-[a-z0-9-]+):\s*([^;]+);/gm)]
       .filter(([, name]) => !name.startsWith('--font-weight-'));
 
     assert.ok(roles.length > 0, 'no --font-* roles emitted at all');
     for (const [, name, value] of roles) {
-      assert.match(
-        value,
-        /var\(--ucsd-type-fallback-(sans|display)\)/,
-        `${name} has no fallback stack — it renders as serif wherever the UCSD faces are absent`,
+      const token = valueOfVar.get(value.match(/var\((--[a-z0-9-]+)/)?.[1]);
+      assert.ok(
+        /var\(--ucsd-type-fallback-(sans|display)\)/.test(value) || isCompleteStack(token),
+        `${name} has no fallback stack and does not end in a generic family — ` +
+          'it renders as serif wherever the UCSD faces are absent',
       );
     }
   });
@@ -309,10 +321,24 @@ describe("Tailwind's own scales are re-pointed at UCSD values", () => {
 });
 
 describe('off-system utilities do not compile at all', () => {
-  test("Tailwind's palette is gone", () => {
-    for (const cls of ['bg-blue-500', 'text-slate-700', 'bg-white', 'text-black']) {
-      assert.ok(!has(cls), `${cls} must not compile — it is not a UCSD colour and ignores dark mode`);
+  // The colour/breakpoint/text/font/container namespaces are reset and only
+  // UCSD values re-emitted, so anything the design does not define — stock
+  // palette entries, sizes beyond the ramp, a serif face, stock measures —
+  // generates nothing.
+  test('nothing the design does not define compiles', () => {
+    for (const cls of [
+      'bg-blue-500', 'text-slate-700', 'bg-white', 'text-black',
+      'text-5xl', 'font-serif', 'max-w-xl',
+    ]) {
+      assert.ok(!has(cls), `${cls} must not compile — the design defines no such value`);
     }
+  });
+
+  test('stock steps that DO have a designed equivalent are re-pointed, not lost', () => {
+    resolvesTo('text-base', '--ucsd-type-body-md-font-size');
+    resolvesTo('text-xs', '--ucsd-type-body-sm-font-size');
+    resolvesTo('font-mono', '--ucsd-type-mono-font-family');
+    resolvesTo('max-w-narrow', '--ucsd-container-narrow');
   });
 });
 
@@ -344,6 +370,17 @@ describe('the shadcn bridge reaches shadcn components', () => {
     resolvesTo('bg-success', '--ucsd-color-system-success');
     resolvesTo('text-success-foreground', '--ucsd-color-component-btn-label-black');
     resolvesTo('text-warning-foreground', '--ucsd-color-component-btn-label-black');
+  });
+
+  test("the bridge carries shadcn's base layer and accordion animation", () => {
+    // Tailwind v4's bare `border` utility sets only border-width; shadcn's own
+    // init writes this base layer into globals.css, which our docs tell
+    // consumers to delete — so the bridge must carry it or every card border
+    // renders currentColor. The accordion keyframes likewise normally come from
+    // tw-animate-css, which the documented setup does not include.
+    assert.match(out, /border-color:\s*var\(--border\)/);
+    assert.ok(has('animate-accordion-down'), 'animate-accordion-down utility missing');
+    assert.match(out, /@keyframes accordion-down/);
   });
 
   test('the bridge carries no .dark block', async () => {

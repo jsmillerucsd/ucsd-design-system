@@ -36,15 +36,25 @@ const OUT = path.join(REPO, 'tokens', 'figma');
  * `root` namespaces each collection so the tiers cannot collide. They otherwise
  * would: `colors-brand` and `colors-primitive` both define `neutral/black`, and
  * Style Dictionary merges every source into one tree.
+ *
+ * `tier` is the collection's place in the Figma stack; `publishTier` is what the
+ * BUILT manifest labels its tokens, which packages/tokens/build.mjs reads from
+ * here so the two can never drift. They differ in one deliberate case:
+ * layout-primitive (the spacing/radius scale) is a primitive in Figma's tiering
+ * but IS the published API — DESIGN.md's spacing table, `p-md-16`, Bootstrap's
+ * $spacers — whereas the weight ramp is reached only through the type roles and
+ * publishes as primitive so no generated doc tells an agent to bind weight.thin.
+ *
+ * Exported for packages/tokens/build.mjs (tier labelling) and the tests.
  */
-const COLLECTIONS = {
-  'colors-brand':         { file: 'brand.json',              root: 'brand',  tier: 'brand' },
-  'colors-primitive':     { file: 'primitive.json',          root: 'palette', tier: 'primitive' },
-  'colors-semantic':      { file: null,                      root: 'color',  tier: 'semantic', byMode: true },
-  'layout-primitive':     { file: 'layout.json',             root: null,     tier: 'primitive' },
-  'layout-semantic':      { file: 'layout-semantic.json',    root: null,     tier: 'semantic' },
-  'typography-primitive': { file: 'typography-weights.json', root: 'weight', tier: 'primitive', numberType: 'fontWeight' },
-  'typography-semantic':  { file: 'typography.json',         root: 'type',   tier: 'semantic',  numberType: 'fontWeight', leafSuffix: 'font-weight' },
+export const COLLECTIONS = {
+  'colors-brand':         { file: 'brand.json',              root: 'brand',  tier: 'brand',     publishTier: 'brand' },
+  'colors-primitive':     { file: 'primitive.json',          root: 'palette', tier: 'primitive', publishTier: 'primitive' },
+  'colors-semantic':      { file: null,                      root: 'color',  tier: 'semantic',  publishTier: 'semantic', byMode: true },
+  'layout-primitive':     { file: 'layout.json',             root: null,     tier: 'primitive', publishTier: 'semantic' },
+  'layout-semantic':      { file: 'layout-semantic.json',    root: null,     tier: 'semantic',  publishTier: 'semantic' },
+  'typography-primitive': { file: 'typography-weights.json', root: 'weight', tier: 'primitive', publishTier: 'primitive', numberType: 'fontWeight' },
+  'typography-semantic':  { file: 'typography.json',         root: 'type',   tier: 'semantic',  publishTier: 'semantic', numberType: 'fontWeight', leafSuffix: 'font-weight' },
 };
 
 /** Mode name -> the suffix used in tokens/figma/semantic.<mode>.json. */
@@ -400,5 +410,8 @@ if (import.meta.url === `file://${process.argv[1]}`.replace(/\\/g, '/') ||
   console.log(
     `sync-figma: ${count} tokens from ${inputs.length} mode file(s) -> ${files.size} file(s) in tokens/figma/`,
   );
-  console.log('Review the diff, then commit.');
+  console.log(
+    'Next: `npm run check` (rebuilds DESIGN.md, the skill and every target, then runs the gates),\n' +
+    'review the whole diff, and commit it together — CI fails on stale generated files.',
+  );
 }

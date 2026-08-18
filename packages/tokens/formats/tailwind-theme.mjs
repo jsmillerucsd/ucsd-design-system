@@ -45,12 +45,18 @@ const LITERAL_NAMESPACES = new Set(['breakpoint']);
  * that only UCSD semantic colours may be used. Same for breakpoints: Tailwind's
  * default `2xl` (1536px) would survive alongside our `xxl` (1400px).
  *
- * Namespaces NOT listed here (spacing, radius, shadow, text, font) intentionally
- * keep Tailwind's defaults as a fallback, because our scales are deliberately
- * sparse and removing them would break common utilities like `rounded-full`.
- * Those defaults are re-pointed at UCSD values instead — see BRIDGED_DEFAULTS.
+ * `text`, `font` and `container` are reset AND selectively re-emitted below:
+ * the type roles plus the bridged xs–2xl steps, the UCSD faces and the weight
+ * ramp, and the UCSD container widths. What is not re-emitted then does not
+ * compile at all — `text-5xl`, `font-serif`, `max-w-4xl` — which is the point:
+ * the design defines no such sizes, faces or measures.
+ *
+ * `spacing`, `radius` and `shadow` are NOT reset, because their stock utilities
+ * are re-pointed wholesale at UCSD values via BRIDGED_DEFAULTS (`p-4` is 16px of
+ * OUR scale) and removing the namespaces would break `rounded-full`, numeric
+ * gaps, and every stock shadcn class for no fidelity gain.
  */
-const RESET_NAMESPACES = ['color', 'breakpoint'];
+const RESET_NAMESPACES = ['color', 'breakpoint', 'text', 'font', 'container'];
 
 /**
  * Tailwind's own numeric/t-shirt scales, re-pointed at UCSD tokens.
@@ -74,10 +80,22 @@ const RESET_NAMESPACES = ['color', 'breakpoint'];
  */
 const BRIDGED_DEFAULTS = [
   ['--spacing',   'space.xxs-4'],
+  // The rule for stock steps beyond the designed scale: CLAMP to the nearest
+  // designed value when the result degrades gracefully (a 4xl radius rendered
+  // at 12px is still a rounded corner), and let the namespace RESET kill the
+  // utility when silence would look broken (text-6xl rendered at 24px reads as
+  // a bug, so it does not compile at all — see RESET_NAMESPACES).
+  //
+  // Radius: 0/4/8/12 and circle/pill are the only corner shapes that exist
+  // (DESIGN.md shapes section), so the whole stock ladder clamps onto them.
+  ['--radius-xs', 'radius.rounded-4'],
   ['--radius-sm', 'radius.rounded-4'],
   ['--radius-md', 'radius.rounded-8'],
   ['--radius-lg', 'radius.rounded-12'],
   ['--radius-xl', 'radius.rounded-12'],
+  ['--radius-2xl', 'radius.rounded-12'],
+  ['--radius-3xl', 'radius.rounded-12'],
+  ['--radius-4xl', 'radius.rounded-12'],
   // DESIGN.md: "Cards are not elevated by default" and "shadow is for things
   // that float and can be dismissed." shadcn's Card has `shadow-sm` hardcoded;
   // mapping it to elevation.0 (none) means cards render flat per the contract.
@@ -94,12 +112,80 @@ const BRIDGED_DEFAULTS = [
   ['--shadow-lg', 'elevation.3'],
   ['--shadow-xl', 'elevation.4'],
   ['--shadow-2xl', 'elevation.4'],
+  // Motion. Tailwind's stock curves are generic Material-era beziers; the UCSD
+  // set is designed (tokens/code/effects.json). The mapping follows the physics:
+  // ease-out decelerates into place, which is what an ENTERING surface does;
+  // ease-in accelerates away, which is an EXIT. `transition` with no modifier
+  // gets the standard curve and base duration in both frameworks — Bootstrap's
+  // $transition-base compiles from the same two tokens.
+  ['--ease-in', 'motion.easing.exit'],
+  ['--ease-out', 'motion.easing.enter'],
+  ['--ease-in-out', 'motion.easing.standard'],
+  ['--default-transition-duration', 'motion.duration.base'],
+  ['--default-transition-timing-function', 'motion.easing.standard'],
+  // Stock font-weight utilities carry the same numbers as the Figma weight ramp;
+  // re-pointing them makes the provenance real (a Figma weight change flows
+  // through) instead of a numeric coincidence.
+  ['--font-weight-thin', 'weight.thin'],
+  ['--font-weight-extralight', 'weight.extra-light'],
+  ['--font-weight-light', 'weight.light'],
+  ['--font-weight-normal', 'weight.regular'],
+  ['--font-weight-medium', 'weight.medium'],
+  ['--font-weight-semibold', 'weight.semi-bold'],
+  ['--font-weight-bold', 'weight.bold'],
+  ['--font-weight-extrabold', 'weight.extra-bold'],
+  ['--font-weight-black', 'weight.black'],
+  // Tailwind's stock type scale, re-pointed at the UCSD ramp. The designed ramp
+  // is sparse (12/14/18/24), so the stock steps snap to the nearest role:
+  // `text-sm` lands on the 14px UI-label size (the `button` role, which is what
+  // stock shadcn markup means by text-sm), `text-base`/`text-lg` on body-md,
+  // `text-xl`/`text-2xl` on body-lg. Steps above 2xl are NOT bridged — the
+  // namespace reset makes them compile to nothing, and the validator's banned
+  // list (derived from these rows via `bridgedTextSteps`) says why.
+  ['--text-xs', 'type.body-sm.font-size'],
+  ['--text-xs--line-height', 'type.body-sm.line-height'],
+  ['--text-sm', 'type.button.font-size'],
+  ['--text-sm--line-height', 'type.button.line-height'],
+  ['--text-base', 'type.body-md.font-size'],
+  ['--text-base--line-height', 'type.body-md.line-height'],
+  ['--text-lg', 'type.body-md.font-size'],
+  ['--text-lg--line-height', 'type.body-md.line-height'],
+  ['--text-xl', 'type.body-lg.font-size'],
+  ['--text-xl--line-height', 'type.body-lg.line-height'],
+  ['--text-2xl', 'type.body-lg.font-size'],
+  ['--text-2xl--line-height', 'type.body-lg.line-height'],
 ];
+
+/**
+ * The stock text-* steps the rows above re-point. Exported so the validator's
+ * banned list is COMPUTED as the complement of this set rather than maintained
+ * as a parallel roster that goes stale the day a step is bridged.
+ */
+export const bridgedTextSteps = new Set(
+  BRIDGED_DEFAULTS.map(([v]) => v.match(/^--text-([a-z0-9]+)$/)?.[1]).filter(Boolean),
+);
+
+/**
+ * Every token path this theme binds OUTSIDE the namespace mapping — the bridged
+ * defaults plus the fallback stacks that fallbackFor() appends (it throws when
+ * they are missing, so listing them here cannot drift). scripts/audit-bridges.mjs
+ * combines this with tailwindName() to know what the Tailwind surface covers,
+ * instead of grepping the generated CSS.
+ */
+export const tailwindBoundPaths = new Set([
+  ...BRIDGED_DEFAULTS.map(([, p]) => p),
+  'type.fallback.sans',
+  'type.fallback.display',
+]);
 
 /** Token path prefix -> Tailwind namespace. Order matters: first match wins. */
 const NAMESPACE_MAP = [
   { prefix: ['color'],      ns: 'color',      drop: 1 },
   { prefix: ['space'],      ns: 'spacing',    drop: 1 },
+  // Icon sizes ride the spacing namespace with their prefix kept (drop: 0), so
+  // `size-icon-sm-8` / `w-icon-lg-16` exist. Tailwind has no icon namespace of
+  // its own; spacing is what feeds the size-*/w-*/h-* utilities.
+  { prefix: ['icon'],       ns: 'spacing',    drop: 0 },
   { prefix: ['radius'],     ns: 'radius',     drop: 1 },
   { prefix: ['elevation'],  ns: 'shadow',     drop: 1 },
   { prefix: ['breakpoint'], ns: 'breakpoint', drop: 1 },
@@ -165,6 +251,18 @@ export function tailwindName(token) {
   return null; // primitives and component tokens are not utilities
 }
 
+/**
+ * A value that already ends in a CSS generic family needs no appended fallback —
+ * that is what "complete stack" means, derived from the value rather than from
+ * the role's name so a rename or a second complete-stack role keeps working.
+ */
+const GENERIC_FAMILIES = new Set([
+  'serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui',
+  'ui-monospace', 'ui-sans-serif', 'ui-serif', 'ui-rounded', 'math',
+]);
+export const isCompleteStack = (v) =>
+  GENERIC_FAMILIES.has(String(v).split(',').at(-1).trim().replace(/^['"]|['"]$/g, '').toLowerCase());
+
 export const tailwindTheme = {
   name: 'css/ucsd-tailwind-theme',
   format: ({ dictionary }) => {
@@ -172,7 +270,7 @@ export const tailwindTheme = {
     const seen = new Set();
 
     const val = (t) => t.$value ?? t.value;
-    const byPathValue = new Map(dictionary.allTokens.map((t) => [t.path.join('.'), t]));
+    const byPath = new Map(dictionary.allTokens.map((t) => [t.path.join('.'), t]));
 
     /**
      * Font families need a fallback stack appended, or a page renders in the
@@ -185,10 +283,14 @@ export const tailwindTheme = {
      * definition rather than a guess about the name, so a face change in Figma
      * carries through without editing this file.
      */
-    const bodyFace = val(byPathValue.get('type.body.font-family') ?? {});
+    const bodyFace = val(byPath.get('type.body.font-family') ?? {});
     const fallbackFor = (token) => {
+      // A value that already ends in a generic family (the mono role) IS the
+      // complete stack — appending a fallback would put 'Arial Narrow' after
+      // 'monospace', which is never reached but is also never right.
+      if (isCompleteStack(val(token))) return '';
       const kind = val(token) === bodyFace ? 'sans' : 'display';
-      const stack = byPathValue.get(`type.fallback.${kind}`);
+      const stack = byPath.get(`type.fallback.${kind}`);
       if (!stack) {
         throw new Error(
           `tailwind-theme: type.fallback.${kind} is missing. Font stacks are defined ` +
@@ -218,17 +320,18 @@ export const tailwindTheme = {
 
     // Resolve BRIDGED_DEFAULTS against the dictionary so a token rename fails the
     // build here instead of shipping a var() that resolves to nothing.
-    const byPath = new Map(dictionary.allTokens.map((t) => [t.path.join('.'), t]));
-    const bridged = BRIDGED_DEFAULTS.map(([twVar, tokenPath]) => {
+    const mustGet = (tokenPath) => {
       const token = byPath.get(tokenPath);
       if (!token) {
         throw new Error(
-          `tailwind-theme: BRIDGED_DEFAULTS maps ${twVar} to the token "${tokenPath}", ` +
-            `which does not exist. Update the mapping in formats/tailwind-theme.mjs.`,
+          `tailwind-theme: mapped to the token "${tokenPath}", which does not ` +
+            `exist. Update the mapping in formats/tailwind-theme.mjs.`,
         );
       }
-      return `  ${twVar}: var(--${token.name});`;
-    });
+      return token;
+    };
+    const bridged = BRIDGED_DEFAULTS.map(([twVar, tokenPath]) =>
+      `  ${twVar}: var(--${mustGet(tokenPath).name});`);
 
     return [
       '/**',
@@ -246,10 +349,24 @@ export const tailwindTheme = {
       ...RESET_NAMESPACES.map((ns) => `  --${ns}-*: initial;`),
       '',
       '  /* Re-point the scales we deliberately keep, so Tailwind\'s own numeric',
-      '     utilities (p-4, rounded-md, h-9) land on UCSD values instead of its. */',
+      '     utilities (p-4, rounded-md, h-9, text-sm) land on UCSD values instead',
+      '     of its. */',
       ...bridged,
       '',
       ...lines.sort(),
+      '}',
+      '',
+      '/**',
+      ' * Body copy is the body-md role (DESIGN.md typography block). Tailwind\'s',
+      ' * preflight leaves <body> at the browser default, which is NOT on the ramp;',
+      ' * Bootstrap compiles $font-size-base from this same token, so both targets',
+      ' * put unclassed body text on the identical designed size.',
+      ' */',
+      '@layer base {',
+      '  body {',
+      `    font-size: var(--${mustGet('type.body-md.font-size').name});`,
+      `    line-height: var(--${mustGet('type.body-md.line-height').name});`,
+      '  }',
       '}',
       '',
       '/**',
