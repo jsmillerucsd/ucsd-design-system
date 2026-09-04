@@ -679,7 +679,7 @@ export function Page() {
 
       <footer className="bg-theme-secondary text-foreground-heading-light">
         <div className="mx-auto max-w-base px-md-16 py-xxxl-64 text-center text-body-md">
-          UCSD Design System — unmodified shadcn/ui on @ucsd/tokens
+          UCSD Design System — unmodified shadcn/ui on @jsmillerucsd/tokens
         </div>
       </footer>
     </>

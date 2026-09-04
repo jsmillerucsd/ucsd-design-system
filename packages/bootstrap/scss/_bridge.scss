@@ -5,7 +5,7 @@
 // UCSD semantic token backs which Bootstrap variable is a design decision, not a
 // mechanical transform. Keeping it small, explicit and reviewable is the point.
 //
-// Everything on the right-hand side comes from @ucsd/tokens (generated).
+// Everything on the right-hand side comes from @jsmillerucsd/tokens (generated).
 // Everything on the left is Bootstrap's own API — and is verified to BE
 // Bootstrap's API by scripts/audit-bridges.mjs, because Sass accepts an
 // assignment to a variable Bootstrap never reads as a silent no-op.
@@ -362,7 +362,7 @@ $modal-backdrop-bg: var(--ucsd-color-theme-primary);
 // $enable-dark-mode makes Bootstrap emit a [data-bs-theme="dark"] block from
 // the $*-dark variables — stock, an entire second gray palette that fights the
 // token layer. Bound here to the DARK token literals ($ucsd-dark-*, from
-// @ucsd/tokens/scss-dark) — literals rather than var() because Bootstrap
+// @jsmillerucsd/tokens/scss-dark) — literals rather than var() because Bootstrap
 // passes several through to-rgb() and into SVG data URIs at compile time.
 // This matters beyond tidiness for SUBTREE theming: on <div data-bs-theme=
 // "dark">, Bootstrap's block outranks the :root re-points in _ucsd.scss.

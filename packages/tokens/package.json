@@ -1,5 +1,5 @@
 {
-  "name": "@ucsd/tokens",
+  "name": "@jsmillerucsd/tokens",
   "version": "0.1.0",
   "description": "UCSD design tokens compiled to CSS custom properties, Sass, Tailwind @theme, JS and JSON.",
   "type": "module",

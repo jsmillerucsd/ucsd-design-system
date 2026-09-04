@@ -20,8 +20,8 @@
 // 2. UCSD token values (light literals, then dark literals for the $*-dark
 //    variables), then the token -> Bootstrap variable mapping. All must land
 //    before Bootstrap's own _variables.scss so !default wins ours.
-@import "@ucsd/tokens/dist/scss/tokens";
-@import "@ucsd/tokens/dist/scss/tokens-dark";
+@import "@jsmillerucsd/tokens/dist/scss/tokens";
+@import "@jsmillerucsd/tokens/dist/scss/tokens-dark";
 @import "bridge";
 
 // 3. Bootstrap variables and maps.
