@@ -117,21 +117,20 @@ typography:
     lineHeight: "18px"
 spacing:
   "0": "0px"
-  lg-24: "24px"
-  md-16: "16px"
-  sm-12: "12px"
-  xl-32: "32px"
-  xs-8: "8px"
-  xxl-48: "48px"
-  xxs-4: "4px"
-  xxxl-64: "64px"
+  xxs: "4px"
+  xs: "8px"
+  sm: "12px"
+  md: "16px"
+  lg: "24px"
+  xl: "32px"
+  xxl: "48px"
+  xxxl: "64px"
 rounded:
   rounded-0: "0px"
-  rounded-12: "12px"
-  rounded-4: "4px"
-  rounded-8: "8px"
+  rounded-sm: "4px"
+  rounded-md: "8px"
+  rounded-lg: "12px"
   rounded-circle: "100px"
-  pill: "999px"
 components:
   button-primary:
     backgroundColor: "{colors.component-btn-primary}"
@@ -167,7 +166,7 @@ icons:
   sm-8: "8px"
   xl-24: "24px"
 grid:
-  gap: "{spacing.sm-12}"
+  gap: "{spacing.sm}"
 elevation:
   "0": "none"
   "1": "0 1px 2px 0 rgba(24, 43, 73, 0.08)"
@@ -261,7 +260,7 @@ modes:
 
 ## Overview
 
-This is an evolution of Decorator V5, UCSD's web design system since 2017. Decorator V5 runs on Bootstrap 3, jQuery, and Glyphicons, with Teko as the display face and Roboto for body. It serves a broad mix of pages: recruitment marketing, task tools, faculty profiles, and CMS content.
+This is a evolution of Decorator V5, UCSD's web design system since 2017. Decorator V5 runs on Bootstrap 3, jQuery, and Glyphicons, with Teko as the display face and Roboto for body. It serves a broad mix of pages: recruitment marketing, task tools, faculty profiles, and CMS content.
 
 What carries forward: the UCSD color identity (navy, blue, gold), the structural page shell (masthead with wordmark, navbar with gold active indicator, breadcrumbs, Regents copyright footer), and the commitment to a shared system across campus.
 
