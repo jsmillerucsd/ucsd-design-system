@@ -66,7 +66,7 @@ The module must preserve the following visual relationships:
 - Tile gutters are consistent across rows and columns.
 - Tiles have the established rounded-corner treatment.
 - Tile labels are centered horizontally and vertically within the tile.
-- Image tiles use the established dark overlay treatment to preserve text
+- Image tiles use a navy readability overlay treatment of `rgba(24, 43, 73, .5)` to preserve text
   readability.
 - Solid-color tiles use only approved UC San Diego tile background treatments.
 
