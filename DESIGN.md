@@ -122,28 +122,25 @@ typography:
   "button-primary":
     fontFamily: "'Brix Sans'"
     fontSize: "16px"
-    lineHeight: "17px"
+    lineHeight: "16px"
     fontWeight: 900
     letterSpacing: 1.4
   "button-secondary":
     fontFamily: "'Brix Sans'"
     fontSize: "16px"
-    lineHeight: "17px"
+    lineHeight: "16px"
     fontWeight: 900
     letterSpacing: 1.4
   "body":
     fontFamily: "'Brix Sans'"
   "mono":
     fontFamily: "ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace"
-  "button":
-    fontFamily: "'Brix Sans'"
-    fontSize: "14px"
-    lineHeight: "17px"
-    fontWeight: 700
   "h2-small":
     fontFamily: "'Brix Sans'"
+    fontWeight: 900
     fontSize: "12px"
     lineHeight: "18px"
+    letterSpacing: 0
 spacing:
   "0": "0px"
   xxs: "4px"
