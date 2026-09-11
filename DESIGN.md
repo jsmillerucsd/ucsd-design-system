@@ -1160,31 +1160,70 @@ feature grid, or custom tile implementation.
 The module must use Bootstrap 5 conventions together with the established
 UC San Diego module classes.
 
+#### Visual contract
+
+The Tiles with Links module is a constrained panel inside the page content
+area. It is not a full-width color band.
+
+The module must preserve the following visual relationships:
+
+- The entire module is centered within the page's standard content container.
+- The module background is applied to the constrained module panel, not to
+  the full viewport width.
+- The introductory row and the tile grid share the same left and right edges.
+- The module includes substantial internal padding around both the introductory
+  content and the tiles.
+- The module heading and description appear on the left side of the introductory
+  row.
+- An optional module-level action appears on the right side of the same row.
+- The tile grid appears below the introductory row.
+- Standard desktop presentation is three equal-width tiles per row.
+- Tile gutters are consistent across rows and columns.
+- Tiles have the established rounded-corner treatment.
+- Tile labels are centered horizontally and vertically within the tile.
+- Image tiles use the established dark overlay treatment to preserve text
+  readability.
+- Solid-color tiles use only approved UC San Diego tile background treatments.
+
+Do not make the module background bleed from edge to edge across the viewport
+unless a separate documented variant explicitly calls for that treatment.
+
 #### Structure
 
-- The section uses `jumbotron-tile-links`.
-- The selected section surface is expressed with the appropriate
-  `tile-module-*` class.
-- Set `data-module="tiles-with-links"`.
-- The module uses a Bootstrap `.container`.
-- Introductory content appears in a Bootstrap `.row`.
-- The heading and description occupy `.col-md-8.text-indent`.
-- An optional module-level action occupies `.col-md-4`.
-- Align the optional action with Bootstrap 5 utilities such as
-  `.text-md-end`; do not use the removed Bootstrap 3 `.text-*-right`
-  utilities.
-- The tile collection appears in a separate `.row.tiles-row`.
-- Each tile occupies a responsive Bootstrap column.
-- Use `.col-md-4` for the standard three-tile desktop layout.
-- Every individual tile uses `.wrapper`.
-- Image tiles contain an `<img class="background-image">`.
-- Solid-color tiles contain `<div class="background-image"></div>` and an
-  approved `tile-*-bg` class.
-- Each tile label is an `<h3>` containing the tile's link.
-- Image tiles use the established UC San Diego overlay treatment when
-  necessary to maintain readable text.
-- Use the established UC San Diego module classes rather than recreating
-  their appearance with unrelated custom components.
+The outer section identifies the module and provides semantic grouping.
+
+The constrained module panel sits inside the Bootstrap container.
+
+The canonical hierarchy is:
+
+- `<section class="jumbotron-tile-links" data-module="tiles-with-links">`
+- `.container`
+- `.tile-module-*`
+- introductory `.row`
+- tile `.row.tiles-row`
+- responsive tile columns
+- `.wrapper`
+- `.background-image`
+- `<h3><a>...</a></h3>`
+
+The selected module surface is expressed with the appropriate
+`tile-module-*` class on the constrained module panel, not on the full-width
+outer section.
+
+The introductory row:
+
+- uses Bootstrap `.row`;
+- places heading and description in `.col-md-8.text-indent`;
+- places an optional module-level action in `.col-md-4`;
+- uses Bootstrap 5 alignment utilities such as `.text-md-end`.
+
+The tile grid:
+
+- appears in a separate `.row.tiles-row`;
+- uses `.col-md-4` for the standard three-column desktop layout;
+- gives every individual tile a `.wrapper`;
+- uses `.background-image` for both image and solid-color tile backgrounds;
+- places each tile label in an `<h3>` containing the destination link.
 
 #### Bootstrap 5 requirements
 
@@ -1192,9 +1231,7 @@ Use Bootstrap 5 markup and utilities.
 
 Do not use Bootstrap 3 patterns that have been removed or superseded.
 
-- Do not use `.jumbotron` as a Bootstrap component. Section spacing and
-  surface treatment come from the UC San Diego module class and Bootstrap 5
-  spacing utilities where needed.
+- Do not use `.jumbotron` as a Bootstrap component.
 - Use `.text-md-end` or another appropriate Bootstrap 5 alignment utility
   instead of `.text-md-right` or `.text-lg-right`.
 - Do not use `.btn-default`.
@@ -1210,111 +1247,116 @@ Do not use Bootstrap 3 patterns that have been removed or superseded.
 ```html
 <section
   aria-labelledby="tiles-with-links-heading"
-  class="jumbotron-tile-links tile-module-sand py-5"
+  class="jumbotron-tile-links"
   data-module="tiles-with-links"
 >
   <div class="container">
 
-    <div class="row align-items-start g-4">
-      <div class="col-md-8 text-indent">
-        <h2 id="tiles-with-links-heading">Tiles with Links</h2>
-        <p>
-          Features text over tiles that can use imagery or approved solid
-          colors. Tiles are arranged in rows of three on larger viewports.
-        </p>
+    <div class="tile-module-sand">
+
+      <div class="row align-items-start g-4">
+        <div class="col-md-8 text-indent">
+          <h2 id="tiles-with-links-heading">Tiles with Links</h2>
+          <p>
+            Features text over tiles that can use imagery or approved solid
+            colors. Tiles are arranged in rows of three on larger viewports.
+          </p>
+        </div>
+
+        <div class="col-md-4 text-md-end">
+          <a
+            class="btn btn-lg btn-primary"
+            href="tiles-with-links/index.html"
+          >
+            More Tiles with Links Examples
+          </a>
+        </div>
       </div>
 
-      <div class="col-md-4 text-md-end">
-        <a
-          class="btn btn-lg btn-primary"
-          href="tiles-with-links/index.html"
-        >
-          More Tiles with Links Examples
-        </a>
+      <div class="row tiles-row g-4">
+
+        <div class="col-md-4">
+          <div class="wrapper">
+            <img
+              alt=""
+              class="background-image"
+              src="../_images/image-library/cta/cta-aerial-view-scripps-pier.jpg"
+            >
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Text is required
+              </a>
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="wrapper">
+            <img
+              alt=""
+              class="background-image"
+              src="../_images/image-library/cta/cta-conference-room.jpg"
+            >
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Filter applied over images
+              </a>
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="wrapper">
+            <img
+              alt=""
+              class="background-image"
+              src="../_images/image-library/cta/cta-geisel-looking-up.jpg"
+            >
+            <h3>
+              <a href="tiles-with-links/index.html">
+                For readability
+              </a>
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="wrapper tile-blue-bg">
+            <div class="background-image"></div>
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Four tile color options
+              </a>
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="wrapper tile-blue-bg">
+            <div class="background-image"></div>
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Also available
+              </a>
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="wrapper tile-blue-bg">
+            <div class="background-image"></div>
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Three background colors
+              </a>
+            </h3>
+          </div>
+        </div>
+
       </div>
+
     </div>
 
-    <div class="row tiles-row g-4">
-
-      <div class="col-md-4">
-        <div class="wrapper">
-          <img
-            alt=""
-            class="background-image"
-            src="../_images/image-library/cta/cta-aerial-view-scripps-pier.jpg"
-          >
-          <h3>
-            <a href="tiles-with-links/index.html">
-              Text is required
-            </a>
-          </h3>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="wrapper">
-          <img
-            alt=""
-            class="background-image"
-            src="../_images/image-library/cta/cta-conference-room.jpg"
-          >
-          <h3>
-            <a href="tiles-with-links/index.html">
-              Filter applied over images
-            </a>
-          </h3>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="wrapper">
-          <img
-            alt=""
-            class="background-image"
-            src="../_images/image-library/cta/cta-geisel-looking-up.jpg"
-          >
-          <h3>
-            <a href="tiles-with-links/index.html">
-              For readability
-            </a>
-          </h3>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="wrapper tile-blue-bg">
-          <div class="background-image"></div>
-          <h3>
-            <a href="tiles-with-links/index.html">
-              Four tile color options
-            </a>
-          </h3>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="wrapper tile-blue-bg">
-          <div class="background-image"></div>
-          <h3>
-            <a href="tiles-with-links/index.html">
-              Also available
-            </a>
-          </h3>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="wrapper tile-blue-bg">
-          <div class="background-image"></div>
-          <h3>
-            <a href="tiles-with-links/index.html">
-              Three background colors
-            </a>
-          </h3>
-        </div>
-      </div>
-
-    </div>
   </div>
 </section>
 
