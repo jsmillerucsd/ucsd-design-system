@@ -490,7 +490,7 @@
     },
     "font-size": {
       "$type": "number",
-      "$value": 8,
+      "$value": 14,
       "$extensions": {
         "com.figma.variableId": "VariableID:7146:1151",
         "com.figma.scopes": [
@@ -500,7 +500,7 @@
     },
     "line-height": {
       "$type": "number",
-      "$value": 15,
+      "$value": 16,
       "$extensions": {
         "com.figma.variableId": "VariableID:7146:1150",
         "com.figma.scopes": [
