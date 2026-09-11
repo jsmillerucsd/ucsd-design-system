@@ -65,43 +65,60 @@ colors:
   theme-primary: "#182b49"
   theme-secondary: "#00629b"
 typography:
-  "body-lg":
-    fontSize: "24px"
-    lineHeight: "29px"
-    fontWeight: 400
-  "body-md":
-    fontSize: "18px"
-    lineHeight: "23px"
-    fontWeight: 400
   "body-sm":
+    fontFamily: "'Brix Sans'"
     fontSize: "12px"
     lineHeight: "17px"
     fontWeight: 400
+    letterSpacing: 0
+  "body-md":
+    fontFamily: "'Brix Sans'"
+    fontSize: "18px"
+    lineHeight: "23px"
+    fontWeight: 400
+    letterSpacing: -.08
+  "body-mdplus":
+    fontFamily: "'Brix Sans'"
+    fontSize: "20px"
+    lineHeight: "30px"
+    fontWeight: 400
+    letterSpacing: -.08
+  "body-lg":
+    fontFamily: "'Brix Sans'"
+    fontSize: "24px"
+    lineHeight: "29px"
+    fontWeight: 400
+    letterSpacing: 0
   "eyebrow":
     fontFamily: "'Refrigerator Deluxe'"
     fontSize: "8px"
     lineHeight: "10px"
     fontWeight: 700
+    letterSpacing: .8
   "h1":
     fontFamily: "'Refrigerator Deluxe'"
-    fontSize: "24px"
-    lineHeight: "29px"
-    fontWeight: 600
+    fontSize: "56px"
+    lineHeight: "50px"
+    fontWeight: 900
+    letterSpacing: .6
   "h2":
     fontFamily: "'Brix Sans'"
-    fontSize: "18px"
-    lineHeight: "22px"
-    fontWeight: 600
+    fontSize: "40px"
+    lineHeight: "36px"
+    fontWeight: 900
+    letterSpacing: .5
   "h3":
     fontFamily: "'Refrigerator Deluxe'"
-    fontSize: "14px"
-    lineHeight: "17px"
+    fontSize: "24px"
+    lineHeight: "26px"
     fontWeight: 900
+    letterSpacing: 0
   "subheading":
     fontFamily: "'Brix Sans'"
-    fontSize: "12px"
+    fontSize: "15px"
     lineHeight: "15px"
-    fontWeight: 700
+    fontWeight: 900
+    letterSpacing: 1.75
   "body":
     fontFamily: "'Brix Sans'"
   "mono":
