@@ -10,7 +10,7 @@
         ]
       }
     },
-    "xxs-4": {
+    "xxs": {
       "$type": "number",
       "$value": 4,
       "$extensions": {
@@ -20,7 +20,7 @@
         ]
       }
     },
-    "xs-8": {
+    "xs": {
       "$type": "number",
       "$value": 8,
       "$extensions": {
@@ -30,7 +30,7 @@
         ]
       }
     },
-    "sm-12": {
+    "sm": {
       "$type": "number",
       "$value": 12,
       "$extensions": {
@@ -40,7 +40,7 @@
         ]
       }
     },
-    "md-16": {
+    "md": {
       "$type": "number",
       "$value": 16,
       "$extensions": {
@@ -50,7 +50,7 @@
         ]
       }
     },
-    "lg-24": {
+    "lg": {
       "$type": "number",
       "$value": 24,
       "$extensions": {
@@ -60,7 +60,7 @@
         ]
       }
     },
-    "xl-32": {
+    "xl": {
       "$type": "number",
       "$value": 32,
       "$extensions": {
@@ -70,7 +70,7 @@
         ]
       }
     },
-    "xxl-48": {
+    "xxl": {
       "$type": "number",
       "$value": 48,
       "$extensions": {
@@ -80,7 +80,7 @@
         ]
       }
     },
-    "xxxl-64": {
+    "xxxl": {
       "$type": "number",
       "$value": 64,
       "$extensions": {
@@ -102,7 +102,7 @@
         ]
       }
     },
-    "rounded-4": {
+    "rounded-sm": {
       "$type": "number",
       "$value": 4,
       "$extensions": {
@@ -112,7 +112,7 @@
         ]
       }
     },
-    "rounded-8": {
+    "rounded-md": {
       "$type": "number",
       "$value": 8,
       "$extensions": {
@@ -122,7 +122,7 @@
         ]
       }
     },
-    "rounded-12": {
+    "rounded-lg": {
       "$type": "number",
       "$value": 12,
       "$extensions": {
