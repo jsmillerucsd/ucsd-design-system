@@ -34,7 +34,7 @@ Status colors always appear as a `color.system.bg-*` background with its matchin
 
 The semantic layer is a curated, closed set. A new component binds to existing semantic tokens; it does not get its own token block by reflex. Component tokens exist only where a component genuinely needs a knob the semantic layer should not carry — and they alias semantics, never primitives, so they inherit dark mode for free.
 
-## Tiles with Links
+### Tiles with Links
 
 When generating a UC San Diego Tiles with Links module, use the established
 UC San Diego CMS module pattern. Do not substitute a generic card grid,
@@ -43,7 +43,7 @@ feature grid, or custom tile implementation.
 The module must use Bootstrap 5 conventions together with the established
 UC San Diego module classes.
 
-### Structure
+#### Structure
 
 - The section uses `jumbotron-tile-links`.
 - The selected section surface is expressed with the appropriate
@@ -69,7 +69,7 @@ UC San Diego module classes.
 - Use the established UC San Diego module classes rather than recreating
   their appearance with unrelated custom components.
 
-### Bootstrap 5 requirements
+#### Bootstrap 5 requirements
 
 Use Bootstrap 5 markup and utilities.
 
@@ -88,7 +88,7 @@ Do not use Bootstrap 3 patterns that have been removed or superseded.
 - Use the Bootstrap 5 grid for responsive tile layout rather than legacy
   float-based or Bootstrap 3 layout techniques.
 
-### Canonical Bootstrap 5 example
+#### Canonical Bootstrap 5 example
 
 ```html
 <section
