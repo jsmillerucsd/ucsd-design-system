@@ -1047,6 +1047,9 @@ Two faces, both from the UCSD brand library.
 
 Both are licensed faces, not open webfonts. Confirm the web licence before shipping either.
 
+Eyebrow text is always rendered in uppercase through the component style.
+Do not rely on authors to manually capitalize eyebrow content.
+
 ### The roles
 
 Type is organised by **role**, not by an abstract scale: `type.h1`, `type.h2`, `type.h2-small`, `type.h3`, `type.subheading`, `type.eyebrow`, `type.btn`, and `type.body` at small, medium and large.
@@ -1158,6 +1161,12 @@ The semantic layer is a curated, closed set. A new component binds to existing s
 When generating a UC San Diego Tiles with Links module, use the established
 UC San Diego CMS module pattern. Do not substitute a generic card grid,
 feature grid, or custom tile implementation.
+
+The Tiles with Links module does not use eyebrow text.
+
+The introductory content begins with the module heading, followed by optional
+supporting copy. Do not add an eyebrow, kicker, label, or overline unless a
+documented module variant explicitly includes one.
 
 The module must use Bootstrap 5 conventions together with the established
 UC San Diego module classes.
