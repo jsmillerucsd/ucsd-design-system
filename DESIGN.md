@@ -10,8 +10,6 @@ colors:
   # never bind to a raw palette value. Dark mode is a re-alias of these same
   # tokens; see `modes` at the end of this block.
   primary: "{colors.theme-primary}"
-  component-btn-tertiary: "#f5f0e6"
-  component-btn-label-tertiary: "#313232"
   component-btn-gold: "#c69214"
   component-btn-label-black: "#000000"
   component-btn-label-primary: "#182b49"
@@ -119,13 +117,13 @@ typography:
     lineHeight: "15px"
     fontWeight: 900
     letterSpacing: 1.75
-  "button-primary":
+  "btn-primary":
     fontFamily: "'Brix Sans'"
     fontSize: "16px"
     lineHeight: "16px"
     fontWeight: 900
     letterSpacing: 1.4
-  "button-secondary":
+  "btn-secondary":
     fontFamily: "'Brix Sans'"
     fontSize: "16px"
     lineHeight: "16px"
@@ -158,21 +156,16 @@ rounded:
   rounded-lg: "12px"
   rounded-circle: "100px"
 components:
-  button-primary:
+  btn-primary:
     backgroundColor: "{colors.component-btn-primary}"
     textColor: "{colors.component-btn-label-primary}"
     rounded: "{rounded.rounded-sm}"
-    typography: "{typography.button}"
-  button-secondary:
+    typography: "{typography.btn}"
+  btn-secondary:
     backgroundColor: "{colors.component-btn-secondary}"
     textColor: "{colors.component-btn-label-secondary}"
     rounded: "{rounded.rounded-sm}"
-    typography: "{typography.button}"
-  button-tertiary:
-    backgroundColor: "{colors.component-btn-tertiary}"
-    textColor: "{colors.component-btn-label-tertiary}"
-    rounded: "{rounded.rounded-sm}"
-    typography: "{typography.button}"
+    typography: "{typography.btn}"
 breakpoints:
   sm: "576px"
   md: "768px"
@@ -215,13 +208,11 @@ modes:
       component-btn-label-black: "#000000"
       component-btn-label-primary: "#182b49"
       component-btn-label-secondary: "#162742"
-      component-btn-label-tertiary: "#bfc0c1"
       component-btn-label-white: "#ffffff"
       component-btn-navy: "#182b49"
       component-btn-orange: "#fc8900"
       component-btn-primary: "#ffcd00"
       component-btn-secondary: "#5496bc"
-      component-btn-tertiary: "#404142"
       component-btn-turqoise: "#00c6d7"
       component-card-blue: "#00629b"
       component-card-navy: "#182b49"
@@ -1132,9 +1123,9 @@ Write idiomatic code for whichever stack you are in. Correctness comes from bind
 
 ### Buttons
 
-One primary action per screen. `button-primary` is the affirmative action; `button-secondary` carries everything else; a third, quieter treatment handles tertiary actions. A screen with three primary buttons has no primary button.
+One primary action per screen. `btn-primary` is the affirmative action; `btn-secondary` carries everything else. A screen with three primary buttons has no primary button.
 
-Every button fill has a matching label token — `color.component.btn.primary` with `color.component.btn.label-primary`, and the same for secondary and tertiary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
+Every button fill has a matching label token — `color.component.btn.primary` with `color.component.btn.label-primary`, and the same for secondary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
 
 Every interactive control has a visible hover state, a visible focus ring drawn from `color.theme.secondary`, and a disabled state that is legibly disabled rather than merely faded. Interactive controls meet the WCAG target-size minimum — never reduce it to fit a layout.
 
