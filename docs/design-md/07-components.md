@@ -6,7 +6,7 @@ Write idiomatic code for whichever stack you are in. Correctness comes from bind
 
 ### Buttons
 
-One primary action per screen. `button-primary` is the affirmative action; `button-secondary` carries everything else; a third, quieter treatment handles tertiary actions. A screen with three primary buttons has no primary button.
+One primary action per screen. `btn-primary` is the affirmative action; `btn-secondary` carries everything else.
 
 Every button fill has a matching label token — `color.component.btn.primary` with `color.component.btn.label-primary`, and the same for secondary and tertiary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
 
