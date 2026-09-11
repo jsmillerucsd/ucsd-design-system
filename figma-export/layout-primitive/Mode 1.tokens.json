@@ -1,5 +1,5 @@
 {
-  "spacing": {
+  "space": {
     "0": {
       "$type": "number",
       "$value": 0,
