@@ -119,6 +119,18 @@ typography:
     lineHeight: "15px"
     fontWeight: 900
     letterSpacing: 1.75
+  "button-primary":
+    fontFamily: "'Brix Sans'"
+    fontSize: "15px"
+    lineHeight: "23px"
+    fontWeight: 900
+    letterSpacing: 1.4
+  "button-secondary":
+    fontFamily: "'Brix Sans'"
+    fontSize: "15px"
+    lineHeight: "23px"
+    fontWeight: 900
+    letterSpacing: 1.4
   "body":
     fontFamily: "'Brix Sans'"
   "mono":
