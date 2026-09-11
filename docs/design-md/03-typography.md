@@ -7,6 +7,9 @@ Two faces, both from the UCSD brand library.
 
 Both are licensed faces, not open webfonts. Confirm the web licence before shipping either.
 
+Eyebrow text is always rendered in uppercase through the component style.
+Do not rely on authors to manually capitalize eyebrow content.
+
 ### The roles
 
 Type is organised by **role**, not by an abstract scale: `type.h1`, `type.h2`, `type.h2-small`, `type.h3`, `type.subheading`, `type.eyebrow`, `type.button`, and `type.body` at small, medium and large.
