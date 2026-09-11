@@ -1042,14 +1042,14 @@ Two roles are deliberately *not* symmetrical between modes — links and primary
 
 Two faces, both from the UCSD brand library.
 
-- **Brix Sans** is the working face, carried by `type.body.*`, `type.h2` and `type.button`. All body copy, all UI, all labels. Neutral, high legibility at small sizes, unremarkable in the way a working face should be.
+- **Brix Sans** is the working face, carried by `type.body.*`, `type.h2` and `type.btn`. All body copy, all UI, all labels. Neutral, high legibility at small sizes, unremarkable in the way a working face should be.
 - **Refrigerator Deluxe** is the display face, carried by `type.h1`, `type.h3` and `type.eyebrow`. Condensed and tall. **Headings and hero type only — never body copy, never anything set at a reading size.** Its whole value is scale contrast; used small it is simply hard to read.
 
 Both are licensed faces, not open webfonts. Confirm the web licence before shipping either.
 
 ### The roles
 
-Type is organised by **role**, not by an abstract scale: `type.h1`, `type.h2`, `type.h2-small`, `type.h3`, `type.subheading`, `type.eyebrow`, `type.button`, and `type.body` at small, medium and large.
+Type is organised by **role**, not by an abstract scale: `type.h1`, `type.h2`, `type.h2-small`, `type.h3`, `type.subheading`, `type.eyebrow`, `type.btn`, and `type.body` at small, medium and large.
 
 The role names echo HTML tags, but the mapping is not automatic. Pick the role by the visual weight the content needs, then choose the heading *element* for the document outline independently — a section heading on a dense listing page may want `h3` styling under an `<h2>`.
 
