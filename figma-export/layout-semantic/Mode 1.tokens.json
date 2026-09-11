@@ -10,7 +10,7 @@
         ],
         "com.figma.aliasData": {
           "targetVariableId": "VariableID:7839f88a2feea8e9d3660446a10a2d55c4f644e9/-1:-1",
-          "targetVariableName": "spacing/sm-12",
+          "targetVariableName": "spacing/sm",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
@@ -26,7 +26,7 @@
         ],
         "com.figma.aliasData": {
           "targetVariableId": "VariableID:3c835e51bfd2ced1146f657282bdd523b6e60828/-1:-1",
-          "targetVariableName": "spacing/lg-24",
+          "targetVariableName": "spacing/lg",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
@@ -44,7 +44,7 @@
         ],
         "com.figma.aliasData": {
           "targetVariableId": "VariableID:7839f88a2feea8e9d3660446a10a2d55c4f644e9/-1:-1",
-          "targetVariableName": "spacing/sm-12",
+          "targetVariableName": "spacing/sm",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
@@ -52,7 +52,7 @@
     }
   },
   "icon": {
-    "sm-8": {
+    "sm": {
       "$type": "number",
       "$value": 8,
       "$extensions": {
@@ -62,13 +62,13 @@
         ],
         "com.figma.aliasData": {
           "targetVariableId": "VariableID:b8c4c8b2c65d44977cc281897bb2b05c6fa49a14/-1:-1",
-          "targetVariableName": "spacing/xs-8",
+          "targetVariableName": "spacing/xs",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
       }
     },
-    "lg-16": {
+    "lg": {
       "$type": "number",
       "$value": 16,
       "$extensions": {
@@ -78,7 +78,7 @@
         ],
         "com.figma.aliasData": {
           "targetVariableId": "VariableID:73199c44f8d8d5e19fcd8d0ca799c359ef1fc451/-1:-1",
-          "targetVariableName": "spacing/md-16",
+          "targetVariableName": "spacing/md",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
@@ -94,7 +94,7 @@
         ]
       }
     },
-    "xl-24": {
+    "xl": {
       "$type": "number",
       "$value": 24,
       "$extensions": {
@@ -104,14 +104,14 @@
         ],
         "com.figma.aliasData": {
           "targetVariableId": "VariableID:3c835e51bfd2ced1146f657282bdd523b6e60828/-1:-1",
-          "targetVariableName": "spacing/lg-24",
+          "targetVariableName": "spacing/lg",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
       }
     }
   },
-  "button": {
+  "btn": {
     "gap": {
       "$type": "number",
       "$value": 12,
@@ -122,7 +122,7 @@
         ],
         "com.figma.aliasData": {
           "targetVariableId": "VariableID:7839f88a2feea8e9d3660446a10a2d55c4f644e9/-1:-1",
-          "targetVariableName": "spacing/sm-12",
+          "targetVariableName": "spacing/sm",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
@@ -130,15 +130,15 @@
     },
     "padding-y": {
       "$type": "number",
-      "$value": 8,
+      "$value": 12,
       "$extensions": {
         "com.figma.variableId": "VariableID:7014:2459",
         "com.figma.scopes": [
           "ALL_SCOPES"
         ],
         "com.figma.aliasData": {
-          "targetVariableId": "VariableID:b8c4c8b2c65d44977cc281897bb2b05c6fa49a14/-1:-1",
-          "targetVariableName": "spacing/xs-8",
+          "targetVariableId": "VariableID:7839f88a2feea8e9d3660446a10a2d55c4f644e9/-1:-1",
+          "targetVariableName": "spacing/sm",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
@@ -154,7 +154,7 @@
         ],
         "com.figma.aliasData": {
           "targetVariableId": "VariableID:3c835e51bfd2ced1146f657282bdd523b6e60828/-1:-1",
-          "targetVariableName": "spacing/lg-24",
+          "targetVariableName": "spacing/lg",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
@@ -162,15 +162,15 @@
     },
     "radius": {
       "$type": "number",
-      "$value": 8,
+      "$value": 4,
       "$extensions": {
         "com.figma.variableId": "VariableID:7020:1068",
         "com.figma.scopes": [
           "ALL_SCOPES"
         ],
         "com.figma.aliasData": {
-          "targetVariableId": "VariableID:50634d0aea3c1faed1e669572b54348339ec0a47/-1:-1",
-          "targetVariableName": "radius/rounded-8",
+          "targetVariableId": "VariableID:869afb0750d616d5ac9aaf7c8813efd869fb63bd/-1:-1",
+          "targetVariableName": "radius/rounded-sm",
           "targetVariableSetId": "VariableCollectionId:f7446ba8bb2e8b942a23f521b9104d82699d7451/-1:-1",
           "targetVariableSetName": "layout-primitive"
         }
