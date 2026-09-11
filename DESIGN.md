@@ -121,14 +121,14 @@ typography:
     letterSpacing: 1.75
   "button-primary":
     fontFamily: "'Brix Sans'"
-    fontSize: "15px"
-    lineHeight: "23px"
+    fontSize: "16px"
+    lineHeight: "17px"
     fontWeight: 900
     letterSpacing: 1.4
   "button-secondary":
     fontFamily: "'Brix Sans'"
-    fontSize: "15px"
-    lineHeight: "23px"
+    fontSize: "16px"
+    lineHeight: "17px"
     fontWeight: 900
     letterSpacing: 1.4
   "body":
@@ -164,17 +164,17 @@ components:
   button-primary:
     backgroundColor: "{colors.component-btn-primary}"
     textColor: "{colors.component-btn-label-primary}"
-    rounded: "{rounded.rounded-8}"
+    rounded: "{rounded.rounded-sm}"
     typography: "{typography.button}"
   button-secondary:
     backgroundColor: "{colors.component-btn-secondary}"
     textColor: "{colors.component-btn-label-secondary}"
-    rounded: "{rounded.rounded-8}"
+    rounded: "{rounded.rounded-sm}"
     typography: "{typography.button}"
   button-tertiary:
     backgroundColor: "{colors.component-btn-tertiary}"
     textColor: "{colors.component-btn-label-tertiary}"
-    rounded: "{rounded.rounded-8}"
+    rounded: "{rounded.rounded-sm}"
     typography: "{typography.button}"
 breakpoints:
   sm: "576px"
@@ -1079,7 +1079,7 @@ Long-form content is constrained to `container.prose`, a measure chosen for read
 
 One spacing scale, based on a four-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
 
-Spacing steps carry their pixel value in the name — `space.xxs-4` through `space.xxxl-64`. Both frameworks' numeric utilities are built on the same step, so `.p-4` in Bootstrap, `p-4` in Tailwind and `space.md-16` are one value reached three ways. The alignment holds across the full scale.
+Spacing steps carry their pixel value in the name — `space.xxs` through `space.xxxl`. Both frameworks' numeric utilities are built on the same step, so `.p-4` in Bootstrap, `p-4` in Tailwind and `space.md` are one value reached three ways. The alignment holds across the full scale.
 
 **Breakpoints are Bootstrap 5's**, matched exactly by `breakpoint.*`. This is not a preference — Bootstrap utilities and Tailwind variants both compile from these values, and a mismatch produces bugs that take days to find. Never invent a breakpoint, and never write a media query against a value that isn't in the scale.
 
