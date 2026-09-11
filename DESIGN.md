@@ -89,9 +89,9 @@ typography:
     letterSpacing: 0
   "eyebrow":
     fontFamily: "'Refrigerator Deluxe'"
-    fontSize: "8px"
-    lineHeight: "10px"
-    fontWeight: 700
+    fontSize: "14px"
+    lineHeight: "16px"
+    fontWeight: 900
     letterSpacing: .8
   "h1":
     fontFamily: "'Refrigerator Deluxe'"
