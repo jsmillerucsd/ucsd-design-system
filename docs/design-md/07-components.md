@@ -8,11 +8,13 @@ Write idiomatic code for whichever stack you are in. Correctness comes from bind
 
 One primary action per screen. `btn-primary` is the affirmative action; `btn-secondary` carries everything else.
 
-Every button fill has a matching label token — `color.component.btn.primary` with `color.component.btn.label-primary`, and the same for secondary and tertiary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
+Every button fill has a matching label token — `color.component.btn.primary` with `color.component.btn.label-primary`, and the same for secondary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
 
 Every interactive control has a visible hover state, a visible focus ring drawn from `color.theme.secondary`, and a disabled state that is legibly disabled rather than merely faded. Interactive controls meet the WCAG target-size minimum — never reduce it to fit a layout.
 
 Label buttons with the verb for what happens: "Apply now", "Download the form". Never "Click here", never "Learn more" as the only label on a page with several of them.
+
+Button labels are rendered in uppercase through the component style. Do not rely on authors to manually capitalize button text.
 
 ### Forms
 
