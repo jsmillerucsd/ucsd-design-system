@@ -260,7 +260,7 @@ modes:
 
 ## Overview
 
-This is a evolution of Decorator V5, UCSD's web design system since 2017. Decorator V5 runs on Bootstrap 3, jQuery, and Glyphicons, with Teko as the display face and Roboto for body. It serves a broad mix of pages: recruitment marketing, task tools, faculty profiles, and CMS content.
+This is an evolution of Decorator V5, UCSD's web design system since 2017. Decorator V5 runs on Bootstrap 3, jQuery, and Glyphicons, with Teko as the display face and Roboto for body. It serves a broad mix of pages: recruitment marketing, task tools, faculty profiles, and CMS content.
 
 What carries forward: the UCSD color identity (navy, blue, gold), the structural page shell (masthead with wordmark, navbar with gold active indicator, breadcrumbs, Regents copyright footer), and the commitment to a shared system across campus.
 
