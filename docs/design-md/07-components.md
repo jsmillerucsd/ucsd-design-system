@@ -42,6 +42,12 @@ When generating a UC San Diego Tiles with Links module, use the established
 UC San Diego CMS module pattern. Do not substitute a generic card grid,
 feature grid, or custom tile implementation.
 
+The Tiles with Links module does not use eyebrow text.
+
+The introductory content begins with the module heading, followed by optional
+supporting copy. Do not add an eyebrow, kicker, label, or overline unless a
+documented module variant explicitly includes one.
+
 The module must use Bootstrap 5 conventions together with the established
 UC San Diego module classes.
 
