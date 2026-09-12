@@ -18,8 +18,7 @@ Button labels are rendered in uppercase through the component style. Do not rely
 
 ## Header
 
-Every generated UC San Diego department or CMS page must use the established
-UC San Diego site header.
+Every generated UC San Diego department or CMS page must use the established UC San Diego site header.
 
 The header is a fixed site-shell pattern.
 
@@ -29,33 +28,37 @@ The only content that changes between sites is the site name and its destination
 
 ### Visual contract
 
-The header must preserve the established visual structure:
+The header must preserve the established UC San Diego CMS title-header treatment:
 
 - White background
-- Thin light-gray rule at the very top
+- `92px` total height
+- `Roboto, sans-serif`
+- Full viewport width
+- `1.5em 0` vertical padding on `.layout-title`
 - Site name aligned left
 - UC San Diego wordmark aligned right
-- Both elements vertically centered within the same header row
-- Generous horizontal spacing
-- Large desktop site-name treatment
-- UC San Diego logo/wordmark presented at the established scale
-- No additional utility links, buttons, icons, search controls, or navigation
-  inserted into this row
+- Site name and wordmark vertically centered in the same row
+- Standard Bootstrap/UC San Diego content container
+- Site name in black uppercase text
+- Site name size `21.6px`
+- Site name letter spacing `1px`
+- Large site title offset downward with `margin-top: 5px`
+- UC San Diego wordmark approximately `225px` wide on desktop
+- No additional utility links, search controls, buttons, icons, navigation, or secondary branding inside this row
 - No colored background
-- No rounded container
-- No shadow
 - No card treatment
+- No rounded corners
+- No shadow
 
-The header must visually match the established CMS header pattern.
+The header must visually match the established UC San Diego CMS header.
 
 Do not place the UC San Diego wordmark on the left.
 
 Do not center the site name.
 
-Do not replace the UC San Diego wordmark with plain text styled approximately
-like the logo.
+Do not replace the UC San Diego wordmark with approximate plain text.
 
-Do not add a secondary subtitle or department label inside this row.
+Do not add a subtitle, breadcrumb, page title, slogan, or department descriptor inside the header row.
 
 ### Structure
 
@@ -85,8 +88,12 @@ Use the established structure:
     <a
       class="title-logo"
       href="https://www.ucsd.edu"
+      aria-label="UC San Diego"
     >
-      UC San Diego
+      <img
+        src="OFFICIAL_UC_SAN_DIEGO_WORDMARK_ASSET"
+        alt="UC San Diego"
+      >
     </a>
 
   </div>
