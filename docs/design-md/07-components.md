@@ -1122,7 +1122,7 @@ Pagination uses circular indicators.
 Each pagination control must have an interactive target of:
 
 ```text
-24px × 24px
+14px × 14px
 ```
 
 The visible circle remains smaller than the interactive target.
@@ -1149,12 +1149,12 @@ There must be exactly:
 2px
 ```
 
-between each 24×24 pagination target.
+between each 14×14 pagination target.
 
-The 24×24 target must not be reduced merely to make the visible controls more
+The 14×14 target must not be reduced merely to make the visible controls more
 compact.
 
-Use a pseudo-element or equivalent technique so the button remains 24×24
+Use a pseudo-element or equivalent technique so the button remains 14×14
 while the visual dot remains small.
 
 Example:
@@ -1175,8 +1175,8 @@ Example:
 [data-bs-target] {
   position: relative;
 
-  width: 24px;
-  height: 24px;
+  width: 14px;
+  height: 14px;
 
   margin: 0;
   padding: 0;
@@ -1514,7 +1514,7 @@ For multi-slide heroes:
 - provide accessible names for pagination indicators;
 - provide an accessible name for play/pause;
 - indicate the active pagination item;
-- preserve 24×24 pagination targets;
+- preserve 14×14 pagination targets;
 - ensure controls have visible focus states;
 - keep static headings and blurbs out of the tab order;
 - ensure automatic rotation can be paused;
@@ -1583,7 +1583,7 @@ For Hero modules specifically:
 - keep the visible arrow smaller than its interactive target;
 - use the unified bottom-center pagination/playback capsule;
 - use `rgba(0, 0, 0, .5)` for the capsule background;
-- use 24×24 pagination click targets;
+- use 14×14 pagination click targets;
 - use approximately 10×10 visible pagination circles;
 - use a 1px white ring for inactive pagination indicators;
 - use a solid white active pagination indicator;
