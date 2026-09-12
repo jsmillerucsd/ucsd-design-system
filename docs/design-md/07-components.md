@@ -59,6 +59,8 @@ The Tiles with Links module supports three approved module background treatments
 Apply the selected background treatment to the constrained module panel inside
 the page container. Do not apply the module background to the full viewport.
 
+Do not use navy tiles on a navy module background — do not place a solid-color tile on a module background of the same color. Tile colors must remain visually distinct from the module background so that individual tiles read as separate interactive elements.
+
 The module header may include:
 
 - a headline that take up one or two lines
