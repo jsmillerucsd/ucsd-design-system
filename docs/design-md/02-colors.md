@@ -652,7 +652,7 @@ Examples include:
 - Text Block → Navy background with white text
 - Callout Content → Blue or Navy content boxes
 - Call to Action → White or Sand background
-- Tiles with Links → Blue only
+- Tiles with Links → Blue, navy, yellow, or turquoise
 - Standard content → White
 - Alternate light section → Sand
 
