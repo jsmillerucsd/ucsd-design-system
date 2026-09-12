@@ -96,19 +96,19 @@ typography:
   "h1":
     fontFamily: "'Refrigerator Deluxe'"
     fontSize: "56px"
-    lineHeight: "50px"
+    lineHeight: "56px"
     fontWeight: 900
     letterSpacing: .6
   "h2":
     fontFamily: "'Brix Sans'"
     fontSize: "40px"
-    lineHeight: "36px"
+    lineHeight: "40px"
     fontWeight: 900
     letterSpacing: .5
   "h3":
     fontFamily: "'Refrigerator Deluxe'"
     fontSize: "24px"
-    lineHeight: "26px"
+    lineHeight: "24px"
     fontWeight: 900
     letterSpacing: 0
   "subheading":
@@ -119,14 +119,14 @@ typography:
     letterSpacing: 1.75
   "btn-primary":
     fontFamily: "'Brix Sans'"
-    fontSize: "16px"
-    lineHeight: "16px"
+    fontSize: "15px"
+    lineHeight: "20px"
     fontWeight: 900
     letterSpacing: 1.4
   "btn-secondary":
     fontFamily: "'Brix Sans'"
-    fontSize: "16px"
-    lineHeight: "16px"
+    fontSize: "15px"
+    lineHeight: "20px"
     fontWeight: 900
     letterSpacing: 1.4
   "body":
