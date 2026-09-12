@@ -1183,6 +1183,8 @@ The introductory content begins with the module heading, followed by optional su
 
 The module must use Bootstrap 5 conventions together with the established UC San Diego module classes.
 
+There is no minimum or maximum number of tiles.
+
 ### Module background and optional header content
 
 The Tiles with Links module supports three approved module background treatments:
@@ -1197,9 +1199,10 @@ the page container. Do not apply the module background to the full viewport.
 The module header may include:
 
 - a headline that take up one or two lines
+- a blurb
 - a module-level button.
 
-All three are optional.
+All three are optional, but a blurb should never appear without a headline.
 
 The module must still render correctly when any or all of these elements are
 omitted.
@@ -1220,6 +1223,14 @@ When omitted:
 For navy module backgrounds, use the appropriate inverse text and control
 treatments so that headings, supporting text, links, and buttons maintain
 required contrast.
+
+#### Blurb
+
+The blurb is optional supporting copy that appears directly beneath the module
+headline and above the tile grid.
+
+Use it to briefly explain the purpose of the module or provide context for the
+links that follow.
 
 #### Visual contract
 
