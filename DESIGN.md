@@ -1626,9 +1626,17 @@ The Hero module must preserve the following visual relationships:
   introductory module.
 - Headline, blurb, and button remain grouped as one content block.
 - Carousel controls remain visually separate from the hero content block.
-- Pagination appears near the bottom center of a multi-slide hero.
-- Previous and next controls appear at the lateral edges of a multi-slide
-  hero.
+- Previous and next controls appear at the left and right edges of a
+  multi-slide hero and are vertically centered.
+- Previous and next controls use the established large chevron treatment.
+- Pagination indicators and the play/pause control appear together inside one
+  unified control group near the bottom center of a multi-slide hero.
+- The unified carousel control group uses a dark navy rounded capsule
+  containing the pagination indicators followed by the play/pause control.
+- The active pagination indicator is filled white.
+- Inactive pagination indicators are transparent with a white outline.
+- The play/pause control appears inside the same capsule as the pagination
+  indicators rather than as a separate floating button.
 - A play/pause control is provided when slides advance automatically.
 
 Do not constrain the hero image itself to a card-sized panel inside the page
@@ -1636,6 +1644,12 @@ container.
 
 Do not convert the established hero into a two-column image-and-text layout
 unless a separately documented hero variant explicitly uses that composition.
+
+Do not visually separate the play/pause control from the pagination
+indicators.
+
+Do not substitute generic Bootstrap arrow graphics for the established UC San
+Diego carousel chevrons.
 
 ### Canonical hero variants
 
@@ -1975,8 +1989,6 @@ The canonical hierarchy is:
 
 - `<section class="hero-homepage">`
 - Bootstrap 5 `.carousel`
-- `.carousel-indicators`
-- play/pause control
 - `.carousel-inner`
 - `.carousel-item`
 - hero media or approved pre-canned background
@@ -1985,12 +1997,250 @@ The canonical hierarchy is:
 - headline
 - optional blurb
 - optional button
-- previous control
-- next control
+- previous control with UC San Diego chevron
+- next control with UC San Diego chevron
+- unified `.hero-carousel-controls`
+  - `.carousel-indicators`
+  - play/pause control
 
 For a static one-slide hero, carousel controls and pagination are omitted.
 
 For a multi-slide hero, preserve the complete carousel control structure.
+
+The pagination indicators and play/pause control are siblings inside one
+shared bottom-center carousel-control container.
+
+Do not position the play/pause button independently from the pagination
+indicators.
+
+### Previous and next arrow treatment
+
+Multi-slide heroes use the established UC San Diego previous and next
+chevrons.
+
+The arrows:
+
+- are positioned at the left and right edges of the hero;
+- are vertically centered within the hero;
+- use a large, thick chevron shape;
+- use a light, semi-opaque white or pale-blue treatment;
+- use a subtle dark shadow so the chevron remains visible over both light and
+  dark imagery;
+- have no circular background;
+- have no pill background;
+- have no visible rectangular button background;
+- do not use a thin line-arrow icon;
+- do not use Bootstrap's default carousel icon artwork.
+
+The arrow itself should read as a substantial chevron rather than a small icon.
+
+The clickable button area may be larger than the visible chevron to provide an
+appropriate pointer and touch target.
+
+The larger hit area must remain visually transparent.
+
+The visual treatment should resemble:
+
+```text
+‹                                  ›
+```
+
+with each symbol rendered as a thick chevron rather than as a typographic
+less-than or greater-than character.
+
+#### Arrow implementation
+
+Use Bootstrap 5 button behavior while replacing the default icon artwork with
+the established chevron treatment.
+
+A suitable implementation is:
+
+```html
+<button
+  class="carousel-control-prev"
+  type="button"
+  data-bs-target="#heroCarousel"
+  data-bs-slide="prev"
+>
+  <span
+    class="hero-carousel-chevron hero-carousel-chevron-prev"
+    aria-hidden="true"
+  ></span>
+  <span class="visually-hidden">Previous slide</span>
+</button>
+
+<button
+  class="carousel-control-next"
+  type="button"
+  data-bs-target="#heroCarousel"
+  data-bs-slide="next"
+>
+  <span
+    class="hero-carousel-chevron hero-carousel-chevron-next"
+    aria-hidden="true"
+  ></span>
+  <span class="visually-hidden">Next slide</span>
+</button>
+```
+
+The visual chevron may be constructed with CSS:
+
+```css
+.carousel-control-prev,
+.carousel-control-next {
+  width: 8%;
+  min-width: 64px;
+
+  border: 0;
+  background: transparent;
+
+  opacity: 1;
+}
+
+.hero-carousel-chevron {
+  display: block;
+
+  width: 32px;
+  height: 32px;
+
+  border-top: 11px solid rgba(255, 255, 255, .68);
+  border-right: 11px solid rgba(255, 255, 255, .68);
+
+  filter: drop-shadow(0 2px 1px rgba(24, 43, 73, .45));
+}
+
+.hero-carousel-chevron-prev {
+  transform: rotate(-135deg);
+}
+
+.hero-carousel-chevron-next {
+  transform: rotate(45deg);
+}
+```
+
+Adjust dimensions only as needed to reproduce the established UC San Diego
+chevron proportion.
+
+Do not fall back to:
+
+```html
+<span class="carousel-control-next-icon"></span>
+```
+
+or:
+
+```html
+<span class="carousel-control-prev-icon"></span>
+```
+
+because Bootstrap's default carousel icons do not reproduce the established
+UC San Diego hero controls.
+
+### Carousel control group
+
+A multi-slide hero uses one unified bottom-center control group for pagination
+and play/pause.
+
+The control group:
+
+- is horizontally centered near the bottom of the hero;
+- uses a dark navy background;
+- uses a fully rounded pill or capsule shape;
+- contains all pagination indicators in a single horizontal row;
+- places the play/pause control to the right of the pagination indicators;
+- keeps indicators and play/pause vertically centered;
+- uses compact, consistent spacing;
+- remains visually distinct from the hero background.
+
+The control group should read as one interface element.
+
+Do not render the pagination dots as one floating element and the play/pause
+button as another.
+
+Do not give the play/pause button its own separate circular or pill-shaped
+background.
+
+Do not add a large gap between the final pagination indicator and the
+play/pause control.
+
+The visual relationship should resemble:
+
+```text
+╭──────────────────────────────────────╮
+│ ○  ●  ○  ○  ○  ○  ○      Ⅱ       │
+╰──────────────────────────────────────╯
+```
+
+The number of pagination indicators must equal the number of slides.
+
+#### Control group styling
+
+Use the established visual treatment:
+
+```css
+.hero-carousel-controls {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  z-index: 8;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 8px 14px;
+  border-radius: 999px;
+
+  background: #182b49;
+  transform: translateX(-50%);
+}
+
+.hero-carousel-controls .carousel-indicators {
+  position: static;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 0;
+}
+
+.hero-carousel-controls .carousel-indicators [data-bs-target] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+
+  border: 2px solid #fff;
+  border-radius: 50%;
+
+  background: transparent;
+  opacity: 1;
+}
+
+.hero-carousel-controls .carousel-indicators .active {
+  background: #fff;
+}
+
+.hero-carousel-toggle {
+  position: static;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+  color: #fff;
+}
+```
+
+Do not use Bootstrap's default indicator rectangles.
+
+The indicators must use the established circular-dot treatment.
 
 ### Bootstrap 5 requirements
 
@@ -2006,10 +2256,15 @@ Replace legacy patterns as follows:
 - `data-slide="next"` → `data-bs-slide="next"`
 - `data-slide-to` → `data-bs-slide-to`
 - `data-target` → `data-bs-target`
-- Bootstrap 3 glyphicon controls → Bootstrap 5 carousel controls or the
-  established UC San Diego control treatment.
+- Bootstrap 3 glyphicon controls → the documented UC San Diego chevron
+  treatment using Bootstrap 5 carousel behavior.
 
 Use `<button>` elements for carousel indicators and carousel controls.
+
+Bootstrap 5 behavior does not require Bootstrap's default visual treatment.
+
+Use Bootstrap 5 for carousel mechanics while preserving the established UC San
+Diego visual treatment for arrows, pagination and playback controls.
 
 Do not add `tabindex="0"` to headings or paragraphs solely to make static text
 keyboard focusable.
@@ -2026,33 +2281,6 @@ keyboard focusable.
     class="carousel slide"
     data-bs-ride="carousel"
   >
-
-    <div class="carousel-indicators">
-      <button
-        type="button"
-        data-bs-target="#heroCarousel"
-        data-bs-slide-to="0"
-        class="active"
-        aria-current="true"
-        aria-label="Slide 1"
-      ></button>
-
-      <button
-        type="button"
-        data-bs-target="#heroCarousel"
-        data-bs-slide-to="1"
-        aria-label="Slide 2"
-      ></button>
-    </div>
-
-    <button
-      class="hero-carousel-toggle"
-      type="button"
-      aria-label="Pause carousel"
-      aria-pressed="false"
-    >
-      <span aria-hidden="true">Pause</span>
-    </button>
 
     <div class="carousel-inner">
 
@@ -2104,6 +2332,13 @@ keyboard focusable.
                 Supporting copy is optional.
               </p>
 
+              <a
+                class="btn btn-lg btn-primary"
+                href="#"
+              >
+                Primary action
+              </a>
+
             </div>
           </div>
 
@@ -2119,7 +2354,7 @@ keyboard focusable.
       data-bs-slide="prev"
     >
       <span
-        class="carousel-control-prev-icon"
+        class="hero-carousel-chevron hero-carousel-chevron-prev"
         aria-hidden="true"
       ></span>
       <span class="visually-hidden">Previous slide</span>
@@ -2132,11 +2367,57 @@ keyboard focusable.
       data-bs-slide="next"
     >
       <span
-        class="carousel-control-next-icon"
+        class="hero-carousel-chevron hero-carousel-chevron-next"
         aria-hidden="true"
       ></span>
       <span class="visually-hidden">Next slide</span>
     </button>
+
+    <div class="hero-carousel-controls">
+
+      <div class="carousel-indicators">
+
+        <button
+          type="button"
+          data-bs-target="#heroCarousel"
+          data-bs-slide-to="0"
+          class="active"
+          aria-current="true"
+          aria-label="Slide 1"
+        ></button>
+
+        <button
+          type="button"
+          data-bs-target="#heroCarousel"
+          data-bs-slide-to="1"
+          aria-label="Slide 2"
+        ></button>
+
+      </div>
+
+      <button
+        class="hero-carousel-toggle"
+        type="button"
+        aria-label="Pause carousel"
+        aria-pressed="false"
+      >
+        <span
+          class="hero-carousel-pause"
+          aria-hidden="true"
+        >
+          Ⅱ
+        </span>
+
+        <span
+          class="hero-carousel-play"
+          aria-hidden="true"
+          hidden
+        >
+          ▶
+        </span>
+      </button>
+
+    </div>
 
   </div>
 </section>
@@ -2144,15 +2425,26 @@ keyboard focusable.
 
 ### Pagination
 
-Multi-slide heroes use bottom-centered pagination indicators.
+Multi-slide heroes use circular pagination indicators inside the unified
+bottom-center carousel-control group.
 
 The indicators:
 
 - represent every slide in the carousel;
 - clearly distinguish the active slide;
-- remain visible against every supported hero background;
+- use a circular shape;
+- use a white outline for inactive slides;
+- use a solid white fill for the active slide;
+- remain visible against the navy control-group background;
 - are interactive controls rather than decorative dots;
 - have accessible labels identifying the slide they activate.
+
+Pagination indicators and play/pause belong to the same dark navy capsule.
+
+Do not position the pagination indicators independently from the play/pause
+control.
+
+Do not use Bootstrap's default rectangular indicator appearance.
 
 Do not hide pagination visually while leaving it available only to assistive
 technology.
@@ -2166,25 +2458,51 @@ edges of the hero.
 
 Controls must:
 
-- remain visible against the hero background;
+- remain vertically centered within the hero;
+- use the established large chevron visual treatment;
+- use a light semi-transparent color;
+- include a subtle dark shadow for visibility;
+- have no visible surrounding circle, pill or rectangle;
 - have accessible names;
-- use Bootstrap 5 button-based carousel controls;
-- remain independent of the headline and button content.
+- use Bootstrap 5 button-based carousel behavior;
+- remain independent of the headline and button content;
+- remain outside the bottom-center pagination/playback control group.
+
+The interactive button area may extend beyond the visible chevron to provide
+a sufficiently large target.
 
 Do not position previous or next controls inside the hero text block.
+
+Do not use Bootstrap's default previous and next icon artwork.
+
+Do not place the arrows inside circular buttons.
+
+Do not place the arrows on dark translucent squares or pills.
 
 ### Play and pause
 
 Automatically advancing hero carousels provide a persistent play/pause
 control.
 
+The play/pause control is part of the same dark navy bottom-center capsule as
+the pagination indicators.
+
+It appears immediately after the pagination indicators.
+
+It does not receive its own separate background, circle, capsule, or floating
+container.
+
 When the carousel is playing:
 
-- the control indicates that activating it will pause the carousel.
+- show the pause symbol;
+- the control's accessible name indicates that activating it will pause the
+  carousel.
 
 When the carousel is paused:
 
-- the control indicates that activating it will resume the carousel.
+- show the play symbol;
+- the control's accessible name indicates that activating it will resume the
+  carousel.
 
 Update both the visible control state and its accessible name.
 
@@ -2215,6 +2533,10 @@ For multi-slide heroes:
 - provide accessible names for previous, next, play/pause and pagination
   controls;
 - indicate the active pagination item;
+- keep previous and next buttons large enough to provide an appropriate
+  interactive target even though only the chevron itself is visible;
+- maintain the visual grouping of pagination and playback controls without
+  merging their individual accessible functions;
 - do not place static headings or blurbs in the tab order;
 - ensure controls have visible focus states;
 - ensure all text maintains required contrast throughout the complete
@@ -2231,8 +2553,9 @@ to the document outline while applying the appropriate hero typography role.
 ### Generation rules
 
 When an established UC San Diego Hero module is requested or applicable,
-reproduce its documented layout envelope, carousel anatomy, control behavior
-and established classes. Do not merely imitate its visual appearance.
+reproduce its documented layout envelope, carousel anatomy, control behavior,
+control grouping, arrow treatment, and established classes. Do not merely
+imitate its general visual appearance.
 
 When selecting a Hero presentation, choose one of the documented canonical
 variants:
@@ -2260,9 +2583,21 @@ For Hero modules specifically:
 - preserve left or center alignment when specified;
 - preserve deliberate headline breaks when specified;
 - preserve the documented text-contrast treatment;
-- preserve pagination, previous/next controls and play/pause behavior on
-  multi-slide heroes;
-- use Bootstrap 5 carousel markup;
+- preserve previous and next controls on multi-slide heroes;
+- use the established large, thick, light-colored chevron treatment for
+  previous and next controls;
+- vertically center previous and next chevrons at the lateral edges of the
+  hero;
+- preserve the subtle arrow shadow;
+- keep the arrow button background visually transparent;
+- preserve the unified bottom-center pagination and play/pause control group;
+- render pagination indicators and play/pause inside one dark navy rounded
+  capsule;
+- use circular pagination indicators;
+- render the active pagination indicator as solid white;
+- render inactive pagination indicators as white outlines;
+- keep the play/pause control inside the same capsule as the pagination;
+- use Bootstrap 5 carousel behavior and markup;
 - preserve established UC San Diego button treatments;
 - preserve documented photographic and pre-canned background options;
 - use only documented style modifications.
@@ -2273,6 +2608,13 @@ Do not:
 - convert the hero image into a rounded card;
 - add an eyebrow or kicker without a documented variant;
 - omit carousel pagination from a multi-slide hero;
+- separate the play/pause control from the pagination indicators;
+- render the play/pause control as an independently floating button;
+- use Bootstrap's default rectangular carousel indicators;
+- use Bootstrap's default carousel arrow artwork;
+- render previous or next arrows inside circles, pills, squares or other
+  visible button containers;
+- substitute a thin line icon for the established thick chevron;
 - omit pause functionality from an automatically advancing carousel;
 - use obsolete Bootstrap 3 carousel markup;
 - invent new background treatments;
