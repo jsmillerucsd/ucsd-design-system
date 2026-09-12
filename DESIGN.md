@@ -1049,6 +1049,8 @@ Both are licensed faces, not open webfonts. Confirm the web licence before shipp
 
 Eyebrow text is always rendered in uppercase through the component style.
 Do not rely on authors to manually capitalize eyebrow content.
+Use the eyebrow role for short contextual labels that sit above a heading,
+such as audience, category, section type, or content context.
 
 ### The roles
 
