@@ -1201,8 +1201,7 @@ the page container. Do not apply the module background to the full viewport.
 
 The module header may include:
 
-- a headline;
-- a headline break or supporting divider treatment;
+- a headline that take up one or two lines
 - a module-level button.
 
 All three are optional.
@@ -1213,7 +1212,6 @@ omitted.
 When present:
 
 - the headline appears above the tile grid;
-- the headline break appears with the headline treatment defined by the module;
 - the module-level button appears in the header area and uses an approved UC San Diego button treatment;
 - the header content and tile grid share the same constrained module panel and horizontal alignment.
 
