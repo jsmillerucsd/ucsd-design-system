@@ -250,3 +250,46 @@ Do not use Bootstrap 3 patterns that have been removed or superseded.
 
   </div>
 </section>
+
+#### Hover behavior
+
+Tiles use the established UC San Diego scale interaction on hover.
+
+The entire `.wrapper` scales, including its background, overlay, label, and
+rounded corners. Do not animate only the background image.
+
+Use the canonical interaction:
+
+```css
+.jumbotron-tile-links .wrapper {
+  transition: transform .2s linear;
+}
+
+.jumbotron-tile-links .wrapper:hover {
+  transform: scale(1.1);
+}
+
+The tile remains in its existing grid position while scaling visually above
+its surrounding content.
+
+Do not substitute a lift, shadow, background-only zoom, or another hover
+effect for this interaction.
+
+
+I would also add keyboard-focus and reduced-motion handling **in the implementation**, even though those aren't present in the legacy CSS:
+
+```css
+.jumbotron-tile-links .wrapper:focus-within {
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jumbotron-tile-links .wrapper {
+    transition: none;
+  }
+
+  .jumbotron-tile-links .wrapper:hover,
+  .jumbotron-tile-links .wrapper:focus-within {
+    transform: none;
+  }
+}
