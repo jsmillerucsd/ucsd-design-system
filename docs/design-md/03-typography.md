@@ -12,6 +12,28 @@ Do not rely on authors to manually capitalize eyebrow content.
 Use the eyebrow role for short contextual labels that sit above a heading,
 such as audience, category, section type, or content context.
 
+### Font fallbacks
+
+Because Brix Sans and Refrigerator Deluxe are licensed faces, generated and prototype implementations must include fallback font stacks for environments where the UC San Diego brand fonts are unavailable.
+
+Use the following fallback order:
+
+- **Refrigerator Deluxe** → **Teko** → a condensed sans-serif system fallback.
+- **Brix Sans** → **Source Sans** → **Roboto** → a general sans-serif system fallback.
+
+The fallback order is part of the typography contract. Do not substitute a different fallback simply because another font is available.
+
+Use the same fallback stack anywhere a typography role uses the corresponding brand face so that headings, body text, buttons, labels and other UI remain consistent when the licensed font cannot load.
+
+Recommended CSS stacks:
+
+```css
+font-family: "Refrigerator Deluxe", "Teko", "Arial Narrow", Arial, sans-serif;
+font-family: "Brix Sans", "Source Sans", "Roboto", Arial, Helvetica, sans-serif;
+```
+
+Fallbacks should preserve the intended role of the primary face as closely as possible, but they do not redefine the typography tokens. The UC San Diego brand font remains the preferred face whenever it is available.
+
 ### The roles
 
 Type is organised by **role**, not by an abstract scale: `type.h1`, `type.h2`, `type.h2-small`, `type.h3`, `type.subheading`, `type.eyebrow`, `type.button`, and `type.body` at small, medium and large.
