@@ -343,7 +343,7 @@ Also add keyboard-focus and reduced-motion handling **in the implementation**, e
 }
 ```
 
-### Hero
+## Hero
 
 When generating a UC San Diego Hero module, use the established UC San Diego
 CMS hero pattern. Do not substitute a generic marketing hero, split-screen
@@ -353,8 +353,8 @@ The Hero module must use Bootstrap 5 conventions together with the established
 UC San Diego module anatomy.
 
 The hero is a full-width visual module. Its image or approved background may
-extend across the viewport, while the hero's text content remains aligned to
-the standard page container.
+extend across the viewport, while the hero's written content remains aligned
+to the standard page container.
 
 The hero may contain one or more slides.
 
@@ -366,40 +366,49 @@ variant explicitly includes it.
 A hero slide may include:
 
 - a headline;
-- a headline break;
+- an optional deliberate headline break;
 - a blurb;
 - a module-level button.
 
 The blurb and button are optional.
 
-The headline may be left aligned or center aligned.
+Hero headlines may occupy one or two lines.
 
-Left-aligned headlines may use a headline break to divide the headline into
-two lines or phrases.
+The headline may be:
+
+- left aligned; or
+- center aligned.
+
+Left-aligned headlines may use a deliberate headline break to divide the
+headline into two phrases.
 
 Do not add an eyebrow, kicker, overline, category label, or other text above
-the hero headline unless a separately documented hero variant explicitly
-includes one.
+the hero headline unless a separately documented variant explicitly includes
+one.
 
 When optional content is omitted:
 
 - do not insert placeholder content;
-- do not reserve empty vertical space for the missing element;
-- allow the remaining hero content to retain its natural spacing.
+- do not reserve empty space for the missing element;
+- allow the remaining content to retain its natural spacing.
 
-#### Headline
+### Headline
 
-The hero headline is the primary page-level display heading.
+The hero headline is the primary display heading within the hero.
 
 Use the established `type.h1` treatment.
 
 Hero headlines use sentence case. Do not automatically transform hero
 headlines to uppercase.
 
-A left-aligned hero headline may contain a deliberate headline break.
+Hero headlines may occupy one or two lines.
 
-Use a semantic line break within the heading when the content calls for the
-established two-line treatment:
+A two-line headline may:
+
+- wrap naturally; or
+- use a deliberate semantic line break when the content calls for it.
+
+Example:
 
 ```html
 <h1>
@@ -409,23 +418,25 @@ established two-line treatment:
 </h1>
 ```
 
-The text after the break remains part of the same semantic heading. Do not
-create a second heading merely to achieve the visual line break.
+The text after the break remains part of the same semantic heading.
 
-Do not force a headline break simply because the headline wraps naturally.
+Do not create a second heading merely to produce a second visual line.
 
-#### Blurb
+Do not force a deliberate line break simply because a headline naturally
+wraps.
+
+### Blurb
 
 The blurb is optional supporting copy that appears beneath the hero headline.
 
-Use it to provide a concise explanation or context for the hero's primary
-message.
+Use the normal body-text treatment appropriate to the hero's light or dark
+text mode.
 
-Keep hero blurbs short enough that they do not dominate the visual area or
-obscure excessive portions of the hero media.
+Do not enlarge hero blurbs into a special display-text size.
 
-Use normal body-text treatment appropriate to the hero's light or dark text
-mode.
+Use the established normal body role for supporting hero copy.
+
+Keep hero blurbs concise enough that they do not dominate the visual area.
 
 Do not:
 
@@ -434,61 +445,57 @@ Do not:
 - use multiple long paragraphs;
 - place the blurb above the headline.
 
-#### Button
+### Button
 
-A hero may contain an optional module-level button beneath the blurb or
-headline.
+A hero may contain an optional module-level button beneath the headline or
+blurb.
 
 Use an approved UC San Diego button treatment.
 
 Button labels use the established button typography and uppercase treatment.
 
-When an `<a>` performs navigation, style the `<a>` itself as the button. Do
-not place a `<button>` inside an `<a>`.
+When an `<a>` performs navigation, style the `<a>` itself as the button.
 
-The button hover state follows the documented global button hover rules.
+Do not place a `<button>` inside an `<a>`.
+
+Button hover behavior depends on the surface behind the button. Do not apply a
+single hover color blindly to every hero variant.
 
 ### Visual contract
 
 The Hero module must preserve the following visual relationships:
 
 - The hero visual treatment extends across the full module width.
-- Hero text is constrained to the standard page container.
-- Text is vertically positioned within the hero rather than appearing in a
-  separate panel below it.
+- Hero text remains constrained to the standard page container.
+- Written content appears within the hero rather than in a separate panel
+  underneath it.
 - Hero content may be left aligned or center aligned.
+- Headlines may occupy one or two lines.
+- Headline, blurb, and button remain grouped as one content block.
 - Text and controls must maintain sufficient contrast against the complete
-  portion of the background behind them.
+  area behind them.
 - The hero remains visually substantial enough to function as the primary
   introductory module.
-- Headline, blurb, and button remain grouped as one content block.
-- Carousel controls remain visually separate from the hero content block.
-- Previous and next controls appear at the left and right edges of a
-  multi-slide hero and are vertically centered.
-- Previous and next controls use the established large chevron treatment.
-- Pagination indicators and the play/pause control appear together inside one
-  unified control group near the bottom center of a multi-slide hero.
-- The unified carousel control group uses a dark navy rounded capsule
-  containing the pagination indicators followed by the play/pause control.
-- The active pagination indicator is filled white.
-- Inactive pagination indicators are transparent with a white outline.
-- The play/pause control appears inside the same capsule as the pagination
-  indicators rather than as a separate floating button.
-- A play/pause control is provided when slides advance automatically.
+- Previous and next controls appear at the lateral edges of a multi-slide
+  hero.
+- Previous and next controls remain visually outside the written-content
+  region.
+- Pagination and playback controls remain visually below the written-content
+  region.
+- Pagination indicators and play/pause appear together inside one unified
+  bottom-center control capsule.
+- Carousel controls must never overlap the headline, blurb, or button at any
+  viewport size.
 
 Do not constrain the hero image itself to a card-sized panel inside the page
 container.
 
 Do not convert the established hero into a two-column image-and-text layout
-unless a separately documented hero variant explicitly uses that composition.
+unless a separately documented variant explicitly uses that composition.
 
-Do not visually separate the play/pause control from the pagination
-indicators.
+---
 
-Do not substitute generic Bootstrap arrow graphics for the established UC San
-Diego carousel chevrons.
-
-### Canonical hero variants
+## Canonical hero variants
 
 The UC San Diego Hero module has six canonical presentation variants.
 
@@ -498,18 +505,21 @@ than inventing new hero compositions.
 The six canonical variants are:
 
 1. Image with light text and optional headline break
-2. Blue Orb pre-canned background with light text
-3. Yellow pre-canned background with dark text
-4. Navy pre-canned background with light text
-5. Image with translucent text box
+2. Blue Orb grit background with light text
+3. Yellow grit background with dark text
+4. Navy grit background with light text
+5. Image with text box
 6. Image with gradient
 
-These variants share the same Hero module anatomy. They differ in background,
-text treatment, and optional style modification.
+These variants share the same Hero module anatomy.
 
-Do not interpret these as six unrelated hero components.
+They differ in background, text treatment, and optional style treatment.
 
-#### Variant 1: Image with light text
+Do not interpret them as unrelated hero components.
+
+Do not invent a seventh visual treatment merely for variety.
+
+### Variant 1: Image with light text
 
 Use an uploaded or approved hero image with light hero text.
 
@@ -518,9 +528,9 @@ The headline may be:
 - left aligned; or
 - center aligned.
 
-A left-aligned headline may use the optional headline-break treatment.
+A left-aligned headline may use a deliberate headline break.
 
-A centered headline does not use a headline break.
+The headline may occupy one or two lines.
 
 The slide may include:
 
@@ -528,13 +538,11 @@ The slide may include:
 - blurb;
 - button.
 
-Each text field is optional.
-
-Example structure:
+Example:
 
 ```html
 <div class="carousel-item active">
-  <div class="hero-media">
+  <div class="hero-media hero-image-light">
 
     <img
       src="hero-image.jpg"
@@ -542,7 +550,7 @@ Example structure:
     >
 
     <div class="container">
-      <div class="hero-content hero-content-start">
+      <div class="hero-content">
 
         <h1 class="rt-text-light">
           Hero Examples
@@ -555,7 +563,7 @@ Example structure:
         </p>
 
         <a
-          class="btn btn-lg btn-primary"
+          class="btn btn-primary"
           href="#"
         >
           Primary action
@@ -568,14 +576,16 @@ Example structure:
 </div>
 ```
 
-Do not apply an additional text box, dark-text treatment, or gradient unless
-that documented variant is being used.
+If the image requires additional readability treatment, use a separately
+documented canonical variant rather than inventing an arbitrary overlay.
 
-#### Variant 2: Blue Orb with light text
+### Variant 2: Blue Orb grit background
 
-Use the approved UC San Diego Blue Orb pre-canned hero background.
+Use the approved UC San Diego Blue Orb grit background.
 
 Use light text.
+
+The headline may occupy one or two lines.
 
 The slide may include:
 
@@ -583,24 +593,18 @@ The slide may include:
 - blurb;
 - button.
 
-Use only approved button treatments.
+This is a pre-canned branded background, not an uploaded-image modification.
 
-Do not substitute an arbitrary blue gradient, stock illustration, or custom
-abstract background for the established Blue Orb treatment.
+Do not replace the established Blue Orb grit asset with an arbitrary blue
+gradient or custom abstract background.
 
-This is a pre-canned background variant, not an uploaded-image style
-modification.
+### Variant 3: Yellow grit background
 
-#### Variant 3: Yellow with dark text
-
-Use the approved UC San Diego yellow pre-canned hero background.
+Use the approved UC San Diego yellow grit background.
 
 Use dark text.
 
-Do not use a yellow button on the yellow background because the control must
-remain visually distinguishable from the hero surface.
-
-Choose an approved contrasting button treatment.
+The headline may occupy one or two lines.
 
 The slide may include:
 
@@ -608,53 +612,90 @@ The slide may include:
 - blurb;
 - button.
 
-This is a pre-canned background variant, not an uploaded-image style
-modification.
+This is a pre-canned branded background.
 
-#### Variant 4: Navy with light text
+Do not use a button color that visually matches the yellow module background.
 
-Use the approved UC San Diego navy pre-canned hero background.
+### Variant 4: Navy grit background
+
+Use the approved UC San Diego navy grit background.
 
 Use light text.
 
+The headline may occupy one or two lines.
+
 The slide may include:
 
 - headline;
 - blurb;
 - button.
 
-Use an approved contrasting button treatment.
+This is a pre-canned branded background.
 
-This is a pre-canned background variant, not an uploaded-image style
-modification.
+Do not use a navy button on the navy grit background.
 
-#### Variant 5: Image with translucent text box
+### Variant 5: Image with text box
 
-Use this variant when an uploaded hero image is too visually complex to
-provide consistent contrast behind the hero content.
+Use this variant when an uploaded hero image needs a contained background
+behind the written content for readability.
 
-Place the headline, blurb and button together inside the established hero text
-box.
+Place the headline, blurb, and button together inside one established hero
+text box.
 
-The text box may use the approved dark-blue or light-blue treatment and the
-documented opacity option.
+The text box may use any of the following approved treatments:
 
-Keep the blurb concise so the box does not grow excessively large.
+- Blue
+- Navy
+- Translucent Blue
+- Translucent Navy
 
-The text box is a style modification available to uploaded-image slides.
+Approved values correspond to the current component color treatments:
+
+- Blue: `#00629b`
+- Navy: `#182b49`
+- Translucent Blue: `rgba(0, 98, 155, 0.8)`
+- Translucent Navy: `rgba(24, 43, 73, 0.8)`
+
+The headline may occupy one or two lines.
+
+A two-line headline may wrap naturally or use a deliberate semantic line break.
+
+Keep the blurb concise so the box does not become excessively large.
 
 Do not:
 
-- create separate boxes around individual text elements;
-- allow the box to grow into a large content panel;
-- combine the text box with the gradient or dark-text style modification.
+- create separate boxes around the headline, blurb, and button;
+- use an unapproved box color;
+- allow the box to become a large general-purpose content panel;
+- combine the text-box treatment with the gradient treatment;
+- force a single-line headline when two lines are appropriate.
 
-#### Variant 6: Image with gradient
+Example classes may include:
 
-Use this variant when an uploaded hero image needs additional contrast behind
+```html
+<div class="hero-text-box hero-text-box-blue">
+```
+
+```html
+<div class="hero-text-box hero-text-box-navy">
+```
+
+```html
+<div class="hero-text-box hero-text-box-blue-translucent">
+```
+
+```html
+<div class="hero-text-box hero-text-box-navy-translucent">
+```
+
+### Variant 6: Image with gradient
+
+Use this variant when an uploaded hero image needs additional contrast beneath
 the text while retaining an uninterrupted image treatment.
 
-Apply the established gentle blue gradient beneath the hero content.
+Apply the established gentle navy/blue gradient beneath the written content.
+
+The headline may occupy one or two lines.
 
 The slide may include:
 
@@ -662,78 +703,165 @@ The slide may include:
 - blurb;
 - button.
 
-The gradient is a style modification available to uploaded-image slides.
-
 Do not:
 
-- replace the documented gradient with a uniformly dark full-image overlay;
+- replace the documented gradient with an arbitrary uniformly dark full-image
+  overlay;
 - make the gradient visually dominate the image;
-- combine the gradient with the text-box or dark-text style modification.
+- combine the gradient with the text-box treatment.
 
-### Uploaded images versus pre-canned backgrounds
+---
 
-Hero slides have two background-source types:
+## Grit-background button colors
 
-#### Uploaded image
+The approved button colors on grit-background hero variants are:
 
-An uploaded-image slide may use exactly one of the following style
-modifications:
+- Yellow
+- Turquoise
+- Orange
+- Gold
+- Navy
 
-- no modification;
-- dark text;
-- translucent text box;
-- gradient.
+A button color may be used only when it remains visually distinct from the
+module background.
 
-Do not combine style modifications.
+Do not use a button whose color effectively matches the hero background.
 
-#### Pre-canned background
+For example:
 
-Approved pre-canned backgrounds are:
+- do not use yellow on the yellow grit background;
+- do not use navy on the navy grit background.
 
-- Blue Orb with light text;
-- Yellow with dark text;
-- Navy with light text.
+Blue is not one of the approved grit-background button treatments.
 
-Style modifications are not applied to pre-canned backgrounds.
+### Grit button hover behavior
 
-Do not recreate these backgrounds approximately with custom CSS when the
-approved asset or established implementation is available.
+Hover states must remain visually distinct from the grit background.
 
-### Button options on pre-canned backgrounds
+Do not choose a hover color that disappears into a similarly colored portion
+of the grit treatment.
 
-Pre-canned hero backgrounds support the established hero button treatments.
+#### Blue Orb grit background
 
-When translating legacy examples to the current design system, use only button
-colors that remain approved by the current UC San Diego token and component
-rules.
+For yellow, orange, or gold buttons on the Blue Orb background:
 
-Do not blindly preserve a legacy button color if it is no longer part of the
-current design system.
+- hover background: Turquoise
+- hover text: Navy
 
-The button must remain visually distinct from the hero background.
+For a turquoise button on the Blue Orb background:
 
-In particular, do not use the yellow button treatment on the yellow
-pre-canned hero background.
+- hover background: Yellow
+- hover text: Navy
 
-### Headline alignment
+Do not use navy as the hover background on the Blue Orb treatment when it
+visually disappears into the dark portion of the grit artwork.
 
-Hero headlines support two alignment modes:
+#### Yellow grit background
 
-- left aligned;
-- centered.
+Use an approved contrasting button color such as Navy.
 
-Left-aligned headlines may use a deliberate headline break.
+The hover state must remain distinct from the yellow module background.
 
-Centered headlines do not use the headline-break option.
+Do not transition the button to yellow.
 
-The headline break is a content-layout option, not a separate typography
-role.
+#### Navy grit background
 
-Do not simulate a headline break by creating multiple headings.
+Do not use a navy button.
 
-### Optional hero fields
+Approved button colors include:
 
-Hero slide text fields are optional.
+- Yellow
+- Turquoise
+- Orange
+- Gold
+
+Hover colors must remain visually distinct from the navy module background.
+
+---
+
+## Text-box button hover behavior
+
+Text-box button hover behavior depends on the box surface.
+
+### Blue and Translucent Blue text boxes
+
+A yellow primary button on:
+
+- Blue
+- Translucent Blue
+
+uses:
+
+- normal background: Yellow
+- normal text: Navy
+- hover background: Navy
+- hover text: White
+
+Example:
+
+```css
+.hero-text-box-blue .btn-primary:hover,
+.hero-text-box-blue .btn-primary:focus,
+.hero-text-box-blue-translucent .btn-primary:hover,
+.hero-text-box-blue-translucent .btn-primary:focus {
+  background: #182b49;
+  color: #fff;
+}
+```
+
+### Navy and Translucent Navy text boxes
+
+A yellow primary button on:
+
+- Navy
+- Translucent Navy
+
+must not hover to navy because the button would visually disappear into the
+box.
+
+Use:
+
+- normal background: Yellow
+- normal text: Navy
+- hover background: Turquoise
+- hover text: Navy
+
+Example:
+
+```css
+.hero-text-box-navy .btn-primary:hover,
+.hero-text-box-navy .btn-primary:focus,
+.hero-text-box-navy-translucent .btn-primary:hover,
+.hero-text-box-navy-translucent .btn-primary:focus {
+  background: #00c6d7;
+  color: #182b49;
+}
+```
+
+The same principle applies to other navy-backed hero treatments.
+
+Never create a hover state where the button background matches the surface
+behind it.
+
+---
+
+## Headline alignment
+
+Hero headlines support:
+
+- left alignment;
+- center alignment.
+
+Hero headlines may occupy one or two lines.
+
+Left-aligned headlines may use a deliberate semantic headline break.
+
+Do not create multiple heading elements merely to produce multiple visual
+lines.
+
+---
+
+## Optional hero fields
 
 A slide may contain:
 
@@ -741,188 +869,188 @@ A slide may contain:
 - headline + blurb;
 - headline + button;
 - headline only;
-- imagery or an approved pre-canned background without text.
+- background imagery without written content.
 
 Do not insert substitute text when a field is intentionally omitted.
 
 Do not reserve empty space for omitted fields.
 
-A button requires a destination.
+A button requires a valid destination.
 
-### Hero image requirements
+---
 
-Uploaded hero images should use the established hero image proportion.
+## Hero image requirements
 
-The legacy CMS reference uses:
+Uploaded hero images should use a consistent hero proportion.
+
+The established CMS reference uses approximately:
 
 ```text
 1440 × 530
 ```
 
-When multiple slides use uploaded images, keep the images at the same
-dimensions and aspect ratio so the hero does not change height between
-slides.
+When multiple slides use uploaded imagery, keep dimensions and proportions
+consistent so the hero does not visibly change height between slides.
 
 Choose imagery with the expected text location in mind.
 
 Avoid:
 
-- important faces underneath the hero text area;
-- text embedded in the image;
-- visually busy areas directly behind hero text;
-- images whose light or dark regions make the selected text treatment fail
-  contrast.
+- important faces directly underneath written content;
+- text embedded within the image;
+- visually busy areas directly behind written content;
+- image regions that cause the chosen text treatment to fail contrast.
 
-### Content limits
+When the image is decorative and all meaningful information is present in the
+visible hero text, use an empty image `alt` value.
+
+---
+
+## Content limits
 
 The Hero establishes the page's primary message rather than serving as a large
 content container.
 
-Use rich imagery and a small amount of supporting text.
+Use rich imagery and concise supporting text.
 
-Keep hero copy concise. As a practical upper bound, aim for approximately
-thirty words of supporting content rather than trying to communicate detailed
-information inside the slide.
+Do not use oversized body text to make the hero appear more dramatic.
 
-Use the hero button to direct users to a page containing the complete
-information.
+Use the established normal body treatment for the blurb.
 
-For production sites, prefer one to three hero slides.
+Keep supporting copy short.
 
-Do not create a large carousel simply because the component supports multiple
-slides. Important information should not depend on users reaching a later
-slide.
+Use the hero button to direct users to detailed content.
 
-### Structure
+For normal production pages, prefer a small number of slides.
 
-The outer hero section identifies the module and provides semantic grouping.
+Do not create a large carousel merely because the component technically
+supports many slides.
+
+---
+
+## Structure
 
 The hero media spans the full module width.
 
-The content container remains constrained within the full-width hero.
+The written content remains constrained inside the standard page container.
 
-The canonical hierarchy is:
+The canonical multi-slide hierarchy is:
 
 - `<section class="hero-homepage">`
 - Bootstrap 5 `.carousel`
 - `.carousel-inner`
 - `.carousel-item`
-- hero media or approved pre-canned background
+- hero media or approved grit background
 - `.container`
 - hero content block
 - headline
 - optional blurb
 - optional button
-- previous control with UC San Diego chevron
-- next control with UC San Diego chevron
+- previous control
+- next control
 - unified `.hero-carousel-controls`
   - `.carousel-indicators`
   - play/pause control
 
-For a static one-slide hero, carousel controls and pagination are omitted.
+For a static one-slide hero, carousel navigation and pagination are omitted.
 
 For a multi-slide hero, preserve the complete carousel control structure.
 
-The pagination indicators and play/pause control are siblings inside one
-shared bottom-center carousel-control container.
+---
 
-Do not position the play/pause button independently from the pagination
-indicators.
+## Carousel control layout
 
-### Previous and next arrow treatment
+Carousel controls must never overlap the written hero content.
+
+The layout must reserve distinct spatial regions for:
+
+1. previous-arrow control;
+2. written hero content;
+3. next-arrow control;
+4. bottom pagination/playback controls.
+
+Do not simply position controls over the content and assume there will be
+enough space.
+
+### Side arrow gutters
+
+Reserve dedicated transparent gutters at the left and right edges of the hero
+for previous and next controls.
+
+Written content must be inset far enough that neither the visible chevron nor
+its interactive target can overlap:
+
+- the headline;
+- the blurb;
+- the button.
+
+This requirement applies at all viewport sizes.
+
+On smaller screens, increase or preserve the content inset rather than moving
+the arrows on top of the content.
+
+Example:
+
+```css
+.hero-content > .container {
+  padding-left: 96px;
+  padding-right: 96px;
+}
+```
+
+Responsive implementations may reduce these values when necessary, but the
+content must remain completely outside the arrow target areas.
+
+### Bottom control safe area
+
+Reserve enough bottom padding inside each hero slide for the unified
+pagination/playback capsule.
+
+The headline, blurb, and button must not extend behind or underneath the
+bottom controls.
+
+This requirement applies at desktop, tablet, and mobile sizes.
+
+---
+
+## Previous and next controls
 
 Multi-slide heroes use the established UC San Diego previous and next
 chevrons.
 
-The arrows:
+The visible arrows:
 
-- are positioned at the left and right edges of the hero;
-- are vertically centered within the hero;
-- use a large, thick chevron shape;
-- use a light, semi-opaque white or pale-blue treatment;
-- use a subtle dark shadow so the chevron remains visible over both light and
-  dark imagery;
-- have no circular background;
+- appear near the left and right edges of the hero;
+- are vertically centered;
+- use a compact thick-chevron shape;
+- use a light semi-transparent treatment;
+- include a subtle dark shadow;
+- have no visible circle;
 - have no pill background;
-- have no visible rectangular button background;
-- do not use a thin line-arrow icon;
-- do not use Bootstrap's default carousel icon artwork.
+- have no visible square or rectangular button surface.
 
-The arrow itself should read as a substantial chevron rather than a small icon.
+Do not use Bootstrap's default carousel arrow artwork.
 
-The clickable button area may be larger than the visible chevron to provide an
-appropriate pointer and touch target.
+Use Bootstrap 5 for behavior, but provide the established UC San Diego
+chevron treatment.
 
-The larger hit area must remain visually transparent.
+The visible arrow is intentionally smaller than its interactive target.
 
-The visual treatment should resemble:
-
-```text
-‹                                  ›
-```
-
-with each symbol rendered as a thick chevron rather than as a typographic
-less-than or greater-than character.
-
-#### Arrow implementation
-
-Use Bootstrap 5 button behavior while replacing the default icon artwork with
-the established chevron treatment.
-
-A suitable implementation is:
-
-```html
-<button
-  class="carousel-control-prev"
-  type="button"
-  data-bs-target="#heroCarousel"
-  data-bs-slide="prev"
->
-  <span
-    class="hero-carousel-chevron hero-carousel-chevron-prev"
-    aria-hidden="true"
-  ></span>
-  <span class="visually-hidden">Previous slide</span>
-</button>
-
-<button
-  class="carousel-control-next"
-  type="button"
-  data-bs-target="#heroCarousel"
-  data-bs-slide="next"
->
-  <span
-    class="hero-carousel-chevron hero-carousel-chevron-next"
-    aria-hidden="true"
-  ></span>
-  <span class="visually-hidden">Next slide</span>
-</button>
-```
-
-The visual chevron may be constructed with CSS:
+A suitable visual treatment is approximately:
 
 ```css
-.carousel-control-prev,
-.carousel-control-next {
-  width: 8%;
-  min-width: 64px;
-
-  border: 0;
-  background: transparent;
-
-  opacity: 1;
-}
-
 .hero-carousel-chevron {
   display: block;
 
-  width: 32px;
-  height: 32px;
+  width: 18px;
+  height: 18px;
 
-  border-top: 11px solid rgba(255, 255, 255, .68);
-  border-right: 11px solid rgba(255, 255, 255, .68);
+  border-top: 6px solid rgba(255,255,255,.68);
+  border-right: 6px solid rgba(255,255,255,.68);
 
-  filter: drop-shadow(0 2px 1px rgba(24, 43, 73, .45));
+  filter: drop-shadow(
+    0 1px 1px rgba(24,43,73,.4)
+  );
 }
 
 .hero-carousel-chevron-prev {
@@ -934,64 +1062,193 @@ The visual chevron may be constructed with CSS:
 }
 ```
 
-Adjust dimensions only as needed to reproduce the established UC San Diego
-chevron proportion.
+The button itself may use a substantially larger transparent hit target.
 
-Do not fall back to:
+Example:
 
-```html
-<span class="carousel-control-next-icon"></span>
+```css
+.carousel-control-prev,
+.carousel-control-next {
+  width: 72px;
+  min-width: 72px;
+
+  border: 0;
+  background: transparent;
+
+  opacity: 1;
+}
 ```
 
-or:
+Do not enlarge the visible chevron merely to increase its click target.
 
-```html
-<span class="carousel-control-prev-icon"></span>
+---
+
+## Pagination and playback control group
+
+A multi-slide hero uses one unified bottom-center control group containing:
+
+- pagination indicators;
+- play/pause.
+
+These controls must visually read as one interface element.
+
+The group:
+
+- is horizontally centered;
+- appears near the bottom edge of the hero;
+- uses a fully rounded capsule shape;
+- uses a black background at 50% transparency;
+- keeps pagination and play/pause vertically centered;
+- uses compact internal spacing.
+
+Use:
+
+```css
+background: rgba(0, 0, 0, .5);
 ```
 
-because Bootstrap's default carousel icons do not reproduce the established
-UC San Diego hero controls.
+Do not use an opaque navy capsule.
 
-### Carousel control group
+Do not place pagination and play/pause into separate floating containers.
 
-A multi-slide hero uses one unified bottom-center control group for pagination
-and play/pause.
+Do not give play/pause its own additional circular or pill-shaped background.
 
-The control group:
+---
 
-- is horizontally centered near the bottom of the hero;
-- uses a dark navy background;
-- uses a fully rounded pill or capsule shape;
-- contains all pagination indicators in a single horizontal row;
-- places the play/pause control to the right of the pagination indicators;
-- keeps indicators and play/pause vertically centered;
-- uses compact, consistent spacing;
-- remains visually distinct from the hero background.
+## Pagination
 
-The control group should read as one interface element.
+Pagination uses circular indicators.
 
-Do not render the pagination dots as one floating element and the play/pause
-button as another.
-
-Do not give the play/pause button its own separate circular or pill-shaped
-background.
-
-Do not add a large gap between the final pagination indicator and the
-play/pause control.
-
-The visual relationship should resemble:
+Each pagination control must have an interactive target of:
 
 ```text
-╭──────────────────────────────────────╮
-│ ○  ●  ○  ○  ○  ○  ○      Ⅱ       │
-╰──────────────────────────────────────╯
+24px × 24px
 ```
 
-The number of pagination indicators must equal the number of slides.
+The visible circle remains smaller than the interactive target.
 
-#### Control group styling
+Use approximately:
 
-Use the established visual treatment:
+```text
+10px × 10px visible circle
+```
+
+with:
+
+```text
+1px white outline
+```
+
+for inactive indicators.
+
+The active indicator uses a solid white fill.
+
+There must be exactly:
+
+```text
+2px
+```
+
+between each 24×24 pagination target.
+
+The 24×24 target must not be reduced merely to make the visible controls more
+compact.
+
+Use a pseudo-element or equivalent technique so the button remains 24×24
+while the visual dot remains small.
+
+Example:
+
+```css
+.hero-carousel-controls .carousel-indicators {
+  position: static;
+
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  margin: 0;
+}
+
+.hero-carousel-controls
+.carousel-indicators
+[data-bs-target] {
+  position: relative;
+
+  width: 24px;
+  height: 24px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  opacity: 1;
+}
+
+.hero-carousel-controls
+.carousel-indicators
+[data-bs-target]::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 10px;
+  height: 10px;
+
+  border: 1px solid #fff;
+  border-radius: 50%;
+
+  background: transparent;
+
+  transform: translate(-50%, -50%);
+}
+
+.hero-carousel-controls
+.carousel-indicators
+.active::after {
+  background: #fff;
+}
+```
+
+Do not use Bootstrap's default rectangular carousel indicators.
+
+---
+
+## Play and pause
+
+Automatically advancing hero carousels provide a persistent play/pause
+control.
+
+The control appears inside the same bottom-center capsule as pagination.
+
+It appears after the pagination indicators.
+
+It does not receive its own background container.
+
+When the carousel is playing:
+
+- show the pause symbol;
+- the accessible name indicates that activation pauses the carousel.
+
+When the carousel is paused:
+
+- show the play symbol;
+- the accessible name indicates that activation resumes the carousel.
+
+Update both the visible state and accessible name.
+
+Do not restart automatic rotation merely because a user manually changes
+slides after explicitly pausing the carousel.
+
+---
+
+## Canonical control-group styling
+
+A suitable implementation is:
 
 ```css
 .hero-carousel-controls {
@@ -1002,12 +1259,13 @@ Use the established visual treatment:
 
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 7px;
 
-  padding: 8px 14px;
+  padding: 4px 8px;
   border-radius: 999px;
 
-  background: #182b49;
+  background: rgba(0, 0, 0, .5);
+
   transform: translateX(-50%);
 }
 
@@ -1016,25 +1274,9 @@ Use the established visual treatment:
 
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
 
   margin: 0;
-}
-
-.hero-carousel-controls .carousel-indicators [data-bs-target] {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-
-  border: 2px solid #fff;
-  border-radius: 50%;
-
-  background: transparent;
-  opacity: 1;
-}
-
-.hero-carousel-controls .carousel-indicators .active {
-  background: #fff;
 }
 
 .hero-carousel-toggle {
@@ -1044,27 +1286,27 @@ Use the established visual treatment:
   align-items: center;
   justify-content: center;
 
-  min-width: 24px;
-  min-height: 24px;
+  min-width: 18px;
+  min-height: 18px;
+
   padding: 0;
 
   border: 0;
   background: transparent;
+
   color: #fff;
 }
 ```
 
-Do not use Bootstrap's default indicator rectangles.
+---
 
-The indicators must use the established circular-dot treatment.
-
-### Bootstrap 5 requirements
+## Bootstrap 5 requirements
 
 Use Bootstrap 5 carousel markup and attributes.
 
 Do not reproduce Bootstrap 3 carousel syntax.
 
-Replace legacy patterns as follows:
+Translate legacy behavior as follows:
 
 - `.item` → `.carousel-item`
 - `data-ride="carousel"` → `data-bs-ride="carousel"`
@@ -1072,20 +1314,29 @@ Replace legacy patterns as follows:
 - `data-slide="next"` → `data-bs-slide="next"`
 - `data-slide-to` → `data-bs-slide-to`
 - `data-target` → `data-bs-target`
-- Bootstrap 3 glyphicon controls → the documented UC San Diego chevron
-  treatment using Bootstrap 5 carousel behavior.
 
-Use `<button>` elements for carousel indicators and carousel controls.
+Use `<button>` elements for:
 
-Bootstrap 5 behavior does not require Bootstrap's default visual treatment.
+- previous;
+- next;
+- pagination;
+- play/pause.
 
-Use Bootstrap 5 for carousel mechanics while preserving the established UC San
-Diego visual treatment for arrows, pagination and playback controls.
+Use Bootstrap 5 for carousel mechanics.
 
-Do not add `tabindex="0"` to headings or paragraphs solely to make static text
+Do not use Bootstrap's default visual treatment for:
+
+- previous/next arrows;
+- pagination indicators.
+
+Preserve the documented UC San Diego appearance instead.
+
+Do not add `tabindex="0"` to static headings or paragraphs merely to make them
 keyboard focusable.
 
-### Canonical Bootstrap 5 example
+---
+
+## Canonical Bootstrap 5 example
 
 ```html
 <section
@@ -1101,59 +1352,36 @@ keyboard focusable.
     <div class="carousel-inner">
 
       <div class="carousel-item active">
-        <div class="hero-media">
+        <div class="hero-media hero-image-light">
 
           <img
             src="hero-image.jpg"
             alt=""
           >
 
-          <div class="container">
-            <div class="hero-content">
+          <div class="hero-content">
+            <div class="container">
 
-              <h1 class="rt-text-light">
-                Hero headline
-                <br>
-                <span>Headline with break</span>
-              </h1>
+              <div class="hero-copy rt-text-light">
 
-              <p class="rt-text-light">
-                A concise supporting blurb appears beneath the headline.
-              </p>
+                <h1>
+                  Hero headline
+                  <br>
+                  <span>Optional second line</span>
+                </h1>
 
-              <a
-                class="btn btn-lg btn-primary"
-                href="#"
-              >
-                Primary action
-              </a>
+                <p>
+                  Concise supporting copy.
+                </p>
 
-            </div>
-          </div>
+                <a
+                  class="btn btn-primary"
+                  href="#"
+                >
+                  Primary action
+                </a>
 
-        </div>
-      </div>
-
-      <div class="carousel-item">
-        <div class="hero-media hero-background-navy">
-
-          <div class="container">
-            <div class="hero-content">
-
-              <h1 class="rt-text-light">
-                Second hero slide
-              </h1>
-
-              <p class="rt-text-light">
-                Supporting copy is optional.
-              </p>
-
-              <a
-                class="btn btn-lg btn-primary"
-                href="#"
-              >
-                Primary action
-              </a>
+              </div>
 
             </div>
           </div>
@@ -1170,10 +1398,16 @@ keyboard focusable.
       data-bs-slide="prev"
     >
       <span
-        class="hero-carousel-chevron hero-carousel-chevron-prev"
+        class="
+          hero-carousel-chevron
+          hero-carousel-chevron-prev
+        "
         aria-hidden="true"
       ></span>
-      <span class="visually-hidden">Previous slide</span>
+
+      <span class="visually-hidden">
+        Previous slide
+      </span>
     </button>
 
     <button
@@ -1183,10 +1417,16 @@ keyboard focusable.
       data-bs-slide="next"
     >
       <span
-        class="hero-carousel-chevron hero-carousel-chevron-next"
+        class="
+          hero-carousel-chevron
+          hero-carousel-chevron-next
+        "
         aria-hidden="true"
       ></span>
-      <span class="visually-hidden">Next slide</span>
+
+      <span class="visually-hidden">
+        Next slide
+      </span>
     </button>
 
     <div class="hero-carousel-controls">
@@ -1239,93 +1479,9 @@ keyboard focusable.
 </section>
 ```
 
-### Pagination
+---
 
-Multi-slide heroes use circular pagination indicators inside the unified
-bottom-center carousel-control group.
-
-The indicators:
-
-- represent every slide in the carousel;
-- clearly distinguish the active slide;
-- use a circular shape;
-- use a white outline for inactive slides;
-- use a solid white fill for the active slide;
-- remain visible against the navy control-group background;
-- are interactive controls rather than decorative dots;
-- have accessible labels identifying the slide they activate.
-
-Pagination indicators and play/pause belong to the same dark navy capsule.
-
-Do not position the pagination indicators independently from the play/pause
-control.
-
-Do not use Bootstrap's default rectangular indicator appearance.
-
-Do not hide pagination visually while leaving it available only to assistive
-technology.
-
-Do not use pagination on a hero containing only one slide.
-
-### Previous and next controls
-
-Multi-slide heroes provide previous and next controls at the left and right
-edges of the hero.
-
-Controls must:
-
-- remain vertically centered within the hero;
-- use the established large chevron visual treatment;
-- use a light semi-transparent color;
-- include a subtle dark shadow for visibility;
-- have no visible surrounding circle, pill or rectangle;
-- have accessible names;
-- use Bootstrap 5 button-based carousel behavior;
-- remain independent of the headline and button content;
-- remain outside the bottom-center pagination/playback control group.
-
-The interactive button area may extend beyond the visible chevron to provide
-a sufficiently large target.
-
-Do not position previous or next controls inside the hero text block.
-
-Do not use Bootstrap's default previous and next icon artwork.
-
-Do not place the arrows inside circular buttons.
-
-Do not place the arrows on dark translucent squares or pills.
-
-### Play and pause
-
-Automatically advancing hero carousels provide a persistent play/pause
-control.
-
-The play/pause control is part of the same dark navy bottom-center capsule as
-the pagination indicators.
-
-It appears immediately after the pagination indicators.
-
-It does not receive its own separate background, circle, capsule, or floating
-container.
-
-When the carousel is playing:
-
-- show the pause symbol;
-- the control's accessible name indicates that activating it will pause the
-  carousel.
-
-When the carousel is paused:
-
-- show the play symbol;
-- the control's accessible name indicates that activating it will resume the
-  carousel.
-
-Update both the visible control state and its accessible name.
-
-Do not restart automatic rotation merely because the user manually changes
-slides after explicitly pausing the carousel.
-
-### Motion
+## Motion
 
 Carousel transitions should be restrained and must not compete with the hero
 content.
@@ -1335,88 +1491,131 @@ Respect `prefers-reduced-motion`.
 When reduced motion is requested:
 
 - remove or minimize animated transitions;
-- do not introduce additional zoom, parallax, or decorative motion;
-- preserve all navigation and carousel controls.
+- do not introduce zoom or parallax;
+- preserve carousel navigation controls;
+- preserve pagination;
+- preserve play/pause functionality.
 
-### Accessibility
+---
 
-The Hero module must remain operable with keyboard, pointer, touch and
-assistive technology.
+## Accessibility
+
+The Hero module must remain operable using:
+
+- keyboard;
+- pointer;
+- touch;
+- assistive technology.
 
 For multi-slide heroes:
 
 - expose the carousel as a clearly named region;
-- provide accessible names for previous, next, play/pause and pagination
-  controls;
+- provide accessible names for previous and next controls;
+- provide accessible names for pagination indicators;
+- provide an accessible name for play/pause;
 - indicate the active pagination item;
-- keep previous and next buttons large enough to provide an appropriate
-  interactive target even though only the chevron itself is visible;
-- maintain the visual grouping of pagination and playback controls without
-  merging their individual accessible functions;
-- do not place static headings or blurbs in the tab order;
+- preserve 24×24 pagination targets;
 - ensure controls have visible focus states;
+- keep static headings and blurbs out of the tab order;
+- ensure automatic rotation can be paused;
+- ensure written content and controls never overlap;
 - ensure all text maintains required contrast throughout the complete
-  background area behind it;
-- do not make automatic rotation impossible to pause.
+  background area behind it.
 
-The page must retain a logical heading hierarchy regardless of which slide is
-currently visible.
+The visual grouping of pagination and playback controls does not merge their
+individual accessible functions.
 
-Avoid creating multiple competing page-level headings solely because the
-carousel contains multiple slides. Choose semantic heading elements according
-to the document outline while applying the appropriate hero typography role.
+The page must retain a logical semantic heading hierarchy regardless of which
+carousel slide is visible.
 
-### Generation rules
+---
+
+## Generation rules
 
 When an established UC San Diego Hero module is requested or applicable,
-reproduce its documented layout envelope, carousel anatomy, control behavior,
-control grouping, arrow treatment, and established classes. Do not merely
-imitate its general visual appearance.
+reproduce its documented layout envelope, control anatomy, visual treatments,
+and interaction behavior.
 
-When selecting a Hero presentation, choose one of the documented canonical
-variants:
+Do not merely imitate its general visual appearance.
+
+When selecting a Hero presentation, choose one of the six documented
+canonical variants:
 
 - image with light text;
-- Blue Orb with light text;
-- yellow background with dark text;
-- navy background with light text;
-- image with dark text;
-- image with translucent text box;
+- Blue Orb grit background;
+- yellow grit background;
+- navy grit background;
+- image with text box;
 - image with gradient.
 
-Do not invent an eighth visual treatment merely for variety.
+For text-box heroes, choose only:
 
-For an uploaded-image slide, use no more than one documented style
-modification.
+- Blue;
+- Navy;
+- Translucent Blue;
+- Translucent Navy.
 
-Pre-canned backgrounds do not receive uploaded-image style modifications.
+For grit-background heroes, permitted button colors are:
+
+- Yellow;
+- Turquoise;
+- Orange;
+- Gold;
+- Navy;
+
+provided the button color does not match or visually disappear into the module
+background.
 
 For Hero modules specifically:
 
 - preserve the full-width visual treatment;
-- preserve the constrained content container;
-- keep headline, blurb and button grouped;
+- preserve the constrained written-content container;
+- allow headlines to occupy one or two lines;
+- keep headline, blurb, and button grouped;
+- use normal body typography for blurbs;
 - preserve left or center alignment when specified;
 - preserve deliberate headline breaks when specified;
-- preserve the documented text-contrast treatment;
-- preserve previous and next controls on multi-slide heroes;
-- use the established large, thick, light-colored chevron treatment for
-  previous and next controls;
-- vertically center previous and next chevrons at the lateral edges of the
-  hero;
-- preserve the subtle arrow shadow;
-- keep the arrow button background visually transparent;
-- preserve the unified bottom-center pagination and play/pause control group;
-- render pagination indicators and play/pause inside one dark navy rounded
-  capsule;
-- use circular pagination indicators;
-- render the active pagination indicator as solid white;
-- render inactive pagination indicators as white outlines;
-- keep the play/pause control inside the same capsule as the pagination;
-- use Bootstrap 5 carousel behavior and markup;
+- preserve documented contrast treatments;
+- reserve dedicated side gutters for previous and next controls;
+- reserve dedicated bottom space for pagination and playback;
+- never overlap carousel controls with written content;
+- use compact custom UC San Diego chevrons;
+- keep the visible arrow smaller than its interactive target;
+- use the unified bottom-center pagination/playback capsule;
+- use `rgba(0, 0, 0, .5)` for the capsule background;
+- use 24×24 pagination click targets;
+- use approximately 10×10 visible pagination circles;
+- use a 1px white ring for inactive pagination indicators;
+- use a solid white active pagination indicator;
+- use exactly 2px between pagination targets;
+- keep play/pause inside the same capsule;
+- use Bootstrap 5 carousel behavior;
 - preserve established UC San Diego button treatments;
-- preserve documented photographic and pre-canned background options;
-- use only documented style modifications.
+- use surface-aware button hover colors.
+
+Do not:
+
+- substitute a generic split hero;
+- convert the hero image into a rounded card;
+- add an eyebrow or kicker without a documented variant;
+- invent additional hero variants;
+- use oversized blurb typography;
+- omit carousel pagination from a multi-slide hero;
+- reduce pagination click targets below the documented size;
+- allow arrows to overlap written content;
+- allow pagination/playback controls to overlap written content;
+- render play/pause as a separately floating button;
+- use Bootstrap's default rectangular pagination indicators;
+- use Bootstrap's default previous/next icon artwork;
+- place arrows inside visible circles, squares, or pills;
+- use a button hover color that matches the surface behind it;
+- use navy hover on a navy surface;
+- use navy hover when it visually disappears into the Blue Orb grit
+  background;
+- use obsolete Bootstrap 3 carousel markup;
+- invent new background treatments;
+- make static hero text keyboard focusable;
+- change the established hero anatomy merely for visual variety.
 
 Do not:
 
