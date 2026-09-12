@@ -269,6 +269,7 @@ Use the canonical interaction:
 .jumbotron-tile-links .wrapper:hover {
   transform: scale(1.1);
 }
+```
 
 The tile remains in its existing grid position while scaling visually above
 its surrounding content.
@@ -277,7 +278,7 @@ Do not substitute a lift, shadow, background-only zoom, or another hover
 effect for this interaction.
 
 
-I would also add keyboard-focus and reduced-motion handling **in the implementation**, even though those aren't present in the legacy CSS:
+Also add keyboard-focus and reduced-motion handling **in the implementation**, even though those aren't present in the legacy CSS:
 
 ```css
 .jumbotron-tile-links .wrapper:focus-within {
@@ -294,3 +295,4 @@ I would also add keyboard-focus and reduced-motion handling **in the implementat
     transform: none;
   }
 }
+```
