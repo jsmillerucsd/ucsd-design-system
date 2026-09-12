@@ -1506,6 +1506,780 @@ Also add keyboard-focus and reduced-motion handling **in the implementation**, e
 }
 ```
 
+### Hero
+
+When generating a UC San Diego Hero module, use the established UC San Diego
+CMS hero pattern. Do not substitute a generic marketing hero, split-screen
+banner, card-based introduction, or custom slideshow.
+
+The Hero module must use Bootstrap 5 conventions together with the established
+UC San Diego module anatomy.
+
+The hero is a full-width visual module. Its image or approved background may
+extend across the viewport, while the hero's text content remains aligned to
+the standard page container.
+
+The hero may contain one or more slides.
+
+The Hero module does not use eyebrow text unless a separately documented
+variant explicitly includes it.
+
+### Hero content
+
+A hero slide may include:
+
+- a headline;
+- a headline break;
+- a blurb;
+- a module-level button.
+
+The blurb and button are optional.
+
+The headline may be left aligned or center aligned.
+
+Left-aligned headlines may use a headline break to divide the headline into
+two lines or phrases.
+
+Do not add an eyebrow, kicker, overline, category label, or other text above
+the hero headline unless a separately documented hero variant explicitly
+includes one.
+
+When optional content is omitted:
+
+- do not insert placeholder content;
+- do not reserve empty vertical space for the missing element;
+- allow the remaining hero content to retain its natural spacing.
+
+#### Headline
+
+The hero headline is the primary page-level display heading.
+
+Use the established `type.h1` treatment.
+
+Hero headlines use sentence case. Do not automatically transform hero
+headlines to uppercase.
+
+A left-aligned hero headline may contain a deliberate headline break.
+
+Use a semantic line break within the heading when the content calls for the
+established two-line treatment:
+
+```html
+<h1>
+  Hero Examples
+  <br>
+  <span>Left Headline with Break</span>
+</h1>
+```
+
+The text after the break remains part of the same semantic heading. Do not
+create a second heading merely to achieve the visual line break.
+
+Do not force a headline break simply because the headline wraps naturally.
+
+#### Blurb
+
+The blurb is optional supporting copy that appears beneath the hero headline.
+
+Use it to provide a concise explanation or context for the hero's primary
+message.
+
+Keep hero blurbs short enough that they do not dominate the visual area or
+obscure excessive portions of the hero media.
+
+Use normal body-text treatment appropriate to the hero's light or dark text
+mode.
+
+Do not:
+
+- use the blurb as an eyebrow or kicker;
+- repeat the headline in different words;
+- use multiple long paragraphs;
+- place the blurb above the headline.
+
+#### Button
+
+A hero may contain an optional module-level button beneath the blurb or
+headline.
+
+Use an approved UC San Diego button treatment.
+
+Button labels use the established button typography and uppercase treatment.
+
+When an `<a>` performs navigation, style the `<a>` itself as the button. Do
+not place a `<button>` inside an `<a>`.
+
+The button hover state follows the documented global button hover rules.
+
+### Visual contract
+
+The Hero module must preserve the following visual relationships:
+
+- The hero visual treatment extends across the full module width.
+- Hero text is constrained to the standard page container.
+- Text is vertically positioned within the hero rather than appearing in a
+  separate panel below it.
+- Hero content may be left aligned or center aligned.
+- Text and controls must maintain sufficient contrast against the complete
+  portion of the background behind them.
+- The hero remains visually substantial enough to function as the primary
+  introductory module.
+- Headline, blurb, and button remain grouped as one content block.
+- Carousel controls remain visually separate from the hero content block.
+- Pagination appears near the bottom center of a multi-slide hero.
+- Previous and next controls appear at the lateral edges of a multi-slide
+  hero.
+- A play/pause control is provided when slides advance automatically.
+
+Do not constrain the hero image itself to a card-sized panel inside the page
+container.
+
+Do not convert the established hero into a two-column image-and-text layout
+unless a separately documented hero variant explicitly uses that composition.
+
+### Canonical hero variants
+
+The UC San Diego Hero module has seven canonical presentation variants.
+
+Generated implementations should select from these established variants rather
+than inventing new hero compositions.
+
+The seven canonical variants are:
+
+1. Image with light text and optional headline break
+2. Blue Orb pre-canned background with light text
+3. Yellow pre-canned background with dark text
+4. Navy pre-canned background with light text
+5. Image with dark text
+6. Image with translucent text box
+7. Image with gradient
+
+These variants share the same Hero module anatomy. They differ in background,
+text treatment, and optional style modification.
+
+Do not interpret these as seven unrelated hero components.
+
+#### Variant 1: Image with light text
+
+Use an uploaded or approved hero image with light hero text.
+
+The headline may be:
+
+- left aligned; or
+- center aligned.
+
+A left-aligned headline may use the optional headline-break treatment.
+
+A centered headline does not use a headline break.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+Each text field is optional.
+
+Example structure:
+
+```html
+<div class="carousel-item active">
+  <div class="hero-media">
+
+    <img
+      src="hero-image.jpg"
+      alt=""
+    >
+
+    <div class="container">
+      <div class="hero-content hero-content-start">
+
+        <h1 class="rt-text-light">
+          Hero Examples
+          <br>
+          <span>Left Headline with Break</span>
+        </h1>
+
+        <p class="rt-text-light">
+          Concise supporting copy.
+        </p>
+
+        <a
+          class="btn btn-lg btn-primary"
+          href="#"
+        >
+          Primary action
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+```
+
+Do not apply an additional text box, dark-text treatment, or gradient unless
+that documented variant is being used.
+
+#### Variant 2: Blue Orb with light text
+
+Use the approved UC San Diego Blue Orb pre-canned hero background.
+
+Use light text.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+Use only approved button treatments.
+
+Do not substitute an arbitrary blue gradient, stock illustration, or custom
+abstract background for the established Blue Orb treatment.
+
+This is a pre-canned background variant, not an uploaded-image style
+modification.
+
+#### Variant 3: Yellow with dark text
+
+Use the approved UC San Diego yellow pre-canned hero background.
+
+Use dark text.
+
+Do not use a yellow button on the yellow background because the control must
+remain visually distinguishable from the hero surface.
+
+Choose an approved contrasting button treatment.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+This is a pre-canned background variant, not an uploaded-image style
+modification.
+
+#### Variant 4: Navy with light text
+
+Use the approved UC San Diego navy pre-canned hero background.
+
+Use light text.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+Use an approved contrasting button treatment.
+
+This is a pre-canned background variant, not an uploaded-image style
+modification.
+
+#### Variant 5: Image with dark text
+
+Use this variant when an uploaded hero image is sufficiently light behind the
+content area to support dark text.
+
+Use the established dark hero text treatment.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+Dark text is a style modification available to uploaded-image slides.
+
+Do not use dark text when portions of the content area do not maintain
+sufficient contrast.
+
+Do not combine the dark-text treatment with another hero style modification.
+
+#### Variant 6: Image with translucent text box
+
+Use this variant when an uploaded hero image is too visually complex to
+provide consistent contrast behind the hero content.
+
+Place the headline, blurb and button together inside the established hero text
+box.
+
+The text box may use the approved dark-blue or light-blue treatment and the
+documented opacity option.
+
+Keep the blurb concise so the box does not grow excessively large.
+
+The text box is a style modification available to uploaded-image slides.
+
+Do not:
+
+- create separate boxes around individual text elements;
+- allow the box to grow into a large content panel;
+- combine the text box with the gradient or dark-text style modification.
+
+#### Variant 7: Image with gradient
+
+Use this variant when an uploaded hero image needs additional contrast behind
+the text while retaining an uninterrupted image treatment.
+
+Apply the established gentle blue gradient beneath the hero content.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+The gradient is a style modification available to uploaded-image slides.
+
+Do not:
+
+- replace the documented gradient with a uniformly dark full-image overlay;
+- make the gradient visually dominate the image;
+- combine the gradient with the text-box or dark-text style modification.
+
+### Uploaded images versus pre-canned backgrounds
+
+Hero slides have two background-source types:
+
+#### Uploaded image
+
+An uploaded-image slide may use exactly one of the following style
+modifications:
+
+- no modification;
+- dark text;
+- translucent text box;
+- gradient.
+
+Do not combine style modifications.
+
+#### Pre-canned background
+
+Approved pre-canned backgrounds are:
+
+- Blue Orb with light text;
+- Yellow with dark text;
+- Navy with light text.
+
+Style modifications are not applied to pre-canned backgrounds.
+
+Do not recreate these backgrounds approximately with custom CSS when the
+approved asset or established implementation is available.
+
+### Button options on pre-canned backgrounds
+
+Pre-canned hero backgrounds support the established hero button treatments.
+
+When translating legacy examples to the current design system, use only button
+colors that remain approved by the current UC San Diego token and component
+rules.
+
+Do not blindly preserve a legacy button color if it is no longer part of the
+current design system.
+
+The button must remain visually distinct from the hero background.
+
+In particular, do not use the yellow button treatment on the yellow
+pre-canned hero background.
+
+### Headline alignment
+
+Hero headlines support two alignment modes:
+
+- left aligned;
+- centered.
+
+Left-aligned headlines may use a deliberate headline break.
+
+Centered headlines do not use the headline-break option.
+
+The headline break is a content-layout option, not a separate typography
+role.
+
+Do not simulate a headline break by creating multiple headings.
+
+### Optional hero fields
+
+Hero slide text fields are optional.
+
+A slide may contain:
+
+- headline + blurb + button;
+- headline + blurb;
+- headline + button;
+- headline only;
+- imagery or an approved pre-canned background without text.
+
+Do not insert substitute text when a field is intentionally omitted.
+
+Do not reserve empty space for omitted fields.
+
+A button requires a destination.
+
+### Hero image requirements
+
+Uploaded hero images should use the established hero image proportion.
+
+The legacy CMS reference uses:
+
+```text
+1440 × 530
+```
+
+When multiple slides use uploaded images, keep the images at the same
+dimensions and aspect ratio so the hero does not change height between
+slides.
+
+Choose imagery with the expected text location in mind.
+
+Avoid:
+
+- important faces underneath the hero text area;
+- text embedded in the image;
+- visually busy areas directly behind hero text;
+- images whose light or dark regions make the selected text treatment fail
+  contrast.
+
+### Content limits
+
+The Hero establishes the page's primary message rather than serving as a large
+content container.
+
+Use rich imagery and a small amount of supporting text.
+
+Keep hero copy concise. As a practical upper bound, aim for approximately
+thirty words of supporting content rather than trying to communicate detailed
+information inside the slide.
+
+Use the hero button to direct users to a page containing the complete
+information.
+
+For production sites, prefer one to three hero slides.
+
+Do not create a large carousel simply because the component supports multiple
+slides. Important information should not depend on users reaching a later
+slide.
+
+### Structure
+
+The outer hero section identifies the module and provides semantic grouping.
+
+The hero media spans the full module width.
+
+The content container remains constrained within the full-width hero.
+
+The canonical hierarchy is:
+
+- `<section class="hero-homepage">`
+- Bootstrap 5 `.carousel`
+- `.carousel-indicators`
+- play/pause control
+- `.carousel-inner`
+- `.carousel-item`
+- hero media or approved pre-canned background
+- `.container`
+- hero content block
+- headline
+- optional blurb
+- optional button
+- previous control
+- next control
+
+For a static one-slide hero, carousel controls and pagination are omitted.
+
+For a multi-slide hero, preserve the complete carousel control structure.
+
+### Bootstrap 5 requirements
+
+Use Bootstrap 5 carousel markup and attributes.
+
+Do not reproduce Bootstrap 3 carousel syntax.
+
+Replace legacy patterns as follows:
+
+- `.item` → `.carousel-item`
+- `data-ride="carousel"` → `data-bs-ride="carousel"`
+- `data-slide="prev"` → `data-bs-slide="prev"`
+- `data-slide="next"` → `data-bs-slide="next"`
+- `data-slide-to` → `data-bs-slide-to`
+- `data-target` → `data-bs-target`
+- Bootstrap 3 glyphicon controls → Bootstrap 5 carousel controls or the
+  established UC San Diego control treatment.
+
+Use `<button>` elements for carousel indicators and carousel controls.
+
+Do not add `tabindex="0"` to headings or paragraphs solely to make static text
+keyboard focusable.
+
+### Canonical Bootstrap 5 example
+
+```html
+<section
+  class="hero-homepage"
+  aria-label="Featured content"
+>
+  <div
+    id="heroCarousel"
+    class="carousel slide"
+    data-bs-ride="carousel"
+  >
+
+    <div class="carousel-indicators">
+      <button
+        type="button"
+        data-bs-target="#heroCarousel"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="Slide 1"
+      ></button>
+
+      <button
+        type="button"
+        data-bs-target="#heroCarousel"
+        data-bs-slide-to="1"
+        aria-label="Slide 2"
+      ></button>
+    </div>
+
+    <button
+      class="hero-carousel-toggle"
+      type="button"
+      aria-label="Pause carousel"
+      aria-pressed="false"
+    >
+      <span aria-hidden="true">Pause</span>
+    </button>
+
+    <div class="carousel-inner">
+
+      <div class="carousel-item active">
+        <div class="hero-media">
+
+          <img
+            src="hero-image.jpg"
+            alt=""
+          >
+
+          <div class="container">
+            <div class="hero-content">
+
+              <h1 class="rt-text-light">
+                Hero headline
+                <br>
+                <span>Headline with break</span>
+              </h1>
+
+              <p class="rt-text-light">
+                A concise supporting blurb appears beneath the headline.
+              </p>
+
+              <a
+                class="btn btn-lg btn-primary"
+                href="#"
+              >
+                Primary action
+              </a>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="hero-media hero-background-navy">
+
+          <div class="container">
+            <div class="hero-content">
+
+              <h1 class="rt-text-light">
+                Second hero slide
+              </h1>
+
+              <p class="rt-text-light">
+                Supporting copy is optional.
+              </p>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#heroCarousel"
+      data-bs-slide="prev"
+    >
+      <span
+        class="carousel-control-prev-icon"
+        aria-hidden="true"
+      ></span>
+      <span class="visually-hidden">Previous slide</span>
+    </button>
+
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#heroCarousel"
+      data-bs-slide="next"
+    >
+      <span
+        class="carousel-control-next-icon"
+        aria-hidden="true"
+      ></span>
+      <span class="visually-hidden">Next slide</span>
+    </button>
+
+  </div>
+</section>
+```
+
+### Pagination
+
+Multi-slide heroes use bottom-centered pagination indicators.
+
+The indicators:
+
+- represent every slide in the carousel;
+- clearly distinguish the active slide;
+- remain visible against every supported hero background;
+- are interactive controls rather than decorative dots;
+- have accessible labels identifying the slide they activate.
+
+Do not hide pagination visually while leaving it available only to assistive
+technology.
+
+Do not use pagination on a hero containing only one slide.
+
+### Previous and next controls
+
+Multi-slide heroes provide previous and next controls at the left and right
+edges of the hero.
+
+Controls must:
+
+- remain visible against the hero background;
+- have accessible names;
+- use Bootstrap 5 button-based carousel controls;
+- remain independent of the headline and button content.
+
+Do not position previous or next controls inside the hero text block.
+
+### Play and pause
+
+Automatically advancing hero carousels provide a persistent play/pause
+control.
+
+When the carousel is playing:
+
+- the control indicates that activating it will pause the carousel.
+
+When the carousel is paused:
+
+- the control indicates that activating it will resume the carousel.
+
+Update both the visible control state and its accessible name.
+
+Do not restart automatic rotation merely because the user manually changes
+slides after explicitly pausing the carousel.
+
+### Motion
+
+Carousel transitions should be restrained and must not compete with the hero
+content.
+
+Respect `prefers-reduced-motion`.
+
+When reduced motion is requested:
+
+- remove or minimize animated transitions;
+- do not introduce additional zoom, parallax, or decorative motion;
+- preserve all navigation and carousel controls.
+
+### Accessibility
+
+The Hero module must remain operable with keyboard, pointer, touch and
+assistive technology.
+
+For multi-slide heroes:
+
+- expose the carousel as a clearly named region;
+- provide accessible names for previous, next, play/pause and pagination
+  controls;
+- indicate the active pagination item;
+- do not place static headings or blurbs in the tab order;
+- ensure controls have visible focus states;
+- ensure all text maintains required contrast throughout the complete
+  background area behind it;
+- do not make automatic rotation impossible to pause.
+
+The page must retain a logical heading hierarchy regardless of which slide is
+currently visible.
+
+Avoid creating multiple competing page-level headings solely because the
+carousel contains multiple slides. Choose semantic heading elements according
+to the document outline while applying the appropriate hero typography role.
+
+### Generation rules
+
+When an established UC San Diego Hero module is requested or applicable,
+reproduce its documented layout envelope, carousel anatomy, control behavior
+and established classes. Do not merely imitate its visual appearance.
+
+When selecting a Hero presentation, choose one of the documented canonical
+variants:
+
+- image with light text;
+- Blue Orb with light text;
+- yellow background with dark text;
+- navy background with light text;
+- image with dark text;
+- image with translucent text box;
+- image with gradient.
+
+Do not invent an eighth visual treatment merely for variety.
+
+For an uploaded-image slide, use no more than one documented style
+modification.
+
+Pre-canned backgrounds do not receive uploaded-image style modifications.
+
+For Hero modules specifically:
+
+- preserve the full-width visual treatment;
+- preserve the constrained content container;
+- keep headline, blurb and button grouped;
+- preserve left or center alignment when specified;
+- preserve deliberate headline breaks when specified;
+- preserve the documented text-contrast treatment;
+- preserve pagination, previous/next controls and play/pause behavior on
+  multi-slide heroes;
+- use Bootstrap 5 carousel markup;
+- preserve established UC San Diego button treatments;
+- preserve documented photographic and pre-canned background options;
+- use only documented style modifications.
+
+Do not:
+
+- substitute a generic split hero;
+- convert the hero image into a rounded card;
+- add an eyebrow or kicker without a documented variant;
+- omit carousel pagination from a multi-slide hero;
+- omit pause functionality from an automatically advancing carousel;
+- use obsolete Bootstrap 3 carousel markup;
+- invent new background treatments;
+- apply multiple hero style modifications merely for visual effect;
+- make static hero text keyboard focusable;
+- change the hero anatomy merely for visual variety.
+
 ## Do's and Don'ts
 
 These are not style preferences. Each one, violated, breaks dark mode, rebranding, or accessibility.
