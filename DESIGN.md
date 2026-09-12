@@ -1653,25 +1653,24 @@ Diego carousel chevrons.
 
 ### Canonical hero variants
 
-The UC San Diego Hero module has seven canonical presentation variants.
+The UC San Diego Hero module has six canonical presentation variants.
 
 Generated implementations should select from these established variants rather
 than inventing new hero compositions.
 
-The seven canonical variants are:
+The six canonical variants are:
 
 1. Image with light text and optional headline break
 2. Blue Orb pre-canned background with light text
 3. Yellow pre-canned background with dark text
 4. Navy pre-canned background with light text
-5. Image with dark text
-6. Image with translucent text box
-7. Image with gradient
+5. Image with translucent text box
+6. Image with gradient
 
 These variants share the same Hero module anatomy. They differ in background,
 text treatment, and optional style modification.
 
-Do not interpret these as seven unrelated hero components.
+Do not interpret these as six unrelated hero components.
 
 #### Variant 1: Image with light text
 
@@ -1792,27 +1791,7 @@ Use an approved contrasting button treatment.
 This is a pre-canned background variant, not an uploaded-image style
 modification.
 
-#### Variant 5: Image with dark text
-
-Use this variant when an uploaded hero image is sufficiently light behind the
-content area to support dark text.
-
-Use the established dark hero text treatment.
-
-The slide may include:
-
-- headline;
-- blurb;
-- button.
-
-Dark text is a style modification available to uploaded-image slides.
-
-Do not use dark text when portions of the content area do not maintain
-sufficient contrast.
-
-Do not combine the dark-text treatment with another hero style modification.
-
-#### Variant 6: Image with translucent text box
+#### Variant 5: Image with translucent text box
 
 Use this variant when an uploaded hero image is too visually complex to
 provide consistent contrast behind the hero content.
@@ -1833,7 +1812,7 @@ Do not:
 - allow the box to grow into a large content panel;
 - combine the text box with the gradient or dark-text style modification.
 
-#### Variant 7: Image with gradient
+#### Variant 6: Image with gradient
 
 Use this variant when an uploaded hero image needs additional contrast behind
 the text while retaining an uninterrupted image treatment.
