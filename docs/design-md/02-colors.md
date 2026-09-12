@@ -433,19 +433,23 @@ Components should provide only color variants appropriate to their function.
 - Yellow for approved high-emphasis CTA treatments
 
 ##### Button hover colors
-If the primary button is blue or yellow, then:
+If the primary button is blue or yellow, then the hover background color should be navy, and the text should be white.
+
+Example:
 
 .btn-primary:hover {
     background-color: #182b49;
     color: #fff;
 }
 
-If the primary background behind the button is navy, then:
+If the primary background behind the button is navy, then the hover background color should be turquoise, and the text should be navy.
+
+Example:
 
 Example:
 .btn-primary:hover {
     background-color: #00C6D7;
-    color: #fff;
+    color: #182b49;
 
 #### Standard content sections
 
