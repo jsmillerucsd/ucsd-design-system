@@ -16,7 +16,7 @@ Label buttons with the verb for what happens: "Apply now", "Download the form". 
 
 Button labels are rendered in uppercase through the component style. Do not rely on authors to manually capitalize button text.
 
-.btn-default:hover {
+.btn-primary:hover {
     background-color: #182b49;
     color: #fff;
 }
@@ -51,6 +51,7 @@ The introductory content begins with the module heading, followed by optional su
 
 The module must use Bootstrap 5 conventions together with the established UC San Diego module classes.
 
+There is no minimum or maximum number of tiles.
 
 ### Module background and optional header content
 
@@ -65,8 +66,7 @@ the page container. Do not apply the module background to the full viewport.
 
 The module header may include:
 
-- a headline;
-- a headline break or supporting divider treatment;
+- a headline that take up one or two lines
 - a module-level button.
 
 All three are optional.
@@ -77,7 +77,6 @@ omitted.
 When present:
 
 - the headline appears above the tile grid;
-- the headline break appears with the headline treatment defined by the module;
 - the module-level button appears in the header area and uses an approved UC San Diego button treatment;
 - the header content and tile grid share the same constrained module panel and horizontal alignment.
 
