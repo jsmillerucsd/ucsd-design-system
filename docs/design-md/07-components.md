@@ -16,11 +16,6 @@ Label buttons with the verb for what happens: "Apply now", "Download the form". 
 
 Button labels are rendered in uppercase through the component style. Do not rely on authors to manually capitalize button text.
 
-.btn-primary:hover {
-    background-color: #182b49;
-    color: #fff;
-}
-
 ### Forms
 
 Every input has a visible, persistent label. Placeholder text is not a label — it disappears exactly when the user needs it, and it fails contrast at the sizes it is typically used.
