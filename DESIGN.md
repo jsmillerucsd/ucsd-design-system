@@ -730,6 +730,26 @@ Components should provide only color variants appropriate to their function.
 - Navy when explicitly required
 - Yellow for approved high-emphasis CTA treatments
 
+##### Button hover colors
+background-color: navy
+text color: #fff;
+
+Example:
+:hover {
+    background-color: #182b49;
+    color: #fff;
+}
+
+If the background behind the button is navy then:
+
+background-color: turquoise
+text color: #fff;
+
+Example:
+:hover {
+    background-color: #00C6D7;
+    color: #fff;
+    
 #### Standard content sections
 
 - White
@@ -1160,18 +1180,53 @@ The semantic layer is a curated, closed set. A new component binds to existing s
 
 ### Tiles with Links
 
-When generating a UC San Diego Tiles with Links module, use the established
-UC San Diego CMS module pattern. Do not substitute a generic card grid,
-feature grid, or custom tile implementation.
+When generating a UC San Diego Tiles with Links module, use the established UC San Diego CMS module pattern. Do not substitute a generic card grid, feature grid, or custom tile implementation.
 
 The Tiles with Links module does not use eyebrow text.
 
-The introductory content begins with the module heading, followed by optional
-supporting copy. Do not add an eyebrow, kicker, label, or overline unless a
-documented module variant explicitly includes one.
+The introductory content begins with the module heading, followed by optional supporting copy. Do not add an eyebrow, kicker, label, or overline unless a documented module variant explicitly includes one.
 
-The module must use Bootstrap 5 conventions together with the established
-UC San Diego module classes.
+The module must use Bootstrap 5 conventions together with the established UC San Diego module classes.
+
+### Module background and optional header content
+
+The Tiles with Links module supports three approved module background treatments:
+
+- White
+- Sand
+- Navy
+
+Apply the selected background treatment to the constrained module panel inside
+the page container. Do not apply the module background to the full viewport.
+
+The module header may include:
+
+- a headline;
+- a headline break or supporting divider treatment;
+- a module-level button.
+
+All three are optional.
+
+The module must still render correctly when any or all of these elements are
+omitted.
+
+When present:
+
+- the headline appears above the tile grid;
+- the headline break appears with the headline treatment defined by the module;
+- the module-level button appears in the header area and uses an approved UC San Diego button treatment;
+- the header content and tile grid share the same constrained module panel and horizontal alignment.
+
+When omitted:
+
+- do not insert placeholder content;
+- do not add an eyebrow, kicker, overline, or substitute heading;
+- do not reserve empty space for the missing element;
+- allow the tile grid to move up naturally within the module.
+
+For navy module backgrounds, use the appropriate inverse text and control
+treatments so that headings, supporting text, links, and buttons maintain
+required contrast.
 
 #### Visual contract
 
