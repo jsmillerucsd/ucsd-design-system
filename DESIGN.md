@@ -2285,7 +2285,7 @@ Pagination uses circular indicators.
 Each pagination control must have an interactive target of:
 
 ```text
-24px × 24px
+14px × 14px
 ```
 
 The visible circle remains smaller than the interactive target.
@@ -2312,12 +2312,12 @@ There must be exactly:
 2px
 ```
 
-between each 24×24 pagination target.
+between each 14×14 pagination target.
 
-The 24×24 target must not be reduced merely to make the visible controls more
+The 14×14 target must not be reduced merely to make the visible controls more
 compact.
 
-Use a pseudo-element or equivalent technique so the button remains 24×24
+Use a pseudo-element or equivalent technique so the button remains 14×14
 while the visual dot remains small.
 
 Example:
@@ -2338,8 +2338,8 @@ Example:
 [data-bs-target] {
   position: relative;
 
-  width: 24px;
-  height: 24px;
+  width: 14px;
+  height: 14px;
 
   margin: 0;
   padding: 0;
