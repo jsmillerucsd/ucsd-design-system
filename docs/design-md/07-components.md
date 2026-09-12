@@ -250,6 +250,7 @@ Do not use Bootstrap 3 patterns that have been removed or superseded.
 
   </div>
 </section>
+```
 
 #### Hover behavior
 
