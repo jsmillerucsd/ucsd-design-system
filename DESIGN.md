@@ -1077,7 +1077,7 @@ Because Brix Sans and Refrigerator Deluxe are licensed faces, generated and prot
 
 Use the following fallback order:
 
-- **Refrigerator Deluxe** → **Teko** → a condensed sans-serif system fallback.
+- **Refrigerator Deluxe** → **Teko** → a condensed sans-serif system fallback. Use weight 900 for Teko when it is used as a fallback.
 - **Brix Sans** → **Source Sans** → **Roboto** → a general sans-serif system fallback.
 
 The fallback order is part of the typography contract. Do not substitute a different fallback simply because another font is available.
