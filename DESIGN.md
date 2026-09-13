@@ -100,7 +100,7 @@ typography:
     fontWeight: 900
     letterSpacing: .6
   "h2":
-    fontFamily: "'Brix Sans'"
+    fontFamily: "'Refrigerator Deluxe'"
     fontSize: "40px"
     lineHeight: "40px"
     fontWeight: 900
