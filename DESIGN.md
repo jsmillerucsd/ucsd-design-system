@@ -2780,6 +2780,824 @@ Do not:
 - make static hero text keyboard focusable;
 - change the established hero anatomy merely for visual variety.
 
+## Call to Action
+
+Use the Call to Action module to pair a concise message with one clear action.
+
+The module may combine text with an image, video, or approved UC San Diego grit background.
+
+Do not create a generic card or two-column marketing component when the Call to Action pattern is appropriate.
+
+The Call to Action module follows the established UC San Diego CMS pattern and should preserve its recognizable proportions, spacing, image treatment, typography, and button behavior.
+
+### Purpose
+
+A Call to Action should focus on one idea and one primary next step.
+
+Typical uses include:
+
+- introducing a program;
+- directing visitors to an important resource;
+- promoting a service;
+- highlighting an opportunity;
+- encouraging contact or participation;
+- pairing explanatory text with a relevant image or video.
+
+Do not use a Call to Action as a substitute for:
+
+- a general-purpose content grid;
+- a list of unrelated links;
+- a navigation menu;
+- a news listing;
+- a multi-action promotional card.
+
+If several equal actions must be presented together, consider another module such as Tiles with Links.
+
+### Call to Action content
+
+A standard Call to Action may contain:
+
+- image, video, or approved grit background;
+- headline;
+- supporting copy;
+- one CTA button.
+
+The image or video may be positioned beside the written content depending on the selected variant.
+
+The button is optional when the content does not require an explicit next step, but most Call to Action implementations should contain one clear action.
+
+Do not add multiple competing CTA buttons to a single module.
+
+### Headline
+
+Use the heading level appropriate to the page hierarchy.
+
+For a typical standalone Call to Action within a page, use an `h2`.
+
+Use the `type.h2` typography role.
+
+The headline:
+
+- should normally fit within approximately 25 characters per line;
+- should not exceed approximately two lines;
+- should be sentence case;
+- should describe the purpose of the action clearly.
+
+Do not uppercase the entire headline.
+
+Do not shrink typography merely to force an overly long headline into the module.
+
+Do not substitute decorative display text for the documented heading role.
+
+### Supporting copy
+
+Supporting copy appears beneath the headline.
+
+Use standard body typography.
+
+Keep the text focused on the single purpose of the module.
+
+Approximately 100 words or fewer is recommended.
+
+The traditional CMS pattern allows approximately 8–9 lines of supporting content.
+
+Keep formatting simple.
+
+Avoid:
+
+- long nested lists;
+- multiple subheadings;
+- several unrelated paragraphs;
+- multiple calls to action;
+- oversized lead text.
+
+### Button
+
+The Call to Action button appears beneath the supporting copy.
+
+Use the established button component.
+
+Button labels should be short, action-oriented, and rendered using the component's uppercase styling.
+
+Examples:
+
+```text
+MEET THE STAFF
+```
+
+```text
+EXPLORE PROGRAMS
+```
+
+```text
+LEARN MORE
+```
+
+```text
+GET STARTED
+```
+
+The source text does not need to be written in uppercase if the button component applies uppercase styling through CSS.
+
+Do not place a `<button>` inside an `<a>`.
+
+Navigation actions should use an anchor styled as a button.
+
+## Image requirements
+
+Images displayed beside CTA content use the established approximate source dimensions:
+
+```text
+550 × 370 pixels
+```
+
+Use an image with an appropriate composition for the available landscape area.
+
+Images must:
+
+- retain their natural aspect ratio;
+- remain responsive;
+- use `max-width: 100%`;
+- use `height: auto`;
+- have rounded corners;
+- use a `14px` border radius.
+
+Do not stretch images.
+
+Do not distort their aspect ratio.
+
+Do not use arbitrary fixed-height cropping when the canonical image treatment allows the image to retain its natural dimensions.
+
+### Canonical image styling
+
+Use:
+
+```css
+.cta-module img {
+  border-radius: 14px;
+  max-width: 100%;
+  height: auto;
+}
+```
+
+When the image appears in a sand-background CTA, preserve the established inset treatment:
+
+```css
+.jumbotron-sand img {
+  border-radius: 14px;
+  margin: 25px 0;
+  max-width: 100%;
+  height: auto;
+}
+```
+
+The image margin creates visible sand space above and below the image.
+
+Do not create an additional gray frame, matte, placeholder surface, or background around the image.
+
+The visible area surrounding an inset image must come from the module background itself.
+
+### Image corners
+
+All photographic CTA images use rounded corners.
+
+Use:
+
+```css
+border-radius: 14px;
+```
+
+This applies regardless of whether the image:
+
+- appears on the left;
+- appears on the right;
+- uses no overlay;
+- uses an approved image overlay.
+
+Any overlay applied to an image must be clipped to the exact same rounded image boundary.
+
+Do not allow an overlay to extend beyond the image and create a visible rectangular box.
+
+A suitable relationship is:
+
+```css
+.cta-media-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.cta-media-frame img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+```
+
+If the image does not require an overlay, an additional wrapper is not required solely to create the rounded corners.
+
+### Canonical Call to Action variants
+
+The Call to Action component supports the following canonical variants.
+
+#### 1. Left Image — Dark Style
+
+The image appears on the left.
+
+The written content appears on the right.
+
+The module uses the sand background treatment.
+
+The image uses no overlay.
+
+The image is inset vertically into the sand module background.
+
+Use:
+
+```css
+.jumbotron-sand img {
+  border-radius: 14px;
+  margin: 25px 0;
+  max-width: 100%;
+  height: auto;
+}
+```
+
+The module structure should preserve this relationship:
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│  ╭──────────────────────╮     Headline                     │
+│  │                      │                                  │
+│  │        Image         │     Supporting copy              │
+│  │                      │                                  │
+│  ╰──────────────────────╯     CTA button                   │
+└──────────────────────────────────────────────────────────────┘
+                 Sand background
+```
+
+The sand background must remain visible around the inset image.
+
+Do not place the image inside a gray box.
+
+Do not use an additional background color behind the image.
+
+Do not make the image flush with the top or bottom of the sand panel.
+
+#### 2. Right Image — Light Style — Overlay 1
+
+The written content appears on the left.
+
+The image appears on the right.
+
+Use the documented Overlay 1 treatment.
+
+The image retains:
+
+```css
+border-radius: 14px;
+```
+
+The overlay must be clipped to the rounded image.
+
+Do not allow the overlay surface to extend outside the image boundary.
+
+A suitable implementation is:
+
+```css
+.cta-overlay-1 .cta-media-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.cta-overlay-1 .cta-media-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+}
+```
+
+The exact approved overlay color or opacity should come from the design-system token or documented CTA implementation.
+
+Do not invent additional overlay treatments.
+
+#### 3. Right Image — Light Style — Overlay 2
+
+The written content appears on the left.
+
+The image appears on the right.
+
+Use the documented Overlay 2 treatment.
+
+As with Overlay 1:
+
+- image corners remain `14px`;
+- the overlay follows the exact same rounded boundary;
+- no visible rectangular overlay may extend beyond the image;
+- no gray frame is added behind the image.
+
+Overlay 2 is a distinct approved treatment, not an arbitrary opacity variation generated for visual variety.
+
+#### 4. Yellow Grit Background
+
+This variant does not require a photograph.
+
+Use the approved UC San Diego yellow grit background.
+
+Written content appears directly on the grit surface.
+
+Use dark text with sufficient contrast.
+
+The content should include:
+
+- headline;
+- supporting copy;
+- optional CTA button.
+
+Do not place a decorative photo beside the grit treatment.
+
+Do not combine the grit background with a separate image unless another documented module explicitly permits it.
+
+Do not create new grit colors.
+
+#### 5. Grit Circles Background
+
+This variant uses the approved UC San Diego blue/circle grit treatment.
+
+Written content appears directly on the grit surface.
+
+Use light text where required for contrast.
+
+The content may include:
+
+- headline;
+- supporting copy;
+- CTA button.
+
+Use surface-aware button behavior.
+
+A button's hover state must remain visually distinct from the background behind it.
+
+For a dark or blue grit surface, do not change the button on hover to a color that disappears into the background.
+
+#### 6. Video Embed
+
+A Call to Action may substitute a video embed for the image.
+
+The video occupies the media side of the module.
+
+Written content occupies the opposite side.
+
+Use a responsive video container.
+
+The video should visually follow the same general media proportions as the image variants.
+
+Where rounded media treatment is used, clip the video to the same `14px` radius.
+
+A suitable implementation is:
+
+```css
+.cta-video-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  aspect-ratio: 550 / 370;
+}
+
+.cta-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+```
+
+The embedded video must have an accessible title.
+
+Do not autoplay video with sound.
+
+### Visual contract
+
+The Call to Action module must preserve the following visual characteristics:
+
+- content constrained to the standard page container;
+- two-column relationship for image/video variants;
+- approximately equal media and content columns on desktop;
+- rounded media corners;
+- `14px` media radius;
+- responsive media;
+- simple content hierarchy;
+- one prominent headline;
+- concise supporting text;
+- one primary CTA;
+- substantial but controlled whitespace;
+- vertically balanced media and written content;
+- documented UC San Diego surfaces and colors.
+
+The module should feel like a single composition.
+
+Do not style the image and written content as two unrelated cards.
+
+Do not add borders around each column.
+
+Do not add shadows unless the documented pattern explicitly requires them.
+
+Do not wrap the entire module in an arbitrary rounded card.
+
+### Layout
+
+Image and video variants use a Bootstrap grid.
+
+A canonical desktop structure is:
+
+```html
+<section class="cta-module jumbotron-sand">
+  <div class="container">
+    <div class="row align-items-center">
+
+      <div class="col-md-6">
+        <figure>
+          <img
+            class="img-fluid"
+            src="IMAGE_SOURCE"
+            alt="IMAGE_DESCRIPTION"
+          >
+        </figure>
+      </div>
+
+      <div class="col-md-6">
+        <h2>Call to Action Headline</h2>
+
+        <p>
+          Supporting copy for the Call to Action.
+        </p>
+
+        <p>
+          <a class="btn btn-primary" href="#">
+            Call to Action
+          </a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+```
+
+The image may be moved to the right by reversing the column order.
+
+Do not use absolute positioning to construct the primary two-column layout.
+
+Use the Bootstrap grid.
+
+### Figure behavior
+
+Images may be wrapped in `<figure>`.
+
+Do not allow default figure margins to accidentally alter the documented module spacing.
+
+If `<figure>` is used, normalize its margin as needed:
+
+```css
+.cta-module figure {
+  margin: 0;
+}
+```
+
+The intentional image spacing should come from the documented module/image rules rather than browser-default figure margins.
+
+### Sand-background treatment
+
+When the CTA uses the dark/sand style, apply the sand surface to the module panel.
+
+The photograph remains visibly inset within this sand surface.
+
+The sand area surrounding the image is intentional.
+
+Use the documented sand surface token rather than an arbitrary beige.
+
+The image does not receive a separate gray background.
+
+Correct:
+
+```text
+Sand module
+  └── Rounded image with vertical inset
+```
+
+Incorrect:
+
+```text
+Sand module
+  └── Gray image box
+        └── Rounded image
+```
+
+### Image overlays
+
+Only use documented overlay variants.
+
+An image overlay:
+
+- sits directly over the image;
+- follows the image's exact size;
+- uses the same `14px` rounded corners;
+- is clipped to the image;
+- does not alter module dimensions;
+- does not create a visible background outside the photo.
+
+A suitable pattern is:
+
+```css
+.cta-media-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.cta-media-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.cta-media-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+}
+```
+
+Do not create an overlay by assigning a colored background to an oversized wrapper.
+
+### Background behavior
+
+The Call to Action may use the documented:
+
+- white/light surface;
+- sand/dark-style surface;
+- Yellow Grit;
+- Grit Circles treatment.
+
+Do not arbitrarily alternate background colors for decoration.
+
+Use a background because it belongs to the selected canonical variant.
+
+### Button behavior
+
+Buttons must use established design-system button treatments.
+
+The button's default and hover colors must maintain sufficient contrast against the surface behind the button.
+
+On a light or sand surface, the standard primary button may use the established yellow treatment.
+
+On dark or blue grit surfaces, use surface-aware hover behavior.
+
+Do not allow a button to become visually indistinguishable from its surrounding surface on hover.
+
+Do not introduce undocumented button colors merely for visual variety.
+
+### Optional fields
+
+The supporting copy and CTA button may be omitted when appropriate.
+
+Omitted elements create no empty placeholders.
+
+For example:
+
+- no blurb → headline is followed directly by the button;
+- no button → content ends after the supporting copy.
+
+Do not reserve blank vertical space for omitted content.
+
+The image or other media should not be omitted from an image-specific variant.
+
+If no media is required, use an appropriate grit-background variant instead.
+
+### Content limits
+
+Keep the module concise.
+
+Recommended limits:
+
+- headline: approximately 25 characters per line;
+- headline: approximately two lines maximum;
+- supporting copy: approximately 100 words maximum;
+- supporting copy: approximately 8–9 lines in the traditional desktop layout;
+- CTA buttons: one.
+
+These are content-design guidelines rather than reasons to alter typography.
+
+Do not shrink fonts to accommodate excessive copy.
+
+Edit the content instead.
+
+### Responsive behavior
+
+On smaller screens, the two-column CTA becomes a stacked layout.
+
+Media should normally appear before the written content unless content requirements specify otherwise.
+
+Images remain:
+
+- responsive;
+- `max-width: 100%`;
+- `height: auto`;
+- `14px` rounded.
+
+Preserve reasonable inset spacing around sand-background images.
+
+Do not remove rounded corners on mobile.
+
+Do not horizontally scroll the module.
+
+Do not allow overlays to separate from their images during responsive stacking.
+
+### Bootstrap 5 requirements
+
+Use Bootstrap 5 grid and responsive utilities.
+
+Canonical column behavior may use:
+
+```html
+<div class="row align-items-center">
+  <div class="col-md-6">...</div>
+  <div class="col-md-6">...</div>
+</div>
+```
+
+Use:
+
+```html
+class="img-fluid"
+```
+
+or equivalent responsive behavior.
+
+Do not reproduce obsolete Bootstrap 3 implementation details merely because they appear in the legacy CMS source.
+
+Translate legacy classes where appropriate.
+
+Examples:
+
+```text
+.img-responsive → .img-fluid
+.btn-default → current documented button component
+```
+
+Bootstrap supplies layout mechanics.
+
+The design system supplies the visual appearance.
+
+Do not use Bootstrap defaults as the final visual treatment where the design system defines a different appearance.
+
+### Accessibility
+
+Images that communicate information must have meaningful alternative text.
+
+Decorative images use:
+
+```html
+alt=""
+```
+
+Do not use placeholder alternative text such as:
+
+```text
+Important: add image description
+```
+
+in production.
+
+Video embeds must include an accessible title.
+
+CTA links must have understandable link text.
+
+Avoid vague button labels such as:
+
+```text
+CLICK HERE
+```
+
+unless the surrounding context makes the destination unmistakable.
+
+Keyboard focus must remain visible.
+
+Color contrast must meet the project's accessibility requirements.
+
+Do not rely on an image overlay alone to communicate information.
+
+### Structure
+
+A canonical sand-background, left-image CTA may use:
+
+```html
+<section
+  class="jumbotron-sand cta-module"
+  data-module="call-to-action"
+>
+  <div class="container">
+    <div class="row align-items-center">
+
+      <div class="col-md-6">
+        <figure>
+          <img
+            class="img-fluid"
+            src="IMAGE_SOURCE"
+            alt="IMAGE_DESCRIPTION"
+          >
+        </figure>
+      </div>
+
+      <div class="col-md-6">
+        <h2>
+          Call to Action Headline
+        </h2>
+
+        <p>
+          Supporting copy for the Call to Action.
+        </p>
+
+        <p>
+          <a
+            class="btn btn-primary"
+            href="DESTINATION"
+          >
+            Call to Action
+          </a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+```
+
+Canonical image styling:
+
+```css
+.jumbotron-sand img {
+  border-radius: 14px;
+  margin: 25px 0;
+  max-width: 100%;
+  height: auto;
+}
+```
+
+### Generation rules
+
+When generating a Call to Action:
+
+- use one of the documented canonical variants;
+- preserve the established two-column composition for media variants;
+- keep content within the standard container;
+- use Bootstrap 5 grid mechanics;
+- use the appropriate heading level;
+- use the documented typography roles;
+- keep supporting copy concise;
+- use no more than one primary CTA;
+- use approximately `550 × 370` source imagery where practical;
+- make images responsive;
+- use `14px` rounded image corners;
+- preserve the `25px 0` image margin for the sand-background inset treatment;
+- allow the module background itself to show around inset images;
+- clip image overlays to the rounded image boundary;
+- ensure video embeds are responsive and accessible;
+- use only documented grit backgrounds;
+- use surface-aware button hover behavior;
+- remove omitted optional fields without placeholders.
+
+Do not:
+
+- create generic marketing cards instead of the CTA pattern;
+- add gray image frames;
+- place a gray background behind CTA imagery;
+- add a separate decorative matte around images;
+- use square image corners;
+- allow overlays to extend beyond images;
+- stretch or distort images;
+- arbitrarily crop images with fixed-height containers when natural responsive dimensions are appropriate;
+- add more than one competing CTA;
+- add multiple unrelated messages;
+- introduce undocumented overlays;
+- invent new grit backgrounds;
+- use arbitrary background colors;
+- add shadows for decoration;
+- create a mega-card treatment around the entire module;
+- shrink typography to accommodate excessive content;
+- use Bootstrap 3 classes or interaction patterns when Bootstrap 5 equivalents exist.
+
+The Call to Action should remain recognizable as the established UC San Diego CMS pattern while using the current design-system typography, colors, spacing, accessibility requirements, Bootstrap 5 behavior, and component styling.
+
 ## Do's and Don'ts
 
 These are not style preferences. Each one, violated, breaks dark mode, rebranding, or accessibility.
