@@ -3643,6 +3643,1061 @@ Do not:
 
 The Call to Action should remain recognizable as the established UC San Diego CMS pattern while using the current design-system typography, colors, spacing, accessibility requirements, Bootstrap 5 behavior, and component styling.
 
+## News With Images
+
+When generating a UC San Diego News With Images module, use the established UC San Diego CMS news pattern. Do not substitute a generic card grid, blog-card layout, marketing-card component, or custom editorial grid.
+
+The News With Images module presents a small, curated group of recent stories using an image, publication date, headline, and descriptive link text.
+
+The module must use Bootstrap 5 conventions together with the established UC San Diego module anatomy.
+
+The standard module contains three news items.
+
+### Purpose
+
+Use News With Images when a page needs to highlight a small group of recent news stories, announcements, articles, or editorial content.
+
+Typical uses include:
+
+* recent campus news;
+* departmental news;
+* related stories;
+* research news;
+* institutional announcements;
+* externally published stories from an approved UC San Diego source.
+
+Do not use News With Images as a substitute for:
+
+* a general-purpose card grid;
+* a navigation module;
+* Tiles with Links;
+* a Call to Action;
+* a list of unrelated resources;
+* a large searchable news archive.
+
+If more than three stories need to be displayed, use a dedicated news listing or archive pattern rather than continually extending this module.
+
+### Module background
+
+The News With Images module uses a constrained Sand panel within the page's standard content container.
+
+Use:
+
+* Sand: `#F5F0E6`
+
+The Sand surface provides subtle grouping without giving the module the visual weight of a Navy or Blue branded section.
+
+The module background must not extend edge to edge across the viewport.
+
+The module must remain centered within the page's standard content container.
+
+Do not:
+
+* use a full-width Sand band for this module;
+* use Navy, Blue, Yellow, or expressive accent colors as interchangeable module backgrounds;
+* place each news item on a separate colored card;
+* add default drop shadows;
+* add decorative gradients or textures.
+
+### Module header
+
+The module header contains:
+
+* an `h2` module heading;
+* an optional module-level text link aligned opposite the heading.
+
+The standard presentation places the heading at the left and the module-level action at the right on larger viewports.
+
+Example:
+
+```html
+<div class="news-heading-row">
+  <div>
+    <h2 id="news-heading">AI news from UC San Diego</h2>
+  </div>
+
+  <div class="view-all-link">
+    <a class="text-link" href="/news/">
+      View all news
+    </a>
+  </div>
+</div>
+```
+
+The module-level action is a text link, not a filled button.
+
+Use it for actions such as:
+
+* View all news
+* More news
+* See all stories
+
+Do not add an eyebrow, kicker, overline, category label, or decorative rule above the module heading.
+
+### Module heading
+
+Use the `type.h2` typography role.
+
+The heading uses:
+
+* Font family: Refrigerator Deluxe
+* Font size: `40px`
+* Line height: `40px`
+* Font weight: `900`
+* Letter spacing: `0.5px`
+* Color: Navy `#182B49`
+
+Example:
+
+```css
+.news-heading-row h2 {
+  font-family: var(--ucsd-font-display);
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: 900;
+  letter-spacing: .5px;
+  color: var(--ucsd-color-foreground-h2-heading);
+  margin: 0;
+}
+```
+
+Do not substitute Brix Sans for the module heading.
+
+Do not uppercase the heading.
+
+### Module-level text link
+
+The module-level action uses the UC San Diego text-link treatment rather than `btn-primary` or `btn-secondary`.
+
+The text link uses:
+
+* Navy label text;
+* Brix Sans;
+* `15px` font size;
+* `20px` line height;
+* font weight `900`;
+* `1.4px` letter spacing;
+* uppercase text;
+* a `1px` UC San Diego Blue underline;
+* no background;
+* no border radius.
+
+The underline must use UC San Diego Blue `#00629B`.
+
+Example:
+
+```css
+.news-heading-row .text-link {
+  display: inline-block;
+  color: #182b49;
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid #00629b;
+}
+
+.news-heading-row .text-link:hover {
+  color: #00629b;
+  border-bottom-color: #00629b;
+}
+
+.news-heading-row .text-link:focus-visible {
+  outline: 3px solid #ffcd00;
+  outline-offset: 4px;
+}
+```
+
+Do not use a Navy underline.
+
+Do not style this module-level action as a filled secondary button.
+
+### Visual contract
+
+The News With Images module must preserve the following visual relationships:
+
+* The entire module is centered within the standard page container.
+* The Sand module surface is constrained to that container rather than spanning the viewport.
+* The module includes substantial internal padding.
+* The heading and module-level action occupy the same introductory row.
+* The heading aligns to the left.
+* The module-level text link aligns to the right on desktop.
+* Three news items appear in one equal-width row on standard desktop viewports.
+* News-item gutters are consistent.
+* Every news image uses the same aspect ratio.
+* The date appears immediately below the image and above the headline.
+* The headline appears below the date.
+* Descriptive link text appears beneath the headline.
+* Items align consistently even when headline lengths differ.
+* News items do not use a default box shadow.
+* News items do not appear as floating SaaS-style cards.
+* Content leads; borders, shadows, and decorative chrome remain minimal.
+
+### News grid
+
+The standard desktop presentation contains three equal-width news items.
+
+Use three columns at desktop widths.
+
+The grid collapses responsively:
+
+* desktop: three columns;
+* medium viewports: two columns;
+* small/mobile viewports: one column.
+
+Example:
+
+```css
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ucsd-space-lg);
+}
+
+@media (max-width: 991px) {
+  .news-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+A Bootstrap 5 implementation may instead use:
+
+```html
+<div class="row g-4">
+  <div class="col-md-6 col-lg-4">...</div>
+  <div class="col-md-6 col-lg-4">...</div>
+  <div class="col-md-6 col-lg-4">...</div>
+</div>
+```
+
+Prefer the Bootstrap 5 grid when implementing the module inside the UC San Diego Bootstrap package.
+
+### News item
+
+Each news item contains:
+
+1. image;
+2. publication date;
+3. headline;
+4. descriptive destination text.
+
+The entire news item may be one navigation link.
+
+Canonical anatomy:
+
+```html
+<a class="news-panel" href="/news/story/">
+  <img
+    src="/images/story.jpg"
+    alt="Descriptive image alternative text"
+  >
+
+  <div class="news-panel-heading">
+    <time
+      class="panel-news-date"
+      datetime="2026-09-09"
+    >
+      September 9, 2026
+    </time>
+
+    <h3 class="panel-news-title">
+      Example news headline
+    </h3>
+  </div>
+
+  <div class="news-panel-body">
+    Read about the example story
+  </div>
+</a>
+```
+
+If the whole news item is linked, do not place additional nested `<a>` elements inside it.
+
+Do not use `alt` on the `<a>` element. The `alt` attribute is for images, not links.
+
+### News images
+
+News images use the established UC San Diego News With Images proportion:
+
+* Width reference: `388px`
+* Height reference: `246px`
+* Aspect ratio: `388 / 246`
+
+Use:
+
+```css
+.news-panel img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 388 / 246;
+  object-fit: cover;
+}
+```
+
+Images must:
+
+* fill the available card width;
+* use a consistent aspect ratio;
+* use `object-fit: cover`;
+* use meaningful alternative text when the image conveys information;
+* use `alt=""` when the image is entirely decorative and its content is already fully represented by adjacent text.
+
+Do not:
+
+* allow mixed image heights within a single module;
+* stretch images;
+* distort image proportions;
+* use unrelated decorative stock imagery;
+* put text over the news images;
+* use arbitrary image ratios within the same module.
+
+### Image corner treatment
+
+Use the standard medium-radius treatment:
+
+```css
+.news-panel img {
+  border-radius: var(--ucsd-radius-md);
+}
+```
+
+Do not add excessive rounding.
+
+The image may carry the radius without placing the entire news item inside a rounded card.
+
+### Publication date
+
+The publication date appears immediately beneath the image and above the headline.
+
+Use a semantic `<time>` element whenever the date is known.
+
+Example:
+
+```html
+<time
+  class="panel-news-date"
+  datetime="2026-09-09"
+>
+  September 9, 2026
+</time>
+```
+
+Date typography:
+
+* Brix Sans;
+* `15px`;
+* `20px` line height;
+* weight `400`;
+* uppercase;
+* Navy.
+
+Example:
+
+```css
+.panel-news-date {
+  display: block;
+  margin: 0 0 .35rem;
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #182b49;
+}
+```
+
+Do not use low-contrast gray merely to make the date appear secondary.
+
+### News headline
+
+Each news item uses an `h3` for its headline when the module heading is an `h2`.
+
+Headline typography:
+
+* Brix Sans;
+* `24px`;
+* `28px` line height;
+* weight `900`;
+* Navy.
+
+Example:
+
+```css
+.panel-news-title {
+  margin: 0;
+  font-family: var(--ucsd-font-body);
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 900;
+  color: #182b49;
+}
+```
+
+On desktop, the headline area may use a minimum height to keep the bottom links visually aligned across all three items.
+
+Example:
+
+```css
+.panel-news-title {
+  min-height: 88px;
+}
+```
+
+Remove the minimum height when news items stack vertically on small screens:
+
+```css
+@media (max-width: 767px) {
+  .panel-news-title {
+    min-height: 0;
+  }
+}
+```
+
+Keep headlines concise.
+
+Prefer headlines that occupy approximately two to four lines at the standard desktop width.
+
+Do not truncate meaningful headlines with ellipses solely to force identical heights.
+
+### Descriptive story link text
+
+The text beneath each headline must describe the destination.
+
+Do not repeat generic link text such as:
+
+* Read more
+* Learn more
+* Read the story
+* Click here
+
+Repeated generic links are ambiguous when a user navigates by links or encounters the links outside their visual context.
+
+Use concise, story-specific labels such as:
+
+* `Read about the Imagination Advantage`
+* `Read about the NSF NAIRR Operations Center`
+* `Read about Summer of Learning by Doing`
+
+Keep this text concise enough to occupy approximately one or two lines on desktop.
+
+Do not repeat the complete headline when a shorter unique phrase provides an equally clear accessible name.
+
+The link treatment uses:
+
+* Brix Sans;
+* `15px`;
+* `20px` line height;
+* weight `900`;
+* approximately `1.1px` letter spacing;
+* uppercase;
+* Navy;
+* visible underline.
+
+Example:
+
+```css
+.news-panel-body {
+  margin-top: auto;
+  padding:
+    var(--ucsd-space-md)
+    var(--ucsd-space-sm)
+    0;
+
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 900;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+
+  color: #182b49;
+
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+```
+
+### Whole-item interaction
+
+When the entire news item is linked, the complete item is the interactive target.
+
+Use:
+
+```css
+.news-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: #182b49;
+  text-decoration: none;
+  background: transparent;
+}
+```
+
+On hover, reinforce the headline as the destination:
+
+```css
+.news-panel:hover .panel-news-title {
+  text-decoration: underline;
+}
+```
+
+Do not:
+
+* lift the item vertically;
+* add a hover shadow;
+* scale the card;
+* zoom the image;
+* change the entire item to a saturated background color.
+
+The News With Images module is editorial content, not Tiles with Links. It should not inherit the Tiles scale interaction.
+
+### Keyboard focus
+
+Every linked news item must have a clearly visible keyboard focus indicator.
+
+Use:
+
+```css
+.news-panel:focus-visible {
+  outline: 3px solid #ffcd00;
+  outline-offset: 5px;
+}
+```
+
+The module-level View All link must also have a visible focus indicator.
+
+Do not remove browser focus styling without replacing it with an equally visible treatment.
+
+### Module panel
+
+The module is a constrained panel inside the page container.
+
+Canonical treatment:
+
+```css
+.jumbotron-news {
+  padding-block: var(--ucsd-space-xxxl);
+}
+
+.jumbotron-news > .container {
+  background: var(--ucsd-color-surface-2);
+  padding: var(--ucsd-space-xxl);
+  border-radius: var(--ucsd-radius-md);
+}
+```
+
+This produces a Sand content panel surrounded by the page's normal canvas.
+
+Do not allow the Sand surface to bleed to the edges of the browser viewport.
+
+### Header layout
+
+Desktop:
+
+```css
+.news-heading-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  align-items: start;
+  gap: var(--ucsd-space-lg);
+  margin-bottom: var(--ucsd-space-xl);
+}
+
+.news-heading-row .view-all-link {
+  text-align: right;
+  padding-top: .35rem;
+}
+```
+
+At smaller breakpoints, allow the action to move below the heading:
+
+```css
+@media (max-width: 767px) {
+  .news-heading-row {
+    display: block;
+  }
+
+  .news-heading-row .view-all-link {
+    margin-top: var(--ucsd-space-md);
+    text-align: left;
+  }
+}
+```
+
+Do not force the View All link to remain right aligned when doing so causes crowding or overlap.
+
+### Structure
+
+The outer section identifies the module and provides semantic grouping.
+
+The canonical hierarchy is:
+
+* `<section class="jumbotron-news" data-module="news-with-images">`
+* `.container`
+* `.news-heading-row`
+* module `<h2>`
+* optional `.view-all-link`
+* `.news-grid` or Bootstrap `.row`
+* individual `.news-panel`
+* `<img>`
+* `.news-panel-heading`
+* `<time class="panel-news-date">`
+* `<h3 class="panel-news-title">`
+* `.news-panel-body`
+
+The module heading must be associated with the section using `aria-labelledby`.
+
+Example:
+
+```html
+<section
+  class="jumbotron-news"
+  data-module="news-with-images"
+  aria-labelledby="news-heading"
+>
+```
+
+Do not use `aria-label` when an existing visible heading can provide the accessible name through `aria-labelledby`.
+
+### Canonical Bootstrap 5 example
+
+```html
+<section
+  class="jumbotron-news"
+  data-module="news-with-images"
+  aria-labelledby="news-heading"
+>
+  <div class="container">
+
+    <div class="news-heading-row">
+      <div>
+        <h2 id="news-heading">
+          AI news from UC San Diego
+        </h2>
+      </div>
+
+      <div class="view-all-link">
+        <a
+          class="text-link"
+          href="/news/"
+        >
+          View all news
+        </a>
+      </div>
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-4">
+        <a
+          class="news-panel"
+          href="/news/story-one/"
+        >
+          <img
+            src="/images/story-one.jpg"
+            alt="Description of the story image"
+          >
+
+          <div class="news-panel-heading">
+            <time
+              class="panel-news-date"
+              datetime="2026-09-09"
+            >
+              September 9, 2026
+            </time>
+
+            <h3 class="panel-news-title">
+              The Imagination Advantage:
+              A Conversation with Cassandra Vieten
+            </h3>
+          </div>
+
+          <div class="news-panel-body">
+            Read about the Imagination Advantage
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <a
+          class="news-panel"
+          href="/news/story-two/"
+        >
+          <img
+            src="/images/story-two.jpg"
+            alt="Description of the story image"
+          >
+
+          <div class="news-panel-heading">
+            <time
+              class="panel-news-date"
+              datetime="2026-09-01"
+            >
+              September 1, 2026
+            </time>
+
+            <h3 class="panel-news-title">
+              Strengthening America's AI Ecosystem
+              with the Launch of the NSF NAIRR
+              Operations Center
+            </h3>
+          </div>
+
+          <div class="news-panel-body">
+            Read about the NSF NAIRR Operations Center
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <a
+          class="news-panel"
+          href="/news/story-three/"
+        >
+          <img
+            src="/images/story-three.jpg"
+            alt="Description of the story image"
+          >
+
+          <div class="news-panel-heading">
+            <time
+              class="panel-news-date"
+              datetime="2026-08-31"
+            >
+              August 31, 2026
+            </time>
+
+            <h3 class="panel-news-title">
+              A Summer of Learning by Doing
+            </h3>
+          </div>
+
+          <div class="news-panel-body">
+            Read about Summer of Learning by Doing
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+```
+
+### Canonical CSS
+
+```css
+.jumbotron-news {
+  padding-block: var(--ucsd-space-xxxl);
+}
+
+.jumbotron-news > .container {
+  background: var(--ucsd-color-surface-2);
+  padding: var(--ucsd-space-xxl);
+  border-radius: var(--ucsd-radius-md);
+}
+
+/* Header */
+
+.news-heading-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  align-items: start;
+  gap: var(--ucsd-space-lg);
+  margin-bottom: var(--ucsd-space-xl);
+}
+
+.news-heading-row h2 {
+  margin: 0;
+
+  font-family: var(--ucsd-font-display);
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: 900;
+  letter-spacing: .5px;
+
+  color: var(--ucsd-color-foreground-h2-heading);
+}
+
+.news-heading-row .view-all-link {
+  padding-top: .35rem;
+  text-align: right;
+}
+
+/* Module-level text link */
+
+.news-heading-row .text-link {
+  display: inline-block;
+
+  color: var(--ucsd-color-theme-primary);
+
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+
+  text-transform: uppercase;
+  text-decoration: none;
+
+  border-bottom:
+    1px solid
+    var(--ucsd-color-component-btn-secondary);
+}
+
+.news-heading-row .text-link:hover {
+  color: var(--ucsd-color-component-btn-secondary);
+  border-bottom-color:
+    var(--ucsd-color-component-btn-secondary);
+}
+
+.news-heading-row .text-link:focus-visible {
+  outline:
+    3px solid
+    var(--ucsd-color-theme-secondary);
+  outline-offset: 4px;
+}
+
+/* News grid */
+
+.news-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: var(--ucsd-space-lg);
+}
+
+/* News item */
+
+.news-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  color: var(--ucsd-color-theme-primary);
+  background: transparent;
+  text-decoration: none;
+}
+
+.news-panel:hover .panel-news-title {
+  text-decoration: underline;
+}
+
+.news-panel:focus-visible {
+  outline:
+    3px solid
+    var(--ucsd-color-theme-secondary);
+  outline-offset: 5px;
+}
+
+/* Image */
+
+.news-panel img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 388 / 246;
+  object-fit: cover;
+
+  border-radius: var(--ucsd-radius-md);
+  background: var(--ucsd-color-surface-5);
+}
+
+/* Story content */
+
+.news-panel-heading {
+  padding:
+    var(--ucsd-space-md)
+    var(--ucsd-space-sm)
+    0;
+}
+
+.panel-news-date {
+  display: block;
+  margin: 0 0 .35rem;
+
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+
+  text-transform: uppercase;
+
+  color: var(--ucsd-color-theme-primary);
+}
+
+.panel-news-title {
+  min-height: 88px;
+  margin: 0;
+
+  font-family: var(--ucsd-font-body);
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 900;
+
+  color: var(--ucsd-color-theme-primary);
+}
+
+.news-panel-body {
+  margin-top: auto;
+
+  padding:
+    var(--ucsd-space-md)
+    var(--ucsd-space-sm)
+    0;
+
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 900;
+  letter-spacing: 1.1px;
+
+  text-transform: uppercase;
+
+  color: var(--ucsd-color-theme-primary);
+
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* Responsive */
+
+@media (max-width: 991px) {
+  .news-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .news-heading-row {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .news-heading-row {
+    display: block;
+  }
+
+  .news-heading-row h2 {
+    font-size: 34px;
+    line-height: 34px;
+  }
+
+  .news-heading-row .view-all-link {
+    margin-top: var(--ucsd-space-md);
+    text-align: left;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-news-title {
+    min-height: 0;
+  }
+}
+```
+
+### Bootstrap 5 requirements
+
+Use Bootstrap 5 markup and utilities.
+
+Do not reproduce obsolete Bootstrap 3 implementation details from legacy CMS examples.
+
+In particular:
+
+* do not depend on Bootstrap 3's `.jumbotron` component;
+* do not use `.col-xs-*`;
+* do not use `.text-right`;
+* use `.text-md-end` when Bootstrap alignment utilities are appropriate;
+* do not use `.panel`, `.panel-default`, `.panel-heading`, or `.panel-body` as Bootstrap components;
+* use semantic UC San Diego module classes instead;
+* use `.row`, `.g-4`, `.col-md-6`, and `.col-lg-4` when using the Bootstrap grid;
+* use real links for navigation;
+* do not place a `<button>` inside an `<a>`.
+
+Legacy UC San Diego class names may inform the module's visual ancestry, but new implementations must use Bootstrap 5 conventions.
+
+### Accessibility
+
+The News With Images module must meet the following requirements:
+
+* The outer section has an accessible name through `aria-labelledby`.
+* The visible module heading is an `h2` when appropriate to the page hierarchy.
+* Story headlines use `h3` beneath that module heading.
+* Publication dates use semantic `<time datetime="">` markup.
+* Images have meaningful `alt` text when informative.
+* Decorative images use `alt=""`.
+* Linked news items have visible keyboard focus.
+* Link purpose can be determined from the accessible name and surrounding content.
+* Repeated generic labels such as `Read more` or `Read the story` are not used.
+* Module-level link text is descriptive.
+* Link and focus treatments do not rely on color alone.
+* Text maintains WCAG-compliant contrast against the Sand surface.
+* Heading order remains logical when the module is placed within a page.
+* Responsive reflow does not change the semantic reading order.
+
+If the complete news item is one link, do not create nested links inside the item.
+
+### Content guidance
+
+Use exactly three stories in the standard News With Images module.
+
+For each story:
+
+* use a concise headline;
+* provide a publication date;
+* provide one representative image;
+* provide concise, descriptive destination text;
+* keep the destination text to approximately two lines or fewer when practical.
+
+Prefer:
+
+`Read about the NSF NAIRR Operations Center`
+
+over:
+
+`Read Strengthening America's AI Ecosystem with the Launch of the NSF NAIRR Operations Center`
+
+The shorter version remains unique and descriptive while preserving the visual rhythm of the module.
+
+Do not shorten labels until they become ambiguous.
+
+### Do not
+
+Do not:
+
+* turn News With Images into a generic card deck;
+* make the module full viewport width;
+* make each story a white floating card on Sand;
+* add card shadows by default;
+* add decorative eyebrow text;
+* use more than three stories merely because additional grid space is available;
+* use inconsistent image ratios;
+* place category badges over the images;
+* use a Tiles with Links scale interaction;
+* use generic repeated link labels;
+* truncate headlines with ellipses by default;
+* introduce arbitrary accent colors;
+* use a filled button for the module-level `View all news` action;
+* use Brix Sans for the module H2 in place of Refrigerator Deluxe;
+* omit visible keyboard focus;
+* use legacy Bootstrap 3 grid or panel behavior in new implementations.
+
+The target is a restrained editorial module: one clear heading, three consistently structured stories, strong photography, plain metadata, and recognizable UC San Diego interaction styling.
+
 ## Do's and Don'ts
 
 These are not style preferences. Each one, violated, breaks dark mode, rebranding, or accessibility.
