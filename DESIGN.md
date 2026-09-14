@@ -1181,7 +1181,7 @@ Button labels are rendered in uppercase through the component style. Do not rely
 
 #### Secondary Button
 
-Use for prominent standalone calls to action that should feel lighter than a filled button.
+Use for prominent standalone calls to action that should feel lighter than a filled button. Follow the font size, line height, font family, etc. guidelines from the typography section of this design.md document.
 
 ```html
 <a class="btn-secondary" href="#">
