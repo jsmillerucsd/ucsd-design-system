@@ -32,7 +32,7 @@ Use for prominent standalone calls to action that should feel lighter than a fil
   text-transform: uppercase;
   text-decoration: none;
 
-  padding: 0 0 0.35rem;
+  padding: 0 0 0;
   border: 0;
   border-bottom: 1px solid #00629b;
 
