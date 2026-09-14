@@ -1179,6 +1179,67 @@ Label buttons with the verb for what happens: "Apply now", "Download the form". 
 
 Button labels are rendered in uppercase through the component style. Do not rely on authors to manually capitalize button text.
 
+#### Secondary Button
+
+Use for prominent standalone calls to action that should feel lighter than a filled button.
+
+```html
+<a class="btn-secondary" href="#">
+  Click me
+</a>
+.btn-secondaryk {
+  display: inline-block;
+
+  color: #182b49;
+  background: transparent;
+
+  font-family:
+    "Refrigerator Deluxe",
+    "Teko",
+    "Arial Narrow",
+    sans-serif;
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  padding: 0 0 0.35rem;
+  border: 0;
+  border-bottom: 0.35rem solid #00629b;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  color: #00629b;
+  border-bottom-color: #00629b;
+}
+
+.btn-secondary:focus-visible {
+  outline: 3px solid #ffcd00;
+  outline-offset: 4px;
+}
+
+.btn-secondary:active {
+  color: #182b49;
+  border-bottom-color: #ffcd00;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-secondary {
+    transition: none;
+  }
+}
+```
+
+Use this treatment only for prominent calls to action. Do not use it for ordinary inline links, navigation items, or dense groups of actions.
+
 ### Forms
 
 Every input has a visible, persistent label. Placeholder text is not a label — it disappears exactly when the user needs it, and it fails contrast at the sizes it is typically used.
