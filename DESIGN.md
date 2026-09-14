@@ -3647,7 +3647,7 @@ The Call to Action should remain recognizable as the established UC San Diego CM
 
 When generating a UC San Diego News With Images module, use the established UC San Diego CMS news pattern. Do not substitute a generic card grid, blog-card layout, marketing-card component, or custom editorial grid.
 
-The News With Images module presents a small, curated group of recent stories using an image, publication date, headline, and descriptive link text.
+The News With Images module presents a small, curated group of recent stories using an image, publication date, and linked headline.
 
 The module must use Bootstrap 5 conventions together with the established UC San Diego module anatomy.
 
@@ -3830,7 +3830,7 @@ The News With Images module must preserve the following visual relationships:
 * Every news image uses the same aspect ratio.
 * The date appears immediately below the image and above the headline.
 * The headline appears below the date.
-* Descriptive link text appears beneath the headline.
+* The headline itself is the story link.
 * Items align consistently even when headline lengths differ.
 * News items do not use a default box shadow.
 * News items do not appear as floating SaaS-style cards.
@@ -3888,15 +3888,16 @@ Each news item contains:
 
 1. image;
 2. publication date;
-3. headline;
-4. descriptive destination text.
+3. linked headline.
 
-The entire news item may be one navigation link.
+Only the headline is the story link.
+
+The image and publication date are not links by default.
 
 Canonical anatomy:
 
 ```html
-<a class="news-panel" href="/news/story/">
+<article class="news-panel">
   <img
     src="/images/story.jpg"
     alt="Descriptive image alternative text"
@@ -3911,17 +3912,17 @@ Canonical anatomy:
     </time>
 
     <h3 class="panel-news-title">
-      Example news headline
+      <a href="/news/story/">
+        Example news headline
+      </a>
     </h3>
   </div>
-
-  <div class="news-panel-body">
-    Read about the example story
-  </div>
-</a>
+</article>
 ```
 
-If the whole news item is linked, do not place additional nested `<a>` elements inside it.
+Do not wrap the entire news item in an anchor.
+
+Do not add a second generic link such as `Read more`, `Read the story`, or `Learn more` beneath the headline.
 
 Do not use `alt` on the `<a>` element. The `alt` attribute is for images, not links.
 
@@ -4043,7 +4044,7 @@ Example:
 }
 ```
 
-On desktop, the headline area may use a minimum height to keep the bottom links visually aligned across all three items.
+On desktop, the headline area may use a minimum height to keep story rows visually aligned.
 
 Example:
 
@@ -4069,92 +4070,48 @@ Prefer headlines that occupy approximately two to four lines at the standard des
 
 Do not truncate meaningful headlines with ellipses solely to force identical heights.
 
-### Descriptive story link text
+### Linked headline behavior
 
-The text beneath each headline must describe the destination.
+The news headline is the story link.
 
-Do not repeat generic link text such as:
+Because the headline itself names the destination, no additional descriptive link is required beneath it.
 
-* Read more
-* Learn more
-* Read the story
-* Click here
-
-Repeated generic links are ambiguous when a user navigates by links or encounters the links outside their visual context.
-
-Use concise, story-specific labels such as:
-
-* `Read about the Imagination Advantage`
-* `Read about the NSF NAIRR Operations Center`
-* `Read about Summer of Learning by Doing`
-
-Keep this text concise enough to occupy approximately one or two lines on desktop.
-
-Do not repeat the complete headline when a shorter unique phrase provides an equally clear accessible name.
-
-The link treatment uses:
+The linked headline uses the same visual typography as the `h3` headline:
 
 * Brix Sans;
-* `15px`;
-* `20px` line height;
+* `24px`;
+* `28px` line height;
 * weight `900`;
-* approximately `1.1px` letter spacing;
-* uppercase;
-* Navy;
-* visible underline.
+* Navy.
 
-Example:
-
-```css
-.news-panel-body {
-  margin-top: auto;
-  padding:
-    var(--ucsd-space-md)
-    var(--ucsd-space-sm)
-    0;
-
-  font-family: var(--ucsd-font-body);
-  font-size: 15px;
-  line-height: 20px;
-  font-weight: 900;
-  letter-spacing: 1.1px;
-  text-transform: uppercase;
-
-  color: #182b49;
-
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-}
-```
-
-### Whole-item interaction
-
-When the entire news item is linked, the complete item is the interactive target.
+The link should not introduce a separate button-like treatment.
 
 Use:
 
 ```css
-.news-panel {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  color: #182b49;
+.panel-news-title a {
+  color: var(--ucsd-color-theme-primary);
   text-decoration: none;
-  background: transparent;
 }
-```
 
-On hover, reinforce the headline as the destination:
-
-```css
-.news-panel:hover .panel-news-title {
+.panel-news-title a:hover {
   text-decoration: underline;
 }
+
+.panel-news-title a:focus-visible {
+  outline: 3px solid var(--ucsd-color-theme-secondary);
+  outline-offset: 4px;
+}
 ```
+
+The full news item is not a link.
 
 Do not:
 
+* wrap the complete news item in an anchor;
+* make the image a separate link to the same story;
+* add a second link beneath the headline;
+* use generic repeated links such as `Read more`, `Learn more`, or `Read the story`;
 * lift the item vertically;
 * add a hover shadow;
 * scale the card;
@@ -4165,14 +4122,14 @@ The News With Images module is editorial content, not Tiles with Links. It shoul
 
 ### Keyboard focus
 
-Every linked news item must have a clearly visible keyboard focus indicator.
+Every linked news headline must have a clearly visible keyboard focus indicator.
 
 Use:
 
 ```css
-.news-panel:focus-visible {
+.panel-news-title a:focus-visible {
   outline: 3px solid #ffcd00;
-  outline-offset: 5px;
+  outline-offset: 4px;
 }
 ```
 
@@ -4255,7 +4212,7 @@ The canonical hierarchy is:
 * `.news-panel-heading`
 * `<time class="panel-news-date">`
 * `<h3 class="panel-news-title">`
-* `.news-panel-body`
+* headline `<a>` inside the `h3`
 
 The module heading must be associated with the section using `aria-labelledby`.
 
@@ -4301,10 +4258,7 @@ Do not use `aria-label` when an existing visible heading can provide the accessi
     <div class="row g-4">
 
       <div class="col-md-6 col-lg-4">
-        <a
-          class="news-panel"
-          href="/news/story-one/"
-        >
+        <article class="news-panel">
           <img
             src="/images/story-one.jpg"
             alt="Description of the story image"
@@ -4319,22 +4273,17 @@ Do not use `aria-label` when an existing visible heading can provide the accessi
             </time>
 
             <h3 class="panel-news-title">
-              The Imagination Advantage:
-              A Conversation with Cassandra Vieten
+              <a href="/news/story-one/">
+                The Imagination Advantage:
+                A Conversation with Cassandra Vieten
+              </a>
             </h3>
           </div>
-
-          <div class="news-panel-body">
-            Read about the Imagination Advantage
-          </div>
-        </a>
+        </article>
       </div>
 
       <div class="col-md-6 col-lg-4">
-        <a
-          class="news-panel"
-          href="/news/story-two/"
-        >
+        <article class="news-panel">
           <img
             src="/images/story-two.jpg"
             alt="Description of the story image"
@@ -4349,23 +4298,18 @@ Do not use `aria-label` when an existing visible heading can provide the accessi
             </time>
 
             <h3 class="panel-news-title">
-              Strengthening America's AI Ecosystem
-              with the Launch of the NSF NAIRR
-              Operations Center
+              <a href="/news/story-two/">
+                Strengthening America's AI Ecosystem
+                with the Launch of the NSF NAIRR
+                Operations Center
+              </a>
             </h3>
           </div>
-
-          <div class="news-panel-body">
-            Read about the NSF NAIRR Operations Center
-          </div>
-        </a>
+        </article>
       </div>
 
       <div class="col-md-6 col-lg-4">
-        <a
-          class="news-panel"
-          href="/news/story-three/"
-        >
+        <article class="news-panel">
           <img
             src="/images/story-three.jpg"
             alt="Description of the story image"
@@ -4380,14 +4324,12 @@ Do not use `aria-label` when an existing visible heading can provide the accessi
             </time>
 
             <h3 class="panel-news-title">
-              A Summer of Learning by Doing
+              <a href="/news/story-three/">
+                A Summer of Learning by Doing
+              </a>
             </h3>
           </div>
-
-          <div class="news-panel-body">
-            Read about Summer of Learning by Doing
-          </div>
-        </a>
+        </article>
       </div>
 
     </div>
@@ -4488,18 +4430,6 @@ Do not use `aria-label` when an existing visible heading can provide the accessi
 
   color: var(--ucsd-color-theme-primary);
   background: transparent;
-  text-decoration: none;
-}
-
-.news-panel:hover .panel-news-title {
-  text-decoration: underline;
-}
-
-.news-panel:focus-visible {
-  outline:
-    3px solid
-    var(--ucsd-color-theme-secondary);
-  outline-offset: 5px;
 }
 
 /* Image */
@@ -4549,27 +4479,20 @@ Do not use `aria-label` when an existing visible heading can provide the accessi
   color: var(--ucsd-color-theme-primary);
 }
 
-.news-panel-body {
-  margin-top: auto;
-
-  padding:
-    var(--ucsd-space-md)
-    var(--ucsd-space-sm)
-    0;
-
-  font-family: var(--ucsd-font-body);
-  font-size: 15px;
-  line-height: 20px;
-  font-weight: 900;
-  letter-spacing: 1.1px;
-
-  text-transform: uppercase;
-
+.panel-news-title a {
   color: var(--ucsd-color-theme-primary);
+  text-decoration: none;
+}
 
+.panel-news-title a:hover {
   text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+}
+
+.panel-news-title a:focus-visible {
+  outline:
+    3px solid
+    var(--ucsd-color-theme-secondary);
+  outline-offset: 4px;
 }
 
 /* Responsive */
@@ -4640,16 +4563,16 @@ The News With Images module must meet the following requirements:
 * Publication dates use semantic `<time datetime="">` markup.
 * Images have meaningful `alt` text when informative.
 * Decorative images use `alt=""`.
-* Linked news items have visible keyboard focus.
-* Link purpose can be determined from the accessible name and surrounding content.
-* Repeated generic labels such as `Read more` or `Read the story` are not used.
+* Linked news headlines have visible keyboard focus.
+* Each story headline is the story link, so its visible text provides the accessible link purpose.
+* Do not add repeated generic links such as `Read more`, `Learn more`, or `Read the story` beneath the headlines.
 * Module-level link text is descriptive.
 * Link and focus treatments do not rely on color alone.
 * Text maintains WCAG-compliant contrast against the Sand surface.
 * Heading order remains logical when the module is placed within a page.
 * Responsive reflow does not change the semantic reading order.
 
-If the complete news item is one link, do not create nested links inside the item.
+Do not wrap the complete news item in a link. Only the headline is linked.
 
 ### Content guidance
 
@@ -4660,20 +4583,12 @@ For each story:
 * use a concise headline;
 * provide a publication date;
 * provide one representative image;
-* provide concise, descriptive destination text;
-* keep the destination text to approximately two lines or fewer when practical.
+* make the headline itself the story link;
+* ensure the headline remains specific enough to identify the destination when encountered as link text.
 
-Prefer:
+Do not add a separate `Read more`, `Learn more`, `Read the story`, or equivalent link beneath the headline.
 
-`Read about the NSF NAIRR Operations Center`
-
-over:
-
-`Read Strengthening America's AI Ecosystem with the Launch of the NSF NAIRR Operations Center`
-
-The shorter version remains unique and descriptive while preserving the visual rhythm of the module.
-
-Do not shorten labels until they become ambiguous.
+Keep headlines concise, but do not shorten them until they become ambiguous.
 
 ### Do not
 
@@ -4688,33 +4603,14 @@ Do not:
 * use inconsistent image ratios;
 * place category badges over the images;
 * use a Tiles with Links scale interaction;
-* use generic repeated link labels;
+* add a separate generic story link beneath the headline;
 * truncate headlines with ellipses by default;
 * introduce arbitrary accent colors;
+* wrap the complete news item in a link;
+* make the image a duplicate link to the same story;
 * use a filled button for the module-level `View all news` action;
 * use Brix Sans for the module H2 in place of Refrigerator Deluxe;
 * omit visible keyboard focus;
 * use legacy Bootstrap 3 grid or panel behavior in new implementations.
 
-The target is a restrained editorial module: one clear heading, three consistently structured stories, strong photography, plain metadata, and recognizable UC San Diego interaction styling.
-
-## Do's and Don'ts
-
-These are not style preferences. Each one, violated, breaks dark mode, rebranding, or accessibility.
-
-- **Don't** write a raw hex color, or a raw pixel value for spacing or radius. Use a semantic token — `var(--ucsd-*)` in CSS, `$ucsd-*` in Sass, or the mapped Tailwind utility. If no token covers what you need, say so rather than inventing a value.
-- **Don't** reference a primitive (`palette.*`) from a component. Primitives are the paint box; components bind to semantic tokens. A primitive reference hard-codes a brand decision and breaks dark mode.
-- **Don't** hand-write dark-mode color overrides. Dark mode is a re-alias of the same semantic tokens and is already correct if you used them. No `dark:` color variants, no theme branching in component code, no second palette.
-- **Don't** invent a breakpoint. The `breakpoint.*` scale matches Bootstrap 5 exactly so that Bootstrap utilities and Tailwind variants agree; a custom media query silently desynchronises them.
-- **Don't** use Bootstrap 3 classes — they are errors, not legacy style. `panel*` is now `card`, `btn-default` is `btn-secondary`, `col-xs-*` is `col-*`, `img-responsive` is `img-fluid`, and `glyphicon` is Bootstrap Icons.
-- **Don't** remove a focus indicator. `outline: none` without an equally visible replacement is an accessibility defect, not a design choice.
-- **Don't** carry meaning in color alone. Every status, error and state needs text or an icon alongside it.
-- **Don't** put a drop shadow on a card. Cards are a surface change and a padding contract; shadow is for things that float and can be dismissed.
-- **Don't** use the display face below heading sizes, and don't use the pill radius on a primary button. Both read as consumer-app signals.
-- **Do** use one `<h1>` per page, a skip link, and real landmark elements.
-- **Do** give every input a visible persistent label. A placeholder is not a label.
-- **Do** keep one primary action per screen.
-- **Do** meet the target-size floor on interactive controls, even when it costs you the layout you wanted.
-- **Do** prefer space and surface change over borders, and borders over shadows, when separating regions.
-- **Do** trust the modest end of the type ramp. The pull toward a much larger heading is a marketing-site reflex.
-- **Do** let pages end. Vertical white space is correct, not underfilled.
+The target is a restrained editorial module: one clear heading, three consistently structured stories, strong photography, plain metadata, linked headlines, and recognizable UC San Diego interaction styling.
