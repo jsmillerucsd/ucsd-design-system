@@ -34,7 +34,7 @@ Use for prominent standalone calls to action that should feel lighter than a fil
 
   padding: 0 0 0.35rem;
   border: 0;
-  border-bottom: 0.35rem solid #00629b;
+  border-bottom: 1px solid #00629b;
 
   cursor: pointer;
 
@@ -45,17 +45,11 @@ Use for prominent standalone calls to action that should feel lighter than a fil
 
 .btn-secondary:hover {
   color: #00629b;
-  border-bottom-color: #00629b;
 }
 
 .btn-secondary:focus-visible {
   outline: 3px solid #ffcd00;
   outline-offset: 4px;
-}
-
-.btn-secondary:active {
-  color: #182b49;
-  border-bottom-color: #ffcd00;
 }
 
 @media (prefers-reduced-motion: reduce) {
