@@ -1192,16 +1192,6 @@ Use for prominent standalone calls to action that should feel lighter than a fil
 
   color: #182b49;
   background: transparent;
-
-  font-family:
-    "Refrigerator Deluxe",
-    "Teko",
-    "Arial Narrow",
-    sans-serif;
-  font-size: 4rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
 
