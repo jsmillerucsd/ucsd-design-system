@@ -2,218 +2,24 @@
 # GENERATED BLOCK — do not edit.
 # Values come from Figma via tokens/ and packages/tokens/dist/tokens.json.
 # Edit the prose in docs/design-md/, then run `npm run build`.
-# Enterprise Application Design Standard for UC San Diego Decorator 5
-
-## 1. Purpose
-
-This document defines how an enterprise application should look, behave, and communicate inside UC San Diego Decorator 5.
-
-Decorator 5 provides the institutional frame. This design standard governs the application experience inside that frame. The goal is a coherent UC San Diego experience without treating Decorator 5 as a complete enterprise application component library.
-
-This document is intentionally written as a design contract. Requirements using **must**, **must not**, **should**, and **may** are intended to be testable by designers, developers, QA, and coding agents.
-
-## 2. The governing boundary
-
-Every page has two ownership zones.
-
-| Zone | Owner | Examples | Change policy |
-| --- | --- | --- | --- |
-| **Decorator chrome** | UC San Diego Decorator 5 | Campus header, institutional identity, global/site navigation, search, mobile drawer, footer, associated scripts | Protected. Reuse canonical markup and behavior. Do not redesign, reconstruct, or override. |
-| **Application canvas** | Product team | App navigation, page headers, workflows, forms, tables, cards, dashboards, dialogs, messages | Editable under this standard. |
-
-### 2.1 Protected Decorator chrome
-
-The following are outside the application design scope:
-
-- UC San Diego header and wordmark
-- Decorator global or site navigation
-- Decorator search interfaces and search scope controls
-- Decorator mobile navigation and drawer behavior
-- Decorator footer
-- Decorator-owned IDs, classes, data attributes, DOM hierarchy, styles, and scripts
-
-The product team **must not**:
-
-- redraw or approximate protected chrome;
-- move application actions into the UC San Diego header or footer;
-- use application CSS to restyle Decorator selectors;
-- use application JavaScript to alter Decorator markup or behavior;
-- copy markup from the browser's rendered DOM as the source of truth;
-- replace a Decorator control with a visually similar custom control; or
-- combine application navigation with institutional navigation.
-
-The installed `ucsd-decorator-v5` templates are the implementation source of truth. The Decorator Kit rules and integrity checks are the source of truth for how the boundary is enforced.
-
-### 2.2 Application canvas
-
-The application canvas begins after the Decorator navigation and ends before the Decorator footer. Everything specific to the product belongs here, including:
-
-- product identity and context;
-- application navigation;
-- page title, breadcrumbs, and page-level actions;
-- business workflows;
-- forms, tables, dashboards, and detail views;
-- loading, empty, success, warning, and error states; and
-- contextual help and product support.
-
-The canvas **must** have one explicit root container. Application styles and scripts must be scoped to that root.
-
-### 2.3 Decorator inheritance and override register
-
-This document follows an **inherit first** rule. If Decorator already owns a foundation or behavior, the application uses it without restating or reimplementing it. A difference is allowed only when it appears in the intentional override/extension column below and remains scoped to the application canvas.
-
-| Design concern | Decision | Reason and scope |
-| --- | --- | --- |
-| Header, institutional navigation, search, mobile drawer, and footer | **Inherit** | Protected Decorator chrome; never overridden by this document |
-| Bootstrap grid mechanics, gutters, and responsive breakpoints | **Inherit** | Use the grid shipped with Decorator 5; do not publish competing grid tokens |
-| Base document reset and chrome typography | **Inherit** | Decorator remains authoritative outside the application root |
-| Application typography | **Intentional override** | `Brix Sans` and `Refrigerator Deluxe` apply only inside the application root and replace Decorator's base type choices there |
-| Application semantic colors | **Application extension** | Named roles translate approved colors into stable application meaning; they do not restyle chrome |
-| Application component spacing | **Application extension** | The 5 px scale governs component internals and non-Bootstrap layouts; Bootstrap rows retain inherited gutter behavior |
-| Application buttons | **Intentional override** | The recipes in Section 6 apply only to application-owned buttons, not Decorator controls |
-| Radius, elevation, icons, and motion | **Application extension** | Decorator does not serve as the enterprise component specification for these concerns |
-| Forms, tables, cards, dialogs, workflow states, and content rules | **Application extension** | These rules cover enterprise behavior within the canvas without changing Decorator components |
-
-Any future Decorator override must be added to this table with its reason, scope, owner, accessibility impact, and migration plan before implementation.
-
----
-
-## 3. Design principles
-
-### 3.1 Make the next action clear
-
-Each page should communicate where the user is, what matters now, and what they can do next. Prefer one obvious primary action over several equally prominent actions.
-
-### 3.2 Optimize for real work
-
-Enterprise users may complete long, repetitive, or high-consequence tasks. Favor legibility, predictable placement, efficient scanning, and error prevention over novelty.
-
-### 3.3 Reveal complexity progressively
-
-Show essential information first. Place advanced controls, infrequent settings, and supporting detail behind clear disclosure patterns without hiding information required to make a decision.
-
-### 3.4 Be accessible by default
-
-Accessibility is a design input, not a final audit. Every component and flow must work without color alone, without a mouse, at browser zoom, and with assistive technology.
-
-### 3.5 Respect the institutional frame
-
-The application should feel compatible with UC San Diego while remaining visually subordinate to the Decorator shell. Use brand color to establish identity and hierarchy, not to decorate every surface.
-
-### 3.6 Prefer consistency over cleverness
-
-One concept should have one name, one interaction pattern, and one visual treatment across the product.
-
----
-
-## 4. Page anatomy
-
-Use the following order for standard application pages:
-
-1. Decorator header and institutional navigation
-2. Application identity and application navigation
-3. Optional breadcrumbs
-4. Page header
-   - page title
-   - concise description or status when needed
-   - primary and secondary page actions
-5. Optional page-level message
-6. Main content
-7. Optional contextual or secondary content
-8. Decorator footer
-
-### 4.1 Page header
-
-- Each route must have one visible `h1` that matches the user's current task or object.
-- Page titles should use plain language and normally remain under 60 characters.
-- Place the primary page action at the end of the title row on wide screens and beneath the title on narrow screens.
-- Show no more than one filled primary button in the page header.
-- Put low-frequency actions in an overflow menu when crowding occurs.
-- Do not use cards solely to contain a page title.
-
-### 4.2 Breadcrumbs
-
-- Use breadcrumbs for hierarchies deeper than one level or when users commonly move to a parent record.
-- Do not use breadcrumbs as a substitute for application navigation.
-- The current page may be plain text and must not link to itself.
-- On small screens, shorten the trail while preserving access to the immediate parent.
-
----
-
-## 5. Layout and responsive behavior
-
-### 5.1 Layout rules
-
-- Use a centered content area with consistent horizontal gutters.
-- Prefer readable line lengths for prose and wider regions for tables, dashboards, and complex forms.
-- A page may use an application sidebar, a full-width content layout, or a content-plus-aside layout. It should not mix these without a workflow reason.
-- Align related headings, fields, tables, and actions to a shared grid.
-- Avoid nested cards and repeated boxes when spacing and headings create sufficient grouping.
-
-### 5.2 Spacing
-
-Use the canonical application spacing tokens for component internals and non-Bootstrap application layouts. The scale follows a 5 px rhythm and aligns with Bootstrap 3's inherited 15 px half-gutter and 30 px full gutter. It extends Decorator; it does not replace Decorator's grid.
-
-| Token | Value | Typical use |
-| --- | ---: | --- |
-| `0` | 0 px | Remove spacing explicitly |
-| `xxs` | 5 px | Very tight icon or inline relationships |
-| `xs` | 10 px | Compact internal gaps |
-| `sm` | 15 px | Bootstrap 3 half-gutter and control relationships |
-| `md` | 20 px | Standard component padding |
-| `lg` | 25 px | Section or card padding |
-| `xl` | 30 px | Bootstrap 3 full grid gutter and major separation |
-| `xxl` | 45 px | Page-section separation |
-| `xxxl` | 60 px | Rare, large layout intervals |
-
-When using the inherited Bootstrap 3 grid:
-
-- Use Decorator's `.container`, `.row`, and `.col-*-*` implementation as shipped.
-- Do not redeclare container padding, column padding, or negative row margins in application tokens.
-- Do not use CSS `gap` as a substitute for the Bootstrap gutter on Bootstrap rows.
-- Avoid nesting padded containers when that would produce unintended 30 px or 45 px edge spacing.
-- Application components that are not Bootstrap rows may use the spacing scale normally.
-
-### 5.3 Responsive behavior
-
-Design behavior, not only breakpoints.
-
-| Wide viewport | Narrow viewport |
-| --- | --- |
-| Application sidebar may remain visible | Sidebar becomes an application-owned drawer or menu inside the canvas |
-| Page title and actions may share a row | Actions stack below the title |
-| Multi-column forms may use two columns | Forms become one column |
-| Tables show priority columns | Lower-priority columns hide, collapse into rows, or move to a detail view |
-| Secondary panel may sit beside content | Secondary panel moves below content or opens on demand |
-
-The application must not take control of or conflict with the Decorator mobile drawer. Responsive layout uses the breakpoints shipped with Decorator's Bootstrap 3.3.7 distribution. This document does not define a second breakpoint scale.
-
----
-
-## 6. Visual language
-
-### 6.0 Canonical design tokens
-
-The following token set is the source of truth only for application-specific semantics and intentional overrides in the **application canvas**. Inherited Decorator foundations are deliberately absent. Components must bind to semantic roles, never to an unnamed raw palette value. Primitive palette tokens are deliberately withheld.
-
-The literal values below define the semantic roles; they do not authorize application code to restyle protected Decorator chrome. When a token changes, consumers inherit the change through the semantic name rather than replacing values component by component.
-
-```yaml
+version: alpha
+name: UC San Diego
+description: "Design system for UC San Diego. Bootstrap 5 and Tailwind/shadcn are both first-class targets; they share tokens, not markup."
 colors:
-  # Semantic roles only. Primitives are withheld deliberately.
+  # Semantic roles only. Primitives are withheld deliberately — components must
+  # never bind to a raw palette value. Dark mode is a re-alias of these same
+  # tokens; see `modes` at the end of this block.
   primary: "{colors.theme-primary}"
-
   component-btn-gold: "#c69214"
   component-btn-label-black: "#000000"
   component-btn-label-primary: "#182b49"
-  component-btn-label-secondary: "#182b49"
+  component-btn-label-secondary: "#ffffff"
   component-btn-label-white: "#ffffff"
   component-btn-navy: "#182b49"
   component-btn-orange: "#fc8900"
   component-btn-primary: "#ffcd00"
   component-btn-secondary: "#00629b"
-  component-btn-turquoise: "#00c6d7"
-
+  component-btn-turqoise: "#00c6d7"
   component-card-blue: "#00629b"
   component-card-navy: "#182b49"
   component-card-semi-transparent-blue: "rgba(0, 98, 155, 0.8)"
@@ -221,7 +27,6 @@ colors:
   component-icon: "#182b49"
   component-link: "#00629b"
   component-menu: "#747678"
-
   foreground-body-text: "#313232"
   foreground-body-text-focus: "#182b49"
   foreground-card-border: "#d4d5d5"
@@ -233,17 +38,14 @@ colors:
   foreground-heading-light: "#ffffff"
   foreground-subcard-border: "#182b49"
   foreground-subheading: "#182b49"
-
   status-critical: "#bd1900"
   status-good: "#109b00"
   status-warning: "#fc8900"
-
   surface-1: "#ffffff"
   surface-2: "#f5f0e6"
   surface-3: "#00629b"
   surface-4: "#182b49"
   surface-5: "#f8f8f9"
-
   system-bg-error: "#f8e8e6"
   system-bg-information: "#e6eff5"
   system-bg-success: "#e7f5e6"
@@ -257,135 +59,139 @@ colors:
   system-success: "#109b00"
   system-success-small-text: "#0a8902"
   system-warning: "#fc8900"
-
   theme-accent: "#ffcd00"
   theme-primary: "#182b49"
   theme-secondary: "#00629b"
-
 typography:
-  body-sm:
+  "body-sm":
     fontFamily: "'Brix Sans'"
     fontSize: "12px"
     lineHeight: "17px"
     fontWeight: 400
-    letterSpacing: "0"
-  body-md:
+    letterSpacing: 0
+  "body-md":
     fontFamily: "'Brix Sans'"
     fontSize: "18px"
     lineHeight: "23px"
     fontWeight: 400
-    letterSpacing: "-0.08px"
-  body-mdplus:
+    letterSpacing: -.08
+  "body-mdplus":
     fontFamily: "'Brix Sans'"
     fontSize: "20px"
     lineHeight: "30px"
     fontWeight: 400
-    letterSpacing: "-0.08px"
-  body-lg:
+    letterSpacing: -.08
+  "body-lg":
     fontFamily: "'Brix Sans'"
     fontSize: "24px"
     lineHeight: "29px"
     fontWeight: 400
-    letterSpacing: "0"
-  eyebrow:
+    letterSpacing: 0
+  "eyebrow":
     fontFamily: "'Refrigerator Deluxe'"
     fontSize: "14px"
     lineHeight: "16px"
     fontWeight: 900
-    letterSpacing: "0.8px"
-  h1:
+    letterSpacing: .8
+  "h1":
     fontFamily: "'Refrigerator Deluxe'"
     fontSize: "56px"
     lineHeight: "56px"
     fontWeight: 900
-    letterSpacing: "0.6px"
-  h2:
+    letterSpacing: .6
+  "h2":
     fontFamily: "'Refrigerator Deluxe'"
     fontSize: "40px"
     lineHeight: "40px"
     fontWeight: 900
-    letterSpacing: "0.5px"
-  h3:
+    letterSpacing: .5
+  "h3":
     fontFamily: "'Refrigerator Deluxe'"
     fontSize: "24px"
     lineHeight: "24px"
     fontWeight: 900
-    letterSpacing: "0"
-  subheading:
+    letterSpacing: 0
+  "subheading":
     fontFamily: "'Brix Sans'"
     fontSize: "15px"
     lineHeight: "15px"
     fontWeight: 900
-    letterSpacing: "1.75px"
-  btn-primary:
+    letterSpacing: 1.75
+  "btn-primary":
     fontFamily: "'Brix Sans'"
     fontSize: "15px"
     lineHeight: "20px"
     fontWeight: 900
-    letterSpacing: "1.4px"
-  btn-secondary:
+    letterSpacing: 1.4
+  "btn-secondary":
     fontFamily: "'Brix Sans'"
     fontSize: "15px"
     lineHeight: "20px"
     fontWeight: 900
-    letterSpacing: "1.4px"
-  body:
+    letterSpacing: 1.4
+  "body":
     fontFamily: "'Brix Sans'"
-  mono:
+  "mono":
     fontFamily: "ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace"
-  h2-small:
+  "h2-small":
     fontFamily: "'Brix Sans'"
     fontWeight: 900
     fontSize: "12px"
     lineHeight: "18px"
-    letterSpacing: "0"
-
+    letterSpacing: 0
 spacing:
   "0": "0px"
-  xxs: "5px"
-  xs: "10px"
-  sm: "15px"
-  md: "20px"
-  lg: "25px"
-  xl: "30px"
-  xxl: "45px"
-  xxxl: "60px"
-
+  xxs: "4px"
+  xs: "8px"
+  sm: "12px"
+  md: "16px"
+  lg: "24px"
+  xl: "32px"
+  xxl: "48px"
+  xxxl: "64px"
 rounded:
   rounded-0: "0px"
-  rounded-sm: "5px"
-  rounded-md: "10px"
-  rounded-lg: "15px"
+  rounded-sm: "4px"
+  rounded-md: "8px"
+  rounded-lg: "12px"
   rounded-circle: "100px"
-
 components:
   btn-primary:
     backgroundColor: "{colors.component-btn-primary}"
     textColor: "{colors.component-btn-label-primary}"
     rounded: "{rounded.rounded-sm}"
-    typography: "{typography.btn-primary}"
-    textTransform: "uppercase"
+    typography: "{typography.btn}"
   btn-secondary:
-    backgroundColor: "transparent"
+    backgroundColor: "{colors.component-btn-secondary}"
     textColor: "{colors.component-btn-label-secondary}"
-    textDecorationLine: "underline"
-    textDecorationColor: "{colors.component-btn-secondary}"
-    typography: "{typography.btn-secondary}"
-    textTransform: "uppercase"
-
+    rounded: "{rounded.rounded-sm}"
+    typography: "{typography.btn}"
+breakpoints:
+  sm: "576px"
+  md: "768px"
+  lg: "992px"
+  xl: "1200px"
+  xxl: "1400px"
+containers:
+  gutter: "24px"
+  margin: "12px"
+  prose: "70ch"
+  narrow: "768px"
+  base: "1140px"
+  wide: "1320px"
 icons:
-  sm: "10px"
-  md: "15px"
-  lg: "20px"
-  xl: "30px"
-
+  lg-16: "16px"
+  lg-20: "20px"
+  sm-8: "8px"
+  xl-24: "24px"
+grid:
+  gap: "{spacing.sm}"
 elevation:
   "0": "none"
   "1": "0 1px 2px 0 rgba(24, 43, 73, 0.08)"
   "2": "0 2px 6px 0 rgba(24, 43, 73, 0.10)"
   "3": "0 6px 16px 0 rgba(24, 43, 73, 0.12)"
   "4": "0 12px 32px 0 rgba(24, 43, 73, 0.16)"
-
 motion:
   duration:
     fast: "120ms"
@@ -395,530 +201,4416 @@ motion:
     standard: "cubic-bezier(0.2, 0, 0, 1)"
     enter: "cubic-bezier(0, 0, 0, 1)"
     exit: "cubic-bezier(0.3, 0, 1, 1)"
+modes:
+  dark:
+    colors:
+      component-btn-gold: "#d9b662"
+      component-btn-label-black: "#000000"
+      component-btn-label-primary: "#182b49"
+      component-btn-label-secondary: "#162742"
+      component-btn-label-white: "#ffffff"
+      component-btn-navy: "#182b49"
+      component-btn-orange: "#fc8900"
+      component-btn-primary: "#ffcd00"
+      component-btn-secondary: "#5496bc"
+      component-btn-turqoise: "#00c6d7"
+      component-card-blue: "#00629b"
+      component-card-navy: "#182b49"
+      component-card-semi-transparent-blue: "rgba(0, 98, 155, 0.8)"
+      component-card-semi-transparent-navy: "rgba(24, 43, 73, 0.8)"
+      component-icon: "#f5f0e6"
+      component-link: "#5496bc"
+      component-menu: "#747678"
+      foreground-body-text: "#bfc0c1"
+      foreground-body-text-focus: "#f5f0e6"
+      foreground-card-border: "#747678"
+      foreground-divider: "#959dab"
+      foreground-eyebrow: "#f5f0e6"
+      foreground-h1-heading: "#f5f0e6"
+      foreground-h2-heading: "#f5f0e6"
+      foreground-h3-heading: "#f5f0e6"
+      foreground-heading-light: "#f5f0e6"
+      foreground-subcard-border: "#747678"
+      foreground-subheading: "#f5f0e6"
+      status-critical: "#bd1900"
+      status-good: "#109b00"
+      status-warning: "#fc8900"
+      surface-1: "#000000"
+      surface-2: "#404142"
+      surface-3: "#00629b"
+      surface-4: "#182b49"
+      surface-5: "#313232"
+      system-bg-error: "#ac1700"
+      system-bg-information: "#5496bc"
+      system-bg-success: "#0b6e00"
+      system-bg-warning: "#975200"
+      system-error: "#d77566"
+      system-foreground-error: "#f8e8e6"
+      system-foreground-information: "#e6eff5"
+      system-foreground-success: "#e7f5e6"
+      system-foreground-warning: "#fff3e6"
+      system-information: "#5496bc"
+      system-success: "#40af33"
+      system-success-small-text: "#40af33"
+      system-warning: "#fc8900"
+      theme-accent: "#ffcd00"
+      theme-primary: "#182b49"
+      theme-secondary: "#00629b"
+---
+
+<!--
+  DESIGN.md — the file to hand any coding agent building for UC San Diego.
+
+  DO NOT EDIT THIS FILE DIRECTLY. Every line is build output, and `npm run build`
+  overwrites an edit made here without warning:
+
+    values (the YAML above)   -> change in Figma, then `npm run sync:figma`
+    prose  (everything below) -> edit docs/design-md/*.md, then `npm run build`
+
+  CI fails if this file is stale, and if prose ever restates a token value.
+
+  Full token reference (light + dark, with CSS/Sass/Tailwind syntax):
+    skills/ucsd-design-system/references/generated/tokens.md
+-->
+
+# UC San Diego Design System
+
+## Overview
+
+This is an evolution of Decorator V5, UCSD's web design system since 2017. Decorator V5 runs on Bootstrap 3, jQuery, and Glyphicons, with Teko as the display face and Roboto for body. It serves a broad mix of pages: recruitment marketing, task tools, faculty profiles, and CMS content.
+
+What carries forward: the UCSD color identity (navy, blue, gold), the structural page shell (masthead with wordmark, navbar with gold active indicator, breadcrumbs, Regents copyright footer), and the commitment to a shared system across campus.
+
+What changes: Bootstrap 3 to 5, then to a token layer that also serves Tailwind and shadcn. Teko and Roboto to Refrigerator Deluxe and Brix Sans from the UCSD brand library. Dark mode, which Decorator V5 never had. And a deliberate shift in register.
+
+**The shift.** Decorator V5's homepage is a seven-slide hero carousel with full-bleed photography and decorative background textures (grit, orbs, trident shapes). That reads as a recruitment brochure. This system pulls toward something plainer: **Geisel Library**, board-formed concrete and glass, structural, unornamented. The form is the structure. Nothing is decoration.
+
+That is the target register: institutional confidence without corporate gloss. Structure you can see. No ornament that isn't doing work.
+
+**Who is reading.** Prospective students, current students completing a task, faculty, researchers, staff, and the public. Most arrived from a search result with a specific question. The recruitment audience is real but is served by a handful of high-production pages, not by every page carrying marketing chrome.
+
+**What that implies.** Content leads; chrome recedes. Generous vertical rhythm and a real reading measure matter more than density. A page that ends two-thirds of the way down the viewport is finished, not underfilled.
+
+**The emotional target** is credible and unhurried. A public research university has nothing to sell in the way a product landing page does. Confidence reads as restraint: one clear action per screen, plain language, no urgency devices.
+
+**What this is not.** Not a startup landing page: no gradient meshes, no glassmorphism, no floating testimonial cards, no animated counters. Not a consumer app: no playful illustration, no mascot voice, no rounded-everything friendliness. Not a brochure: the marks of print (full-bleed hero photography carrying no information, decorative rules, drop caps) don't transfer.
+
+The single most common failure mode is a generated page that is technically on-palette and tonally wrong: UCSD blue applied to a SaaS marketing layout. When a choice isn't covered by a token or a rule below, resolve it toward the building: structural, plain, and durable.
+
+## Colors
+
+UC San Diego color should be applied as a structured system rather than as a set of interchangeable decorative colors.
+
+The core palette establishes hierarchy, structure, and brand recognition. Accent colors should support the core palette rather than compete with it.
+
+Use the official UC San Diego brand palette as the source of truth for color values and general brand intent:
+
+https://brand.ucsd.edu/visual-brand/color/index.html
+
+Use the UC San Diego Department Website as the primary visual reference for correct page-level application of these colors:
+
+https://department.ucsd.edu/
+
+Use the UC San Diego Modules Website as the primary reference for color application within CMS modules and content patterns:
+
+https://department.ucsd.edu/modules/
+
+When these written rules are ambiguous, use the Department Website for page-level composition and the Modules Website for module-level composition.
+
+### Color hierarchy
+
+Use colors according to the following hierarchy:
+
+1. Foundational surfaces: White, Sand
+2. Primary brand and structural colors: Navy, Blue
+3. High-emphasis colors: Yellow, Gold
+4. Expressive accent colors: Turquoise, Magenta, Citron, Orange, Green
+5. Supporting neutrals: Cool Gray, Stone, Black
+
+The majority of a page should be built from White, Sand, Navy, and UC San Diego Blue.
+
+Accent colors should occupy substantially less visual area than the core colors.
+
+---
+
+### UC San Diego Navy
+
+**Hex:** `#182B49`
+
+**Role:** Primary dark brand color and strongest structural color.
+
+#### Use for
+
+- Major branded sections
+- Navigation and persistent structural elements
+- Feature areas
+- Strong visual anchors
+- Dark cards, tiles, and content modules
+- Image overlays
+- Backgrounds behind white text and icons
+
+#### Rules
+
+- Use Navy when a section should have strong visual weight or clearly communicate UC San Diego identity.
+- Use white text and icons on Navy.
+- Prefer Navy over Black for major branded interface surfaces.
+- Alternate Navy sections with White or Sand to maintain visual rhythm.
+- Do not allow large portions of a page to become one uninterrupted Navy surface.
+- Do not place Navy components on Navy backgrounds unless sufficient visual separation exists.
+- Use Navy for stronger structural emphasis than Blue.
+
+---
+
+### UC San Diego Blue
+
+**Hex:** `#00629B`
+
+**Role:** Primary active brand color and secondary structural color.
+
+#### Use for
+
+- Links
+- Primary interactive elements
+- Buttons
+- Medium-emphasis branded sections
+- Cards and tiles
+- Content boxes
+- Image overlays
+
+#### Rules
+
+- Use Blue as the default brand color for interaction.
+- Prefer Blue for prominent links and controls unless another semantic treatment is required.
+- Use Blue when Navy would feel too visually heavy.
+- Prefer Blue or Navy before introducing an accent color.
+- Maintain a clear distinction between Navy structural elements and Blue interactive elements.
+- Do not replace Blue with an expressive accent color for standard interaction.
+
+**Hierarchy:**
+
+- Navy = strongest structural color
+- Blue = primary active and interactive color
+
+---
+
+### UC San Diego Yellow
+
+**Hex:** `#FFCD00`
+
+**Role:** High-attention accent color.
+
+#### Use for
+
+- Calls to action
+- Small areas of emphasis
+- Graphic highlights
+- Small branded accents
+- Selected tiles or component treatments
+
+#### Rules
+
+- Use Yellow sparingly.
+- Use Yellow when an element should receive immediate visual attention.
+- Keep Yellow subordinate to Navy and Blue in the overall composition.
+- Do not use Yellow as the dominant page background.
+- Do not use Yellow for large areas of body content.
+- Do not rely on Yellow alone to communicate meaning or state.
+- Do not assume white text is accessible on Yellow.
+
+> Yellow attracts attention; it does not provide structure.
+
+---
+
+### UC San Diego Gold
+
+**Hex:** `#C69214`
+
+**Role:** Restrained, formal brand accent.
+
+#### Use for
+
+- Institutional or formal treatments
+- Small branded accents
+- Graphic details
+- Navy, Gold, and Stone compositions
+- Situations where a more subdued treatment is appropriate than Yellow
+
+#### Rules
+
+- Use Gold sparingly.
+- Do not treat Gold and Yellow as interchangeable.
+- Do not use Gold as a primary interface background.
+- Do not use Gold as the default color for links or primary actions.
+- Prefer Blue for standard interactive controls.
+- Keep Navy or Blue visually dominant when Gold is used.
+
+---
+
+### White
+
+**Hex:** `#FFFFFF`
+
+**Role:** Default content surface and primary page canvas.
+
+#### Use for
+
+- Standard page backgrounds
+- Content-heavy sections
+- Cards
+- Reading surfaces
+- Areas between stronger branded modules
+
+#### Rules
+
+- Use White as the default background unless another surface has a specific purpose.
+- Use dark text on White.
+- Prefer White for long-form reading and information-dense areas.
+- Use White to provide breathing room between stronger branded sections.
+- Do not add color unless it communicates hierarchy, interaction, grouping, emphasis, or brand identity.
+- Most ordinary content should remain on White.
+
+---
+
+### Sand
+
+**Hex:** `#F5F0E6`
+
+**Role:** Primary alternate light surface.
+
+#### Use for
+
+- Alternate page sections
+- Grouped content
+- Feature sections
+- Cards
+- Calls to action
+- Tiles
+- Areas requiring subtle separation from White
+
+#### Rules
+
+- Use Sand to distinguish content groups without creating strong visual emphasis.
+- Use dark text on Sand.
+- Prefer Sand over generic gray when a warm UC San Diego neutral is appropriate.
+- Do not mechanically alternate every White section with Sand.
+- Use Sand only when the surface change supports meaningful grouping or page rhythm.
+
+**Hierarchy:**
+
+- White = normal content
+- Sand = softly emphasized or grouped content
+
+---
+
+### Turquoise
+
+**Hex:** `#00C6D7`
+
+**Role:** Expressive accent color.
+
+#### Use for
+
+- Occasional tiles
+- Graphic accents
+- Illustrations
+- Data visualization
+- Small areas of visual variation
+
+#### Rules
+
+- Use Turquoise sparingly.
+- Use Turquoise only when Navy or Blue already establishes UC San Diego identity in the surrounding composition.
+- Do not use Turquoise as the dominant site color.
+- Avoid large uninterrupted Turquoise backgrounds.
+- Do not replace Blue with Turquoise for standard links, navigation, or controls.
+- Do not assign Turquoise semantic meaning unless explicitly defined by the design system.
+
+---
+
+### Magenta
+
+**Hex:** `#D462AD`
+
+**Role:** Rare expressive accent.
+
+#### Use for
+
+- Campaigns
+- Editorial graphics
+- Illustrations
+- Promotional treatments
+- Isolated expressive moments
+
+#### Rules
+
+- Use Magenta sparingly.
+- Do not use Magenta as a standard UI surface color.
+- Do not use Magenta for normal links, buttons, navigation, or controls.
+- Do not substitute Magenta for Blue.
+- Ensure Navy or Blue remains visually present when Magenta plays a prominent role.
+- Do not introduce Magenta into standard modules without a specific design reason.
+
+---
+
+### Citron
+
+**Hex:** `#F3E500`
+
+**Role:** Special-purpose bright accent.
+
+#### Use for
+
+- Illustrations
+- Campaign graphics
+- Data visualization
+- Small graphic accents
+- Distinctive branded moments
+
+#### Rules
+
+- Use Citron very sparingly.
+- Do not use Citron as a general-purpose UI background.
+- Do not use Citron for body text.
+- Do not use Citron for standard navigation or interaction.
+- Do not assign Citron semantic meaning unless explicitly defined by the design system.
+- Maintain stronger presence of Navy or Blue in the overall composition.
+
+---
+
+### Orange
+
+**Hex:** `#FC8900`
+
+**Role:** Special-purpose warm accent.
+
+#### Use for
+
+- Illustrations
+- Campaigns
+- Editorial graphics
+- Data visualization
+- Small isolated accents
+
+#### Rules
+
+- Reserve Orange for expressive and supporting uses.
+- Do not use Orange as the standard color for navigation or interaction.
+- Do not allow Orange to compete with Blue for primary actions.
+- Avoid large saturated Orange surfaces unless specifically required by an approved composition.
+- Keep Orange subordinate to the core UC San Diego colors.
+
+---
+
+### Green
+
+**Hex:** `#6E963B`
+
+**Role:** Special-purpose supporting accent.
+
+#### Use for
+
+- Illustrations
+- Editorial graphics
+- Specialized compositions
+- Data visualization
+- Small accent treatments
+
+#### Rules
+
+- Use Green sparingly.
+- Do not replace Blue with Green for standard links, buttons, or navigation.
+- Do not automatically use brand Green to indicate success.
+- Semantic success colors should be defined independently and meet accessibility requirements.
+- Maintain Navy or Blue as the primary brand identifier when Green is prominent.
+
+---
+
+### Cool Gray
+
+**Hex:** `#747678`
+
+**Role:** Supporting neutral.
+
+#### Use for
+
+- Secondary text
+- Metadata
+- Supporting interface elements
+- Subtle borders
+- Disabled states
+- Low-emphasis information
+
+#### Rules
+
+- Use Cool Gray only when reduced visual emphasis is intentional.
+- Prefer Navy when a darker color can provide stronger brand identity without harming hierarchy.
+- Verify sufficient contrast whenever Cool Gray is used for text.
+- Do not use low-contrast gray text solely to create visual hierarchy.
+
+---
+
+### Stone
+
+**Hex:** `#B6B1A9`
+
+**Role:** Warm supporting neutral.
+
+#### Use for
+
+- Subtle decorative surfaces
+- Borders
+- Supporting backgrounds
+- Formal institutional treatments
+- Compositions using Navy and Gold
+
+#### Rules
+
+- Treat Stone as a supporting color rather than a primary brand identifier.
+- Do not allow Stone to compete with Sand as the normal alternate page surface without a specific reason.
+- Use Stone when a quieter or more formal neutral treatment is appropriate.
+
+---
+
+### Black
+
+**Hex:** `#000000`
+
+**Role:** Functional neutral rather than a primary UC San Diego brand color.
+
+#### Use for
+
+- Situations requiring maximum contrast
+- Functional interface needs
+- Content where Black is specifically required
+
+#### Rules
+
+- Prefer Navy over Black for major branded typography and interface surfaces when appropriate.
+- Do not build a primarily black-and-white UC San Diego interface when Navy or Blue could establish brand identity.
+- Use Black for functional reasons rather than as a dominant visual theme.
+
+---
+
+### Surface selection
+
+Choose section backgrounds according to this hierarchy:
+
+- Standard content → White
+- Alternate or grouped content → Sand
+- Strong branded section → Navy
+- Medium-emphasis branded section → Blue
+- High-attention accent → Yellow
+- Occasional expressive variation → Turquoise
+- Special campaign or graphic treatment → Magenta, Citron, Orange, or Green
+
+Do not choose section colors arbitrarily.
+
+Every background color should communicate at least one of the following:
+
+- Hierarchy
+- Grouping
+- Emphasis
+- Interaction
+- Brand identity
+- Semantic meaning
+
+If changing the background color does not serve one of these purposes, use White.
+
+---
+
+### Component color rules
+
+Being part of the UC San Diego brand palette does not mean a color should be exposed as an option on every component.
+
+Components should provide only color variants appropriate to their function.
+
+#### Buttons
+
+- Blue
+- Navy when explicitly required
+- Yellow for approved high-emphasis CTA treatments
+
+##### Button hover colors
+If the primary button is blue or yellow, then the hover background color should be navy, and the text should be white.
+
+Example:
+
+.btn-primary:hover {
+    background-color: #182b49;
+    color: #fff;
+}
+
+If the primary background behind the button is navy, then the hover background color should be turquoise, and the text should be navy.
+
+Example:
+
+Example:
+.btn-primary:hover {
+    background-color: #00C6D7;
+    color: #182b49;
+    
+#### Standard content sections
+
+- White
+- Sand
+- Navy
+- Blue when appropriate
+
+#### Tiles
+
+- Navy
+- Blue
+- Yellow
+- Turquoise
+
+#### Standard links
+
+- Blue
+
+#### Expressive accents
+
+- Magenta
+- Citron
+- Orange
+- Green
+
+Do not expose all brand colors as arbitrary variants for every component.
+
+---
+
+### Core composition
+
+Most interfaces should be composed primarily from:
+
+- White
+- Sand
+- Navy
+- UC San Diego Blue
+
+Use Yellow for focused emphasis.
+
+Use Turquoise and the remaining accent colors selectively.
+
+Use the following hierarchy:
+
+1. Foundational surfaces
+   - White
+   - Sand
+2. Primary brand and structure
+   - Navy
+   - Blue
+3. High emphasis
+   - Yellow
+   - Gold
+4. Expressive accents
+   - Turquoise
+   - Magenta
+   - Citron
+   - Orange
+   - Green
+5. Supporting neutrals
+   - Cool Gray
+   - Stone
+   - Black
+
+Core colors should dominate the visual composition.
+
+Accent colors should reinforce the UC San Diego visual identity, never replace it.
+
+---
+
+### Reference implementation: UC San Diego Department Website
+
+Use the UC San Diego Department Website as the primary reference for proper page-level application of the color system:
+
+https://department.ucsd.edu/
+
+The site demonstrates how brand colors should establish hierarchy and rhythm across an entire page rather than being distributed evenly or used decoratively.
+
+#### Overall composition
+
+The Department Website is primarily composed from:
+
+- White
+- Sand
+- UC San Diego Navy
+- UC San Diego Blue
+
+Yellow and other accent colors occupy smaller areas and provide emphasis or graphic interest.
+
+Neutral surfaces carry most of the content, while Navy and Blue establish UC San Diego identity.
+
+#### White as the default surface
+
+The Department Website uses White as the primary content surface.
+
+Use White for:
+
+- Standard content sections
+- Reading-heavy content
+- Cards and informational areas
+- Areas where photography or typography should receive the visual emphasis
+
+Do not give every section a colored background.
+
+Most ordinary content should remain on White.
+
+#### Sand for subtle section separation
+
+The Department Website uses Sand to differentiate light sections without introducing another saturated color.
+
+Use Sand to:
+
+- Separate neighboring content groups
+- Create a lightly emphasized section
+- Provide visual rhythm between White sections
+- Support modules that need more distinction without strong brand emphasis
+
+White and Sand should generally occupy more page area than saturated colors.
+
+#### Navy for major structural emphasis
+
+The Department Website uses Navy for strong branded and structural moments.
+
+Use Navy for:
+
+- Major branded sections
+- Hero or feature areas
+- Strong visual anchors
+- Dark modules
+- Persistent structural elements
+
+Use white text on Navy.
+
+Do not make every module Navy. Dark sections should be separated by lighter White or Sand surfaces.
+
+#### Blue for active and medium-emphasis elements
+
+The Department Website uses UC San Diego Blue for interaction and secondary branded emphasis.
+
+Use Blue for:
+
+- Links
+- Buttons and interactive elements
+- Selected content boxes
+- Selected tiles
+- Medium-emphasis branded surfaces
+- Overlays when Navy would be unnecessarily heavy
+
+Maintain this hierarchy:
+
+1. Navy for strong structural emphasis
+2. Blue for active or medium emphasis
+3. Yellow and other accents for focused attention
+
+#### Yellow for focused emphasis
+
+On the Department Website, Yellow occupies a relatively small portion of the composition and is used to draw attention.
+
+Use Yellow for:
+
+- Calls to action
+- Small graphic details
+- Selected tiles
+- Brand graphics
+- Areas that need immediate attention
+
+Do not use Yellow as a general section background or as a substitute for Navy or Blue.
+
+#### Turquoise and other accents
+
+The Department Website demonstrates that accent colors should remain secondary to the core palette.
+
+Turquoise may be used selectively for additional variation.
+
+Magenta, Citron, Orange, and Green should be even more selective.
+
+Use expressive accents primarily for:
+
+- Brand graphics
+- Illustrations
+- Photography treatments
+- Campaign-specific elements
+- Data visualization
+- Occasional bounded components
+
+Do not introduce accent colors merely to make a page appear more colorful.
+
+#### Page rhythm
+
+Follow the Department Website's general pattern of alternating neutral and branded surfaces.
+
+Good examples:
+
+`White → Sand → White → Navy → White`
+
+`White → Navy → White → Sand → White`
+
+Avoid sequences such as:
+
+`Navy → Blue → Yellow → Turquoise → Navy`
+
+Large adjacent saturated sections weaken hierarchy and reduce the visual impact of individual brand colors.
+
+---
+
+### Reference implementation: UC San Diego Modules Website
+
+Use the UC San Diego Modules Website as the primary reference for proper color application within CMS modules and content patterns:
+
+https://department.ucsd.edu/modules/
+
+The Modules Website demonstrates that modules use constrained, predefined color combinations rather than allowing every brand color to be applied arbitrarily.
+
+#### Module color usage
+
+Examples include:
+
+- Text Block → Navy background with white text
+- Callout Content → Blue or Navy content boxes
+- Call to Action → White or Sand background
+- Tiles with Links → Blue, navy, yellow, or turquoise
+- Standard content → White
+- Alternate light section → Sand
+
+Use only approved color variants for each module.
+
+Do not expose the entire UC San Diego palette as interchangeable options for every module.
+
+#### Module composition
+
+When combining several modules on one page:
+
+- Avoid placing several saturated modules directly next to one another.
+- Separate dark or highly saturated modules with White or Sand where appropriate.
+- Use Navy for the strongest branded moments.
+- Use Blue for secondary branded emphasis.
+- Use Yellow or Turquoise selectively within bounded modules.
+- Keep the overall page visually dominated by White, Sand, Navy, and Blue.
+
+---
+
+### Photography and color
+
+Photography should remain an important part of the composition rather than competing with excessive colored surfaces.
+
+When text appears over photography:
+
+- Use Blue or Navy overlays when necessary for readability.
+- Ensure text maintains sufficient contrast across the entire image.
+- Prefer approved overlays and treatments rather than arbitrary opacity or color combinations.
+- Avoid adding unnecessary saturated backgrounds around photography.
+
+Brand color should support photography, not overwhelm it.
+
+---
+
+### Page-level rule
+
+When creating a UC San Diego departmental page, use the Department Website as the visual reference:
+
+https://department.ucsd.edu/
+
+Apply color in this order:
+
+1. Begin with White as the default canvas.
+2. Add Sand where light section separation is needed.
+3. Introduce Navy at major branded or structural moments.
+4. Use Blue for interaction and secondary branded emphasis.
+5. Add Yellow or other accent colors only where focused visual emphasis is needed.
+
+The finished page should be recognizable as UC San Diego primarily because of its consistent use of Navy, Blue, White, and Sand—not because every available brand color appears on the page.
+
+---
+
+### Accessibility
+
+- All foreground and background combinations must meet the required WCAG contrast ratio for their content type.
+- Never rely on color alone to communicate meaning, state, selection, error, success, or required information.
+- Interactive states must include a non-color indication when needed.
+- Text over images must maintain sufficient contrast across the entire text area.
+- Use overlays when necessary to make text over photography consistently readable.
+- Do not assume that two approved brand colors automatically form an accessible combination.
+- Validate each foreground/background pairing independently.
+
+
+### Additional color information
+
+The palette is navy and blue carried forward from the university's identity, with gold as the single high-energy accent and a warm neutral ramp underneath. It is a restrained palette on purpose: the interest in a UCSD page should come from structure and typography, not from color.
+
+Colors are organised by **role, not by hue**. Bind to what a color is *for*, never to what it looks like.
+
+- **`color.theme.*`** — the brand marks themselves: primary, secondary, accent. Reserved for identity. If you are reaching for one to style a button, you want `color.component.*`.
+- **`color.surface.*`** — what sits behind content, numbered `surface.1` through `surface.5`. `surface.1` is the content surface, `surface.2` is raised, and the darker steps are the chrome bands a page header or footer sits on.
+- **`color.foreground.*`** — text, rules and borders: the heading roles, body text, dividers and card borders. Reach down the ramp for de-emphasis; never fake it with a lower-contrast surface.
+- **`color.component.*`** — what a control is actually made of. Each button fill has a matching label token, and the two are designed to be used as a pair.
+- **`color.system.*`** — feedback messaging: success, warning, error, information. Each has a `bg-` and a `foreground-` half, again meant as a pair. These carry meaning; using error as an accent because it looks good is a bug.
+- **`color.status.*`** — standalone state marks: good, warning, critical.
+
+**Gold is an accent, not a surface.** It carries the least text-legible contrast in the palette and reads as emphasis precisely because it is scarce. Large gold fields cheapen it and usually fail contrast. It earns its place on a focus ring against dark surfaces, and in small marks of emphasis.
+
+### Dark mode
+
+Dark mode is **a re-alias of these same semantic tokens**, not a second palette and not a set of new tokens. Every semantic color has a value in both modes, and CI fails if one is missing.
+
+The practical consequence for anyone writing code: use semantic tokens and dark mode is already correct. Do not write `dark:` color overrides, do not branch on theme in component code, and do not introduce a parallel dark color. If something looks wrong in dark mode, the fix belongs in the token's dark alias, not in the component.
+
+Two roles are deliberately *not* symmetrical between modes — links and primary actions both lighten in dark mode, because the light-mode values fail contrast against dark surfaces. That asymmetry is intentional and is enforced by the contrast gate rather than left to judgment.
+
+## Typography
+
+Two faces, both from the UCSD brand library.
+
+- **Brix Sans** is the working face, carried by `type.body.*`, `type.h3` and `type.btn`. All body copy, all UI, all labels. Neutral, high legibility at small sizes, unremarkable in the way a working face should be.
+- **Refrigerator Deluxe** is the display face, carried by `type.h1`, `type.h2` and `type.eyebrow`. Condensed and tall. **Headings and hero type only — never body copy, never anything set at a reading size.** Its whole value is scale contrast; used small it is simply hard to read.
+
+Both are licensed faces, not open webfonts. Confirm the web licence before shipping either.
+
+Eyebrow text is always rendered in uppercase through the component style.
+Do not rely on authors to manually capitalize eyebrow content.
+Use the eyebrow role for short contextual labels that sit above a heading,
+such as audience, category, section type, or content context.
+
+### Font fallbacks
+
+Because Brix Sans and Refrigerator Deluxe are licensed faces, generated and prototype implementations must include fallback font stacks for environments where the UC San Diego brand fonts are unavailable.
+
+Use the following fallback order:
+
+- **Refrigerator Deluxe** → **Teko** → a condensed sans-serif system fallback. Use weight 900 for Teko when it is used as a fallback.
+- **Brix Sans** → **Source Sans** → **Roboto** → a general sans-serif system fallback.
+
+The fallback order is part of the typography contract. Do not substitute a different fallback simply because another font is available.
+
+Use the same fallback stack anywhere a typography role uses the corresponding brand face so that headings, body text, buttons, labels and other UI remain consistent when the licensed font cannot load.
+
+Recommended CSS stacks:
+
+```css
+font-family: "Refrigerator Deluxe", "Teko", "Arial Narrow", Arial, sans-serif;
+font-family: "Brix Sans", "Source Sans", "Roboto", Arial, Helvetica, sans-serif;
 ```
 
-#### Token-use rules
-
-- Use semantic aliases in component definitions, even when two roles currently resolve to the same value.
-- Do not replace aliases with literals in application components.
-- Do not create primitive names such as `blue-500` or `yellow-300` in this contract.
-- Do not recreate inherited Decorator grid, breakpoint, reset, or chrome tokens in the application token output.
-- Use `component-*` roles only for the component family named by the token.
-- Use `system-*` roles for messages and feedback; use `status-*` roles for compact statuses and data indicators.
-- Validate contrast in the actual foreground/background pairing. A token's presence does not guarantee that every combination is accessible.
-- Font assets must come from an approved UC San Diego or project source. Do not fetch substitute webfonts from an unapproved third party.
-- Token changes require design-system review; do not override a token locally to fix a single component.
+Fallbacks should preserve the intended role of the primary face as closely as possible, but they do not redefine the typography tokens. The UC San Diego brand font remains the preferred face whenever it is available.
 
-### 6.1 Color
+### The roles
 
-Use the semantic color roles defined in Section 6.0. Decorator assets remain authoritative for protected chrome; this application token set governs the canvas.
+Type is organised by **role**, not by an abstract scale: `type.h1`, `type.h2`, `type.h2-small`, `type.h3`, `type.subheading`, `type.eyebrow`, `type.btn`, and `type.body` at small, medium and large.
 
-Application color roles must be semantic:
+The role names echo HTML tags, but the mapping is not automatic. Pick the role by the visual weight the content needs, then choose the heading *element* for the document outline independently — a section heading on a dense listing page may want `h3` styling under an `<h2>`.
 
-| Role | Intended use |
-| --- | --- |
-| Primary | Main action, active application navigation, selected state |
-| Neutral | Text, borders, backgrounds, disabled surfaces |
-| Information | Neutral system information |
-| Success | Confirmed completion or positive status |
-| Warning | Condition requiring attention but not blocking progress |
-| Danger | Error, failure, destructive or irreversible action |
+Every role carries its size **and** its line height. They cannot be mismatched, and you should never set a line height by hand.
 
-Rules:
+**Trust modest steps.** The ramp is close-spaced by design. A section heading roughly half again the size of body text is doing enough work; the pull toward a hero heading several times body size is a marketing-site reflex that reads as loud here.
 
-- Never rely on color alone to communicate state.
-- Pair semantic color with text and, when useful, an icon.
-- Reserve strong saturated color for small, meaningful areas.
-- Do not use yellow or gold body text on white.
-- Links must remain visually identifiable outside of hover.
-- Text and interactive elements must meet WCAG 2.2 AA contrast requirements.
+**Weight does the rest.** Each role carries its own weight, running regular through heavy. Use at most two weights in a single view. Bold is an emphasis tool, not a heading default.
 
-### 6.2 Typography
+### Reading
 
-- Use the typography tokens in Section 6.0. This is an intentional, canvas-scoped override of Decorator's base typography: `Brix Sans` is the application body and control family, while `Refrigerator Deluxe` is reserved for the defined display hierarchy. Decorator typography remains unchanged outside the application root.
-- Use sentence case for page titles, headings, field labels, tabs, and menu items. All visible textual button labels render in uppercase.
-- Use `body-md` as the default body style. `body-sm` is reserved for compact supporting metadata and must not become the default page copy style.
-- Apply `h1`, `h2`, and `h3` according to semantic document structure; never select a heading token only for its appearance.
-- Use weight, size, and spacing before introducing additional colors.
-- Do not use more than three heading levels on a typical page.
-- Use tabular numerals where columns of changing numeric values must align.
+Long-form content is constrained to `container.prose`, a measure chosen for readability rather than to fill the viewport. Content pages, article bodies and any sustained prose use it. Resist widening it to balance a layout; a full-width paragraph is harder to read at every viewport size.
 
-Recommended hierarchy:
+## Layout
 
-| Style | Purpose |
-| --- | --- |
-| Page title | One per page; identifies the route or object |
-| Section heading | Divides major page regions |
-| Subsection heading | Groups closely related content |
-| Body | Default content and instructions |
-| Label | Names an input or compact data field |
-| Supporting text | Help, metadata, timestamps, secondary detail |
+One spacing scale, based on a four-unit step, used for margin, padding and gap alike. There is no separate inset/stack split — one scale referenced everywhere is what keeps two frameworks from drifting a pixel apart.
 
-### 6.3 Shape, borders, and elevation
+Spacing steps carry their pixel value in the name — `space.xxs` through `space.xxxl`. Both frameworks' numeric utilities are built on the same step, so `.p-4` in Bootstrap, `p-4` in Tailwind and `space.md` are one value reached three ways. The alignment holds across the full scale.
 
-- Use the `rounded` and `elevation` tokens in Section 6.0.
-- Use borders or background changes for most grouping.
-- Prefer elevation `0` or `1` for persistent surfaces. Reserve stronger elevation for temporary layers such as dialogs, popovers, menus, and drawers.
-- Do not add ornamental shadows to every card.
-- Focus indication must remain visually stronger than ordinary borders.
+**Breakpoints are Bootstrap 5's**, matched exactly by `breakpoint.*`. This is not a preference — Bootstrap utilities and Tailwind variants both compile from these values, and a mismatch produces bugs that take days to find. Never invent a breakpoint, and never write a media query against a value that isn't in the scale.
 
-### 6.4 Icons
+Mobile-first. Layouts stack in source order at the narrow end and gain columns as space allows. If a design only works from the widest breakpoint down, it isn't finished.
 
-- Icons support labels; they do not replace unfamiliar labels.
-- Icon-only controls require an accessible name and a discoverable tooltip where appropriate.
-- Use one approved icon family throughout the application.
-- Size icons with the `icons` scale in Section 6.0.
-- Do not use an icon whose meaning changes between screens.
+### Containers
 
-### 6.5 Motion
+`container.*` carries the max content widths the layouts use: a readable prose measure, plus narrow, base and wide. Pick the container by what the region *contains* — sustained reading takes the prose measure regardless of how much horizontal room is available.
 
-- Motion must explain change, location, or hierarchy.
-- Avoid decorative motion in task-focused workflows.
-- Use the duration and easing tokens in Section 6.0 rather than introducing component-specific timing values.
-- Respect `prefers-reduced-motion`.
-- Do not make users wait for an animation before they can continue.
+Full-bleed regions are for structural bands (a page header, a section with its own background), not for content. Text that runs the full width of a large display is a defect.
 
----
+### Composition
 
-## 7. Application navigation
+Regions are separated by space and by surface change, in that order of preference. Reach for a border when space alone genuinely doesn't communicate the grouping, and for a shadow only when something actually floats above the page.
 
-Application navigation belongs entirely inside the canvas and must be visually distinct from Decorator navigation.
+Vertical rhythm is generous. The system's density target is closer to a university publication than to a dashboard — when in doubt between two spacing steps, take the larger one.
 
-### 7.1 Information architecture
+Page anatomy — which regions exist, what a CMS author may place in each, how each degrades at the narrow end, and the required landmarks — is specified per pattern in `layouts/`, not here.
 
-- Organize navigation around user goals, not internal departments or database structures.
-- Keep the primary level stable across routes.
-- Use no more than two visible nesting levels.
-- Use the same label in navigation, page title, and documentation for the same concept.
-- Hide an inaccessible destination only when revealing it would be inappropriate; otherwise show it disabled only when the reason is useful and explainable.
+## Elevation & Depth
 
-### 7.2 States
+Depth is **structural, not atmospheric**. Hierarchy comes from surface change and space first, from borders second, and from shadow last.
 
-Navigation must define:
+`elevation.*` is a short ladder from flat to a high float, tuned as a navy-tinted shadow rather than neutral gray so it sits in the palette instead of muddying it. The ladder is short deliberately — a system with many elevation steps ends up using them decoratively.
 
-- default;
-- hover;
-- keyboard focus;
-- current/active;
-- expanded and collapsed, when nested;
-- disabled, only when necessary; and
-- loading, when permissions or configuration are unresolved.
+Use the ladder for things that genuinely float above the page and can be dismissed: menus, popovers, dialogs, toasts. The rule of thumb is that if it can't be dismissed, it probably isn't elevated.
 
-The active item must be identifiable without color alone.
+**Cards are not elevated by default.** A card is a surface change and a padding contract. Reach for `color.surface.2` and let space do the grouping. A page of drop-shadowed cards is the single most common way generated UI drifts off-brand: it reads as a SaaS dashboard, and it flattens the actual hierarchy by giving every region the same visual weight.
 
-### 7.3 Mobile behavior
+In dark mode, shadow carries much less information because there is less luminance range beneath it. Depth there comes primarily from the surface ramp — raised surfaces genuinely lighten. Don't compensate by deepening shadows.
 
-The application menu may become a separate in-canvas drawer, disclosure, or destination list. It must not reuse, imitate, inject content into, or compete with the Decorator mobile navigation control.
+No glassmorphism, no backdrop blur, no glow, no inner shadow, no gradient used to imply depth. The reference building has real shadows because it has real mass; nothing here should simulate depth it doesn't structurally have.
 
----
+## Shapes
 
-## 8. Core components
+The shape language is **squared-off**. `radius.*` runs from none through a small set of steps, plus a pill and a circle. The working steps sit at the tight end of that range: enough softening to look intentional on a screen, not enough to read as friendly.
 
-Every component must document its purpose, variants, states, content rules, responsive behavior, accessibility behavior, and examples.
+Buttons, inputs, cards and containers share the same modest radius. Consistency here is most of the effect — mixing radii within a view is more noticeable than the specific value chosen.
 
-### 8.1 Buttons and actions
+The pill radius is reserved for genuinely pill-shaped objects: tags, chips, status badges. A pill-shaped primary button is a consumer-app signal and reads wrong in this system. The circle radius is for avatars and icon buttons.
 
-| Variant | Use |
-| --- | --- |
-| Primary | The single most important action in the current context |
-| Secondary | Common supporting actions; navy text with a blue underline and no fill |
-| Tertiary/text | Low-emphasis or compact actions |
-| Danger | Destructive action; use sparingly |
+Corners are the *only* softening in the system. There are no decorative shapes: no blob backgrounds, no angled section dividers, no rounded-corner overlays on photography, no abstract glyphs in the margins.
 
-Application-owned primary buttons use the `components.btn-primary` recipe, and application-owned secondary buttons use `components.btn-secondary`. These recipes intentionally override Decorator button presentation only inside the application root; they must not target or alter Decorator controls. Additional gold, navy, orange, and turquoise button roles may be defined only as documented variants with a specific interaction purpose; their existence as color tokens does not make them interchangeable visual options.
+Borders are hairlines. A border's job is to separate, not to draw attention — when a border becomes visible as a design element, the separation should probably have been done with space or a surface change instead.
 
-Secondary buttons must render uppercase with `#182b49` text, a `#00629b` underline, and a transparent background. The underline is part of the persistent default treatment, not a hover-only affordance. Hover, focus, active, disabled, and loading states must preserve recognition as the same secondary action and continue to meet contrast requirements.
+Photography is rectangular and full-bleed within its region. It is not rounded, not masked to a shape, and not overlaid with a gradient scrim unless text genuinely sits on it and needs the contrast.
 
-Rules:
+## Components
 
-- Render every visible textual button label in uppercase, including primary, secondary, tertiary, danger, menu-trigger, and dialog buttons.
-- Apply uppercase through the shared application button style rather than rewriting labels independently in each component. Source labels should remain clear verb phrases so accessible names and analytics remain readable.
-- Use verb-first labels such as “SAVE CHANGES,” “SUBMIT REQUEST,” or “ADD PERSON.”
-- Avoid vague labels such as “OK,” “YES,” “NO,” or “SUBMIT” when a specific action fits.
-- Show progress after activation and prevent accidental duplicate submission.
-- Do not use color alone to distinguish destructive actions.
-- Put “CANCEL” before or after the main action consistently across the product.
-- A disabled action should not be used as the only explanation of what is missing.
-- Icon-only buttons have no visible text to transform, but still require a sentence-case accessible name describing the action.
+Component *implementations* are not shared across frameworks and are not described here — a `.btn` in Bootstrap 5 and a `<Button>` in a React app can never share code. What they share is the token binding below and the behaviour contract in the skill's accessibility reference.
 
-### 8.2 Links
+Write idiomatic code for whichever stack you are in. Correctness comes from binding to the right tokens, not from matching markup.
 
-- Use links for navigation and buttons for actions.
-- Link text must describe the destination out of context.
-- Avoid “click here” and bare URLs in body copy.
-- External destinations should be disclosed when leaving the application would be unexpected.
+### Buttons
 
-### 8.3 Form controls
+One primary action per screen. `btn-primary` is the affirmative action; `btn-secondary` carries everything else.
 
-- Every input must have a persistent visible label.
-- Put essential instructions before the field and concise help near it.
-- Mark optional fields as “Optional” when most fields are required; otherwise state the required convention at the start of the form.
-- Do not use placeholder text as the label or as essential instructions.
-- Use native controls where they meet the need.
-- Match the control type to the data and expected input method.
-- Preserve user input after validation errors.
+Every button fill has a matching label token — `color.component.btn.primary` with `color.component.btn.label-primary`, and the same for secondary. Use them as a pair; mixing a fill from one variant with a label from another is how contrast failures happen.
 
-Required states:
+Every interactive control has a visible hover state, a visible focus ring drawn from `color.theme.secondary`, and a disabled state that is legibly disabled rather than merely faded. Interactive controls meet the WCAG target-size minimum — never reduce it to fit a layout.
 
-- default;
-- hover when relevant;
-- keyboard focus;
-- filled/selected;
-- disabled;
-- read-only;
-- error;
-- warning when distinct from error; and
-- loading for async controls.
+Label buttons with the verb for what happens: "Apply now", "Download the form". Never "Click here", never "Learn more" as the only label on a page with several of them.
 
-### 8.4 Validation
+Button labels are rendered in uppercase through the component style. Do not rely on authors to manually capitalize button text.
 
-- Validate at a moment that helps the user; avoid scolding while they are still typing.
-- Place field errors beside the field and provide an error summary at the start of a submitted form with multiple errors.
-- Error text must explain the problem and how to fix it.
-- Move focus to the error summary after an unsuccessful submission.
-- Do not clear correct values because another field is invalid.
+#### Secondary Button
 
-### 8.5 Tables and data grids
+Use for prominent standalone calls to action that should feel lighter than a filled button. Follow the font size, line height, font family, etc. guidelines from the typography section of this design.md document.
 
-Use a table when users need to compare values across records. Use a list or cards when each record has different content or only one or two comparable attributes.
+```html
+<a class="btn-secondary" href="#">
+  Click me
+</a>
+.btn-secondaryk {
+  display: inline-block;
 
-Tables must define:
+  color: #182b49;
+  background: transparent;
+  text-transform: uppercase;
+  text-decoration: none;
 
-- column priority;
-- sorting and default sort;
-- filtering and applied-filter visibility;
-- search scope;
-- pagination or progressive loading;
-- row and bulk actions;
-- empty, loading, partial, and error states;
-- responsive behavior; and
-- keyboard and screen-reader behavior.
+  padding: 0 0 0;
+  border: 0;
+  border-bottom: 1px solid #00629b;
 
-Rules:
+  cursor: pointer;
 
-- Left-align text and normally right-align comparable numbers.
-- Keep headers visible for long tables when technically appropriate.
-- Do not encode status with color alone.
-- Keep destructive row actions out of the highest-emphasis position.
-- Preserve filters and sort when users open a record and return.
-- Never force essential record actions to exist only on hover.
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
 
-### 8.6 Cards
+.btn-secondary:hover {
+  color: #00629b;
+}
 
-- Use cards for a discrete object, summary, or actionable group.
-- Do not place every page section in a card.
-- A card should have one clear subject and hierarchy.
-- If the whole card is interactive, ensure nested actions remain unambiguous and keyboard accessible.
+.btn-secondary:focus-visible {
+  outline: 3px solid #ffcd00;
+  outline-offset: 4px;
+}
 
-### 8.7 Tabs
+@media (prefers-reduced-motion: reduce) {
+  .btn-secondary {
+    transition: none;
+  }
+}
+```
 
-- Use tabs for peer views of the same object or context.
-- Do not use tabs as the primary navigation for unrelated destinations.
-- Keep tab labels short and stable.
-- Preserve the selected tab in the URL when direct linking or browser navigation matters.
-- On narrow screens, use a documented overflow treatment rather than shrinking labels until unreadable.
+Use this treatment only for prominent calls to action. Do not use it for ordinary inline links, navigation items, or dense groups of actions.
 
-### 8.8 Dialogs
+### Forms
 
-- Use a dialog for a focused decision or short task that should not become a page.
-- The title must name the decision or task.
-- Initial focus, focus containment, Escape behavior, close behavior, and focus return must be specified.
-- Do not use a dialog for long, multi-step, or reference-heavy forms.
-- Require explicit confirmation for consequential destructive actions.
+Every input has a visible, persistent label. Placeholder text is not a label — it disappears exactly when the user needs it, and it fails contrast at the sizes it is typically used.
 
-### 8.9 Status badges
+Errors appear next to the field they concern, in text, using the `color.system.bg-error` and `color.system.foreground-error` pair. Color alone never carries the message: a red border with no text is invisible to a screen reader and to a red-green colorblind user. Validate on blur and on submit, not on every keystroke.
 
-- Use a short noun or adjective such as “Draft,” “Approved,” or “Past due.”
-- Status labels must use the same vocabulary everywhere.
-- Pair color with readable text.
-- Do not make a badge look interactive unless it is interactive.
+Help text sits below the field, in a muted text token, and stays visible.
 
-### 8.10 Alerts and notifications
+### Navigation
 
-| Pattern | Use |
-| --- | --- |
-| Inline message | Guidance or feedback tied to a field or section |
-| Page alert | Important state affecting the whole page |
-| Toast | Brief confirmation that does not require immediate action |
-| Banner | Rare, persistent system-wide or product-wide condition |
+Navigation is a landmark, uses real links, and marks the current page programmatically as well as visually. Dropdowns are keyboard-operable and close on `Escape`.
 
-Errors requiring action must not disappear automatically. Success toasts may time out if the same result is also apparent in the page.
+### Status and feedback
 
----
+Status colors always appear as a `color.system.bg-*` background with its matching `color.system.foreground-*` half. Alerts carry an icon *and* text, never color alone. Toasts are for transient confirmations; anything the user must act on belongs on the page.
 
-## 9. Forms and workflows
+### Adding a component
 
-### 9.1 Form layout
+The semantic layer is a curated, closed set. A new component binds to existing semantic tokens; it does not get its own token block by reflex. Component tokens exist only where a component genuinely needs a knob the semantic layer should not carry — and they alias semantics, never primitives, so they inherit dark mode for free.
 
-- Use one column by default.
-- Use multiple columns only for short, strongly related fields such as city/state/postal code or start/end dates.
-- Group fields under descriptive headings.
-- Put labels above controls unless a specialized pattern has been tested.
-- Keep the primary action near the end of the content it submits.
-- For long forms, provide progress, section navigation, save status, or draft behavior as appropriate.
+### Tiles with Links
 
-### 9.2 Saving
+When generating a UC San Diego Tiles with Links module, use the established UC San Diego CMS module pattern. Do not substitute a generic card grid, feature grid, or custom tile implementation.
 
-Each workflow must explicitly choose one model:
+The Tiles with Links module does not use eyebrow text.
 
-- explicit **SAVE**;
-- save draft plus final submission;
-- autosave with visible saved/saving/error status; or
-- immediate update for small reversible settings.
+The introductory content begins with the module heading, followed by optional supporting copy. Do not add an eyebrow, kicker, label, or overline unless a documented module variant explicitly includes one.
 
-Do not mix models without explaining the transition. Never imply that data is saved before confirmation from the system.
+The module must use Bootstrap 5 conventions together with the established UC San Diego module classes.
 
-### 9.3 Destructive actions
+There is no minimum or maximum number of tiles.
 
-- Use specific labels such as “DELETE REPORT,” not “CONFIRM.”
-- Explain the effect, scope, and recoverability.
-- Add confirmation when the action is difficult to reverse or has broad consequences.
-- For highly consequential actions, require a stronger confirmation pattern proportionate to the risk.
-- After completion, explain what happened and whether recovery is possible.
+### Module background and optional header content
 
-### 9.4 Multi-step workflows
+The Tiles with Links module supports three approved module background treatments:
 
-- Show the user's current step and total progress when the sequence is fixed.
-- Allow backward navigation without losing valid information.
-- Summarize consequential inputs before final submission.
-- Distinguish “SAVE AND EXIT” from “CONTINUE.”
-- Do not use a wizard when users need to compare information across steps continuously.
+- White
+- Sand
+- Navy
 
----
+Apply the selected background treatment to the constrained module panel inside
+the page container. Do not apply the module background to the full viewport.
 
-## 10. System states
+Do not use navy tiles on a navy module background — do not place a solid-color tile on a module background of the same color. Tile colors must remain visually distinct from the module background so that individual tiles read as separate interactive elements.
 
-Every data-dependent page and component must design these states before implementation:
+The module header may include:
 
-| State | Requirement |
-| --- | --- |
-| Initial loading | Preserve layout where possible; announce meaningful async status |
-| Background loading | Keep usable content visible and identify what is updating |
-| Empty—first use | Explain the purpose and offer a relevant first action |
-| Empty—no results | Preserve filters and offer a way to broaden or clear them |
-| Success | Confirm the completed action and its effect |
-| Warning | Explain the risk and available choices |
-| Error—recoverable | Explain what happened and provide a retry or correction path |
-| Error—blocking | Explain what the user can do next and how to get help |
-| Partial data | Identify missing or stale data without presenting it as complete |
-| No permission | Explain the limitation without exposing restricted information |
-| Session timeout | Warn before timeout when possible and preserve recoverable work |
-| Offline/interrupted | Protect entered data and explain reconnection behavior |
+- a headline that take up one or two lines
+- a blurb
+- a module-level button.
 
-Loading placeholders should resemble the eventual structure and must not create distracting animation.
+All three are optional, but a blurb should never appear without a headline.
 
----
+The module must still render correctly when any or all of these elements are
+omitted.
 
-## 11. Accessibility standard
+When present:
 
-The product must meet **WCAG 2.2 Level AA** for the application canvas and must not reduce the accessibility of Decorator chrome.
+- the headline appears above the tile grid;
+- the module-level button appears in the header area and uses an approved UC San Diego button treatment;
+- the header content and tile grid share the same constrained module panel and horizontal alignment.
 
-Minimum requirements:
+When omitted:
 
-- complete keyboard access in a logical order;
-- a clearly visible focus indicator;
-- semantic headings, landmarks, lists, tables, and form relationships;
-- accessible names for all controls;
-- sufficient text and non-text contrast;
-- no information conveyed by color, position, shape, sound, or motion alone;
-- reflow and usability at 400% browser zoom where applicable;
-- touch targets sized and spaced to reduce accidental activation;
-- status and error updates announced appropriately;
-- captions, transcripts, and alternatives for media;
-- reduced-motion support; and
-- instructions that do not depend only on sensory characteristics.
+- do not insert placeholder content;
+- do not add an eyebrow, kicker, overline, or substitute heading;
+- do not reserve empty space for the missing element;
+- allow the tile grid to move up naturally within the module.
 
-### 11.1 Definition of done for accessibility
+For navy module backgrounds, use the appropriate inverse text and control
+treatments so that headings, supporting text, links, and buttons maintain
+required contrast.
 
-A feature is not complete until it has:
+#### Blurb
 
-- been reviewed in all documented states;
-- passed keyboard-only use;
-- been checked at 200% and 400% zoom;
-- been checked for contrast;
-- been tested with at least one supported screen reader for critical workflows; and
-- resolved all critical and serious automated accessibility findings, with manual review because automation is not sufficient.
+The blurb is optional supporting copy that appears directly beneath the module
+headline and above the tile grid.
 
----
+Use it to briefly explain the purpose of the module or provide context for the
+links that follow.
 
-## 12. Content design
+#### Visual contract
 
-### 12.1 Voice
+The Tiles with Links module is a constrained panel inside the page content
+area. It is not a full-width color band.
 
-Use a calm, direct, respectful voice. Assume users are capable but may be unfamiliar with institutional terminology or the current process.
+The module must preserve the following visual relationships:
 
-### 12.2 Writing rules
+- The entire module is centered within the page's standard content container.
+- The module background is applied to the constrained module panel, not to
+  the full viewport width.
+- The introductory row and the tile grid share the same left and right edges.
+- The module includes substantial internal padding around both the introductory
+  content and the tiles.
+- The module heading and description appear on the left side of the introductory
+  row.
+- An optional module-level action appears on the right side of the same row.
+- The tile grid appears below the introductory row.
+- Standard desktop presentation is three equal-width tiles per row.
+- Tile gutters are consistent across rows and columns.
+- Tiles have the established rounded-corner treatment.
+- Tile labels are centered horizontally and vertically within the tile.
+- Image tiles use a navy readability overlay treatment of `rgba(24, 43, 73, .5)` to preserve text
+  readability.
+- Solid-color tiles use only approved UC San Diego tile background treatments.
 
-- Lead with what the user needs to know or do.
-- Use familiar words and short sentences.
-- Use sentence case for prose, headings, navigation, tabs, field labels, and system messages. Visible textual button labels are the intentional exception and render in uppercase.
-- Use the same term for the same concept.
-- Avoid internal acronyms; define unavoidable ones on first use.
-- State dates unambiguously, including the year when relevant.
-- Include time zone when deadlines or event times may be interpreted across zones.
-- Make error messages specific, constructive, and free of blame.
-- Do not use “successfully” when the confirmed result is already clear.
+Do not make the module background bleed from edge to edge across the viewport
+unless a separate documented variant explicitly calls for that treatment.
 
-### 12.3 Labels and help
+#### Structure
 
-- Navigation labels name destinations.
-- Button labels name actions.
-- Headings describe the content that follows.
-- Help text answers a likely question and should not repeat the label.
-- Tooltips provide supplementary detail, never essential instructions.
+The outer section identifies the module and provides semantic grouping.
 
----
+The constrained module panel sits inside the Bootstrap container.
 
-## 13. Roles, permissions, and privacy
+The canonical hierarchy is:
 
-- Design for the least-privileged relevant role, not only administrators.
-- Do not show a control that will always fail for the current user.
-- When a hidden control would create confusion, explain the restriction in context without revealing sensitive information.
-- Clearly identify when users are acting on behalf of another person or organizational unit.
-- Confirm changes with broad scope, such as updates affecting many records or users.
-- Mask sensitive values by default and provide deliberate reveal behavior where appropriate.
-- Do not expose private information in URLs, page titles, analytics labels, notifications, or error messages.
+- `<section class="jumbotron-tile-links" data-module="tiles-with-links">`
+- `.container`
+- `.tile-module-*`
+- introductory `.row`
+- tile `.row.tiles-row`
+- responsive tile columns
+- `.wrapper`
+- `.background-image`
+- `<h3><a>...</a></h3>`
 
----
+The selected module surface is expressed with the appropriate
+`tile-module-*` class on the constrained module panel, not on the full-width
+outer section.
 
-## 14. Design patterns for common enterprise pages
+The introductory row:
 
-### 14.1 Dashboard
+- uses Bootstrap `.row`;
+- places heading and description in `.col-md-8.text-indent`;
+- places an optional module-level action in `.col-md-4`;
+- uses Bootstrap 5 alignment utilities such as `.text-md-end`.
 
-A dashboard should answer a small set of recurring questions. It must not become a collection of unrelated cards.
+The tile grid:
 
-Recommended order:
+- appears in a separate `.row.tiles-row`;
+- uses `.col-md-4` for the standard three-column desktop layout;
+- gives every individual tile a `.wrapper`;
+- uses `.background-image` for both image and solid-color tile backgrounds;
+- places each tile label in an `<h3>` containing the destination link.
+
+#### Bootstrap 5 requirements
+
+Use Bootstrap 5 markup and utilities.
+
+Do not use Bootstrap 3 patterns that have been removed or superseded.
+
+- Do not use `.jumbotron` as a Bootstrap component.
+- Use `.text-md-end` or another appropriate Bootstrap 5 alignment utility
+  instead of `.text-md-right` or `.text-lg-right`.
+- Do not use `.btn-default`.
+- Use an approved UC San Diego button treatment together with the appropriate
+  Bootstrap 5 `.btn` classes.
+- When an `<a>` performs navigation, style the `<a>` itself as the button.
+  Do not place a `<button>` inside an `<a>`.
+- Use the Bootstrap 5 grid for responsive tile layout rather than legacy
+  float-based or Bootstrap 3 layout techniques.
+
+#### Canonical Bootstrap 5 example
+
+```html
+<section
+  aria-labelledby="tiles-with-links-heading"
+  class="jumbotron-tile-links"
+  data-module="tiles-with-links"
+>
+  <div class="container">
+
+    <div class="tile-module-sand">
+
+      <div class="row align-items-start g-4">
+        <div class="col-md-8 text-indent">
+          <h2 id="tiles-with-links-heading">Tiles with Links</h2>
+          <p>
+            Features text over tiles that can use imagery or approved solid
+            colors. Tiles are arranged in rows of three on larger viewports.
+          </p>
+        </div>
+
+        <div class="col-md-4 text-md-end">
+          <a
+            class="btn btn-lg btn-primary"
+            href="tiles-with-links/index.html"
+          >
+            More Tiles with Links Examples
+          </a>
+        </div>
+      </div>
+
+      <div class="row tiles-row g-4">
+
+        <div class="col-md-4">
+          <div class="wrapper">
+            <img
+              alt=""
+              class="background-image"
+              src="../_images/image-library/cta/cta-aerial-view-scripps-pier.jpg"
+            >
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Text is required
+              </a>
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="wrapper">
+            <img
+              alt=""
+              class="background-image"
+              src="../_images/image-library/cta/cta-conference-room.jpg"
+            >
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Filter applied over images
+              </a>
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="wrapper">
+            <img
+              alt=""
+              class="background-image"
+              src="../_images/image-library/cta/cta-geisel-looking-up.jpg"
+            >
+            <h3>
+              <a href="tiles-with-links/index.html">
+                For readability
+              </a>
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="wrapper tile-blue-bg">
+            <div class="background-image"></div>
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Four tile color options
+              </a>
+            </h3>
+          </div>
+        </div>
 
-1. page title and time/data context;
-2. urgent tasks or exceptions;
-3. key summary measures;
-4. recent or assigned work;
-5. supporting trends or shortcuts.
+        <div class="col-md-4">
+          <div class="wrapper tile-blue-bg">
+            <div class="background-image"></div>
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Also available
+              </a>
+            </h3>
+          </div>
+        </div>
 
-Every metric must define its time range, source or scope, update time, and link to detail when available.
+        <div class="col-md-4">
+          <div class="wrapper tile-blue-bg">
+            <div class="background-image"></div>
+            <h3>
+              <a href="tiles-with-links/index.html">
+                Three background colors
+              </a>
+            </h3>
+          </div>
+        </div>
 
-### 14.2 Work queue
+      </div>
 
-Include:
+    </div>
 
-- clear scope and record count;
-- search and filters;
-- visible applied filters;
-- sortable priority columns;
-- ownership or assignment;
-- status and age;
-- row and bulk actions when appropriate; and
-- preserved state when returning from a record.
+  </div>
+</section>
+```
 
-### 14.3 Record detail
+#### Hover behavior
 
-Recommended order:
+Tiles use the established UC San Diego scale interaction on hover.
 
-1. record identity and status;
-2. primary actions;
-3. summary facts;
-4. current task or next step;
-5. detailed sections;
-6. history, audit trail, or related records.
+The entire `.wrapper` scales, including its background, overlay, label, and
+rounded corners. Do not animate only the background image.
 
-Separate editable and read-only states clearly. Do not make every field look editable when the page is in view mode.
+Use the canonical interaction:
 
-### 14.4 Create or edit form
+```css
+.jumbotron-tile-links .wrapper {
+  transition: transform .2s linear;
+}
 
-Use a descriptive title, short orientation, logically grouped fields, local help, clear saving behavior, and a predictable action area. For long workflows, support draft recovery and return visits.
+.jumbotron-tile-links .wrapper:hover {
+  transform: scale(1.1);
+}
+```
 
-### 14.5 Administration
+The tile remains in its existing grid position while scaling visually above
+its surrounding content.
 
-Administration pages require stronger scope cues, explicit consequences, searchable records, auditability, and cautious destructive actions. Clearly distinguish configuration changes from content changes.
+Do not substitute a lift, shadow, background-only zoom, or another hover
+effect for this interaction.
 
----
 
-## 15. Anti-patterns
+Also add keyboard-focus and reduced-motion handling **in the implementation**, even though those aren't present in the legacy CSS:
+
+```css
+.jumbotron-tile-links .wrapper:focus-within {
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jumbotron-tile-links .wrapper {
+    transition: none;
+  }
+
+  .jumbotron-tile-links .wrapper:hover,
+  .jumbotron-tile-links .wrapper:focus-within {
+    transform: none;
+  }
+}
+```
+
+## Hero
+
+When generating a UC San Diego Hero module, use the established UC San Diego
+CMS hero pattern. Do not substitute a generic marketing hero, split-screen
+banner, card-based introduction, or custom slideshow.
+
+The Hero module must use Bootstrap 5 conventions together with the established
+UC San Diego module anatomy.
+
+The hero is a full-width visual module. Its image or approved background may
+extend across the viewport, while the hero's written content remains aligned
+to the standard page container.
+
+The hero may contain one or more slides.
+
+The Hero module does not use eyebrow text unless a separately documented
+variant explicitly includes it.
+
+### Hero content
+
+A hero slide may include:
+
+- a headline;
+- an optional deliberate headline break;
+- a blurb;
+- a module-level button.
+
+The blurb and button are optional.
+
+Hero headlines may occupy one or two lines.
+
+The headline may be:
+
+- left aligned; or
+- center aligned.
+
+Left-aligned headlines may use a deliberate headline break to divide the
+headline into two phrases.
+
+Do not add an eyebrow, kicker, overline, category label, or other text above
+the hero headline unless a separately documented variant explicitly includes
+one.
+
+When optional content is omitted:
+
+- do not insert placeholder content;
+- do not reserve empty space for the missing element;
+- allow the remaining content to retain its natural spacing.
+
+### Headline
+
+The hero headline is the primary display heading within the hero.
+
+Use the established `type.h1` treatment.
+
+Hero headlines use sentence case. Do not automatically transform hero
+headlines to uppercase.
+
+Hero headlines may occupy one or two lines.
+
+A two-line headline may:
+
+- wrap naturally; or
+- use a deliberate semantic line break when the content calls for it.
+
+Example:
+
+```html
+<h1>
+  Hero Examples
+  <br>
+  <span>Left Headline with Break</span>
+</h1>
+```
+
+The text after the break remains part of the same semantic heading.
+
+Do not create a second heading merely to produce a second visual line.
+
+Do not force a deliberate line break simply because a headline naturally
+wraps.
+
+### Blurb
+
+The blurb is optional supporting copy that appears beneath the hero headline.
+
+Use the normal body-text treatment appropriate to the hero's light or dark
+text mode.
+
+Do not enlarge hero blurbs into a special display-text size.
+
+Use the established normal body role for supporting hero copy.
+
+Keep hero blurbs concise enough that they do not dominate the visual area.
 
 Do not:
 
-- modify or imitate Decorator chrome;
-- place application navigation inside the Decorator navigation;
-- use global CSS selectors such as unscoped `header`, `nav`, `.container`, `.dropdown`, or `.form-control`;
-- use more than one primary action in the same decision context;
-- rely on hover to reveal essential information or actions;
-- use placeholder text as a form label;
-- place long workflows in dialogs;
-- use cards as the default container for every section;
-- invent a new status label when an existing one has the same meaning;
-- show a blank area while data is loading;
-- use a disabled button as the only form guidance;
-- clear entered data after a recoverable error;
-- use color alone for status or validation; or
-- optimize only for the happy path.
+- use the blurb as an eyebrow or kicker;
+- repeat the headline in different words;
+- use multiple long paragraphs;
+- place the blurb above the headline.
+
+### Button
+
+A hero may contain an optional module-level button beneath the headline or
+blurb.
+
+Use an approved UC San Diego button treatment.
+
+Button labels use the established button typography and uppercase treatment.
+
+When an `<a>` performs navigation, style the `<a>` itself as the button.
+
+Do not place a `<button>` inside an `<a>`.
+
+Button hover behavior depends on the surface behind the button. Do not apply a
+single hover color blindly to every hero variant.
+
+### Visual contract
+
+The Hero module must preserve the following visual relationships:
+
+- The hero visual treatment extends across the full module width.
+- Hero text remains constrained to the standard page container.
+- Written content appears within the hero rather than in a separate panel
+  underneath it.
+- Hero content may be left aligned or center aligned.
+- Headlines may occupy one or two lines.
+- Headline, blurb, and button remain grouped as one content block.
+- Text and controls must maintain sufficient contrast against the complete
+  area behind them.
+- The hero remains visually substantial enough to function as the primary
+  introductory module.
+- Previous and next controls appear at the lateral edges of a multi-slide
+  hero.
+- Previous and next controls remain visually outside the written-content
+  region.
+- Pagination and playback controls remain visually below the written-content
+  region.
+- Pagination indicators and play/pause appear together inside one unified
+  bottom-center control capsule.
+- Carousel controls must never overlap the headline, blurb, or button at any
+  viewport size.
+
+Do not constrain the hero image itself to a card-sized panel inside the page
+container.
+
+Do not convert the established hero into a two-column image-and-text layout
+unless a separately documented variant explicitly uses that composition.
 
 ---
 
-## Appendix A: Instructions for coding agents
+## Canonical hero variants
 
-When generating or editing application UI:
+The UC San Diego Hero module has six canonical presentation variants.
 
-1. Treat Decorator header, navigation, search, mobile drawer, footer, and associated runtime as protected external code.
-2. Make changes only inside the declared application canvas unless the user explicitly provides an approved Decorator change.
-3. Read the installed Decorator template and Decorator Kit instructions before integrating the shell. Do not infer canonical markup from the live browser DOM.
-4. Inherit Decorator foundations when they already satisfy the requirement; do not duplicate them in application code or tokens.
-5. Apply only the intentional overrides and application extensions listed in Section 2.3.
-6. Scope application CSS and JavaScript to the application root.
-7. Do not target selectors found only in protected chrome.
-8. Use semantic HTML and native controls before custom equivalents.
-9. Implement every state specified in the design, including loading, empty, error, permission, and responsive states.
-10. Do not invent brand values when approved tokens or Decorator values exist.
-11. Flag a conflict rather than silently overriding this document or Decorator behavior.
-12. Run the project's Decorator Kit integrity checks before considering the work complete.
+Generated implementations should select from these established variants rather
+than inventing new hero compositions.
 
-## Appendix B: Feature specification template
+The six canonical variants are:
 
-Copy this section for each feature:
+1. Image with light text and optional headline break
+2. Blue Orb grit background with light text
+3. Yellow grit background with dark text
+4. Navy grit background with light text
+5. Image with text box
+6. Image with gradient
 
-```md
-# Feature: [Name]
+These variants share the same Hero module anatomy.
 
-## User goal
-[What the user is trying to accomplish]
+They differ in background, text treatment, and optional style treatment.
 
-## Users and permissions
-[Roles, capabilities, and restrictions]
+Do not interpret them as unrelated hero components.
 
-## Entry points
-[How users reach the feature]
+Do not invent a seventh visual treatment merely for variety.
 
-## Primary flow
-1. [Step]
-2. [Step]
-3. [Outcome]
+### Variant 1: Image with light text
 
-## Alternate and failure paths
-- [Path]
+Use an uploaded or approved hero image with light hero text.
 
-## Layout and responsive behavior
-[Wide and narrow viewport behavior]
+The headline may be:
 
-## Components
-- [Component and variant]
+- left aligned; or
+- center aligned.
 
-## States
-- Loading:
-- Empty:
-- Success:
-- Warning:
-- Error:
-- No permission:
-- Partial or stale data:
+A left-aligned headline may use a deliberate headline break.
 
-## Content rules
-[Labels, helper text, validation, formatting]
+The headline may occupy one or two lines.
 
-## Accessibility annotations
-[Focus order, names, announcements, keyboard behavior, contrast]
+The slide may include:
 
-## Data and system assumptions
-[Sources, latency, limits, update behavior]
+- headline;
+- blurb;
+- button.
 
-## Acceptance criteria
-- [ ] [Testable requirement]
+Example:
+
+```html
+<div class="carousel-item active">
+  <div class="hero-media hero-image-light">
+
+    <img
+      src="hero-image.jpg"
+      alt=""
+    >
+
+    <div class="container">
+      <div class="hero-content">
+
+        <h1 class="rt-text-light">
+          Hero Examples
+          <br>
+          <span>Left Headline with Break</span>
+        </h1>
+
+        <p class="rt-text-light">
+          Concise supporting copy.
+        </p>
+
+        <a
+          class="btn btn-primary"
+          href="#"
+        >
+          Primary action
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</div>
 ```
+
+If the image requires additional readability treatment, use a separately
+documented canonical variant rather than inventing an arbitrary overlay.
+
+### Variant 2: Blue Orb grit background
+
+Use the approved UC San Diego Blue Orb grit background.
+
+Use light text.
+
+The headline may occupy one or two lines.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+This is a pre-canned branded background, not an uploaded-image modification.
+
+Do not replace the established Blue Orb grit asset with an arbitrary blue
+gradient or custom abstract background.
+
+### Variant 3: Yellow grit background
+
+Use the approved UC San Diego yellow grit background.
+
+Use dark text.
+
+The headline may occupy one or two lines.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+This is a pre-canned branded background.
+
+Do not use a button color that visually matches the yellow module background.
+
+### Variant 4: Navy grit background
+
+Use the approved UC San Diego navy grit background.
+
+Use light text.
+
+The headline may occupy one or two lines.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+This is a pre-canned branded background.
+
+Do not use a navy button on the navy grit background.
+
+### Variant 5: Image with text box
+
+Use this variant when an uploaded hero image needs a contained background
+behind the written content for readability.
+
+Place the headline, blurb, and button together inside one established hero
+text box.
+
+The text box may use any of the following approved treatments:
+
+- Blue
+- Navy
+- Translucent Blue
+- Translucent Navy
+
+Approved values correspond to the current component color treatments:
+
+- Blue: `#00629b`
+- Navy: `#182b49`
+- Translucent Blue: `rgba(0, 98, 155, 0.8)`
+- Translucent Navy: `rgba(24, 43, 73, 0.8)`
+
+The headline may occupy one or two lines.
+
+A two-line headline may wrap naturally or use a deliberate semantic line break.
+
+Keep the blurb concise so the box does not become excessively large.
+
+Do not:
+
+- create separate boxes around the headline, blurb, and button;
+- use an unapproved box color;
+- allow the box to become a large general-purpose content panel;
+- combine the text-box treatment with the gradient treatment;
+- force a single-line headline when two lines are appropriate.
+
+Example classes may include:
+
+```html
+<div class="hero-text-box hero-text-box-blue">
+```
+
+```html
+<div class="hero-text-box hero-text-box-navy">
+```
+
+```html
+<div class="hero-text-box hero-text-box-blue-translucent">
+```
+
+```html
+<div class="hero-text-box hero-text-box-navy-translucent">
+```
+
+### Variant 6: Image with gradient
+
+Use this variant when an uploaded hero image needs additional contrast beneath
+the text while retaining an uninterrupted image treatment.
+
+Apply the established gentle navy/blue gradient beneath the written content.
+
+The headline may occupy one or two lines.
+
+The slide may include:
+
+- headline;
+- blurb;
+- button.
+
+Do not:
+
+- replace the documented gradient with an arbitrary uniformly dark full-image
+  overlay;
+- make the gradient visually dominate the image;
+- combine the gradient with the text-box treatment.
+
+---
+
+## Grit-background button colors
+
+The approved button colors on grit-background hero variants are:
+
+- Yellow
+- Turquoise
+- Orange
+- Gold
+- Navy
+
+A button color may be used only when it remains visually distinct from the
+module background.
+
+Do not use a button whose color effectively matches the hero background.
+
+For example:
+
+- do not use yellow on the yellow grit background;
+- do not use navy on the navy grit background.
+
+Blue is not one of the approved grit-background button treatments.
+
+### Grit button hover behavior
+
+Hover states must remain visually distinct from the grit background.
+
+Do not choose a hover color that disappears into a similarly colored portion
+of the grit treatment.
+
+#### Blue Orb grit background
+
+For yellow, orange, or gold buttons on the Blue Orb background:
+
+- hover background: Turquoise
+- hover text: Navy
+
+For a turquoise button on the Blue Orb background:
+
+- hover background: Yellow
+- hover text: Navy
+
+Do not use navy as the hover background on the Blue Orb treatment when it
+visually disappears into the dark portion of the grit artwork.
+
+#### Yellow grit background
+
+Use an approved contrasting button color such as Navy.
+
+The hover state must remain distinct from the yellow module background.
+
+Do not transition the button to yellow.
+
+#### Navy grit background
+
+Do not use a navy button.
+
+Approved button colors include:
+
+- Yellow
+- Turquoise
+- Orange
+- Gold
+
+Hover colors must remain visually distinct from the navy module background.
+
+---
+
+## Text-box button hover behavior
+
+Text-box button hover behavior depends on the box surface.
+
+### Blue and Translucent Blue text boxes
+
+A yellow primary button on:
+
+- Blue
+- Translucent Blue
+
+uses:
+
+- normal background: Yellow
+- normal text: Navy
+- hover background: Navy
+- hover text: White
+
+Example:
+
+```css
+.hero-text-box-blue .btn-primary:hover,
+.hero-text-box-blue .btn-primary:focus,
+.hero-text-box-blue-translucent .btn-primary:hover,
+.hero-text-box-blue-translucent .btn-primary:focus {
+  background: #182b49;
+  color: #fff;
+}
+```
+
+### Navy and Translucent Navy text boxes
+
+A yellow primary button on:
+
+- Navy
+- Translucent Navy
+
+must not hover to navy because the button would visually disappear into the
+box.
+
+Use:
+
+- normal background: Yellow
+- normal text: Navy
+- hover background: Turquoise
+- hover text: Navy
+
+Example:
+
+```css
+.hero-text-box-navy .btn-primary:hover,
+.hero-text-box-navy .btn-primary:focus,
+.hero-text-box-navy-translucent .btn-primary:hover,
+.hero-text-box-navy-translucent .btn-primary:focus {
+  background: #00c6d7;
+  color: #182b49;
+}
+```
+
+The same principle applies to other navy-backed hero treatments.
+
+Never create a hover state where the button background matches the surface
+behind it.
+
+---
+
+## Headline alignment
+
+Hero headlines support:
+
+- left alignment;
+- center alignment.
+
+Hero headlines may occupy one or two lines.
+
+Left-aligned headlines may use a deliberate semantic headline break.
+
+Do not create multiple heading elements merely to produce multiple visual
+lines.
+
+---
+
+## Optional hero fields
+
+A slide may contain:
+
+- headline + blurb + button;
+- headline + blurb;
+- headline + button;
+- headline only;
+- background imagery without written content.
+
+Do not insert substitute text when a field is intentionally omitted.
+
+Do not reserve empty space for omitted fields.
+
+A button requires a valid destination.
+
+---
+
+## Hero image requirements
+
+Uploaded hero images should use a consistent hero proportion.
+
+The established CMS reference uses approximately:
+
+```text
+1440 × 530
+```
+
+When multiple slides use uploaded imagery, keep dimensions and proportions
+consistent so the hero does not visibly change height between slides.
+
+Choose imagery with the expected text location in mind.
+
+Avoid:
+
+- important faces directly underneath written content;
+- text embedded within the image;
+- visually busy areas directly behind written content;
+- image regions that cause the chosen text treatment to fail contrast.
+
+When the image is decorative and all meaningful information is present in the
+visible hero text, use an empty image `alt` value.
+
+---
+
+## Content limits
+
+The Hero establishes the page's primary message rather than serving as a large
+content container.
+
+Use rich imagery and concise supporting text.
+
+Do not use oversized body text to make the hero appear more dramatic.
+
+Use the established normal body treatment for the blurb.
+
+Keep supporting copy short.
+
+Use the hero button to direct users to detailed content.
+
+For normal production pages, prefer a small number of slides.
+
+Do not create a large carousel merely because the component technically
+supports many slides.
+
+---
+
+## Structure
+
+The hero media spans the full module width.
+
+The written content remains constrained inside the standard page container.
+
+The canonical multi-slide hierarchy is:
+
+- `<section class="hero-homepage">`
+- Bootstrap 5 `.carousel`
+- `.carousel-inner`
+- `.carousel-item`
+- hero media or approved grit background
+- `.container`
+- hero content block
+- headline
+- optional blurb
+- optional button
+- previous control
+- next control
+- unified `.hero-carousel-controls`
+  - `.carousel-indicators`
+  - play/pause control
+
+For a static one-slide hero, carousel navigation and pagination are omitted.
+
+For a multi-slide hero, preserve the complete carousel control structure.
+
+---
+
+## Carousel control layout
+
+Carousel controls must never overlap the written hero content.
+
+The layout must reserve distinct spatial regions for:
+
+1. previous-arrow control;
+2. written hero content;
+3. next-arrow control;
+4. bottom pagination/playback controls.
+
+Do not simply position controls over the content and assume there will be
+enough space.
+
+### Side arrow gutters
+
+Reserve dedicated transparent gutters at the left and right edges of the hero
+for previous and next controls.
+
+Written content must be inset far enough that neither the visible chevron nor
+its interactive target can overlap:
+
+- the headline;
+- the blurb;
+- the button.
+
+This requirement applies at all viewport sizes.
+
+On smaller screens, increase or preserve the content inset rather than moving
+the arrows on top of the content.
+
+Example:
+
+```css
+.hero-content > .container {
+  padding-left: 96px;
+  padding-right: 96px;
+}
+```
+
+Responsive implementations may reduce these values when necessary, but the
+content must remain completely outside the arrow target areas.
+
+### Bottom control safe area
+
+Reserve enough bottom padding inside each hero slide for the unified
+pagination/playback capsule.
+
+The headline, blurb, and button must not extend behind or underneath the
+bottom controls.
+
+This requirement applies at desktop, tablet, and mobile sizes.
+
+---
+
+## Previous and next controls
+
+Multi-slide heroes use the established UC San Diego previous and next
+chevrons.
+
+The visible arrows:
+
+- appear near the left and right edges of the hero;
+- are vertically centered;
+- use a compact thick-chevron shape;
+- use a light semi-transparent treatment;
+- include a subtle dark shadow;
+- have no visible circle;
+- have no pill background;
+- have no visible square or rectangular button surface.
+
+Do not use Bootstrap's default carousel arrow artwork.
+
+Use Bootstrap 5 for behavior, but provide the established UC San Diego
+chevron treatment.
+
+The visible arrow is intentionally smaller than its interactive target.
+
+A suitable visual treatment is approximately:
+
+```css
+.hero-carousel-chevron {
+  display: block;
+
+  width: 18px;
+  height: 18px;
+
+  border-top: 6px solid rgba(255,255,255,.68);
+  border-right: 6px solid rgba(255,255,255,.68);
+
+  filter: drop-shadow(
+    0 1px 1px rgba(24,43,73,.4)
+  );
+}
+
+.hero-carousel-chevron-prev {
+  transform: rotate(-135deg);
+}
+
+.hero-carousel-chevron-next {
+  transform: rotate(45deg);
+}
+```
+
+The button itself may use a substantially larger transparent hit target.
+
+Example:
+
+```css
+.carousel-control-prev,
+.carousel-control-next {
+  width: 72px;
+  min-width: 72px;
+
+  border: 0;
+  background: transparent;
+
+  opacity: 1;
+}
+```
+
+Do not enlarge the visible chevron merely to increase its click target.
+
+---
+
+## Pagination and playback control group
+
+A multi-slide hero uses one unified bottom-center control group containing:
+
+- pagination indicators;
+- play/pause.
+
+These controls must visually read as one interface element.
+
+The group:
+
+- is horizontally centered;
+- appears near the bottom edge of the hero;
+- uses a fully rounded capsule shape;
+- uses a black background at 50% transparency;
+- keeps pagination and play/pause vertically centered;
+- uses compact internal spacing.
+
+Use:
+
+```css
+background: rgba(0, 0, 0, .5);
+```
+
+Do not use an opaque navy capsule.
+
+Do not place pagination and play/pause into separate floating containers.
+
+Do not give play/pause its own additional circular or pill-shaped background.
+
+---
+
+## Pagination
+
+Pagination uses circular indicators.
+
+Each pagination control must have an interactive target of:
+
+```text
+14px × 14px
+```
+
+The visible circle remains smaller than the interactive target.
+
+Use approximately:
+
+```text
+10px × 10px visible circle
+```
+
+with:
+
+```text
+1px white outline
+```
+
+for inactive indicators.
+
+The active indicator uses a solid white fill.
+
+There must be exactly:
+
+```text
+2px
+```
+
+between each 14×14 pagination target.
+
+The 14×14 target must not be reduced merely to make the visible controls more
+compact.
+
+Use a pseudo-element or equivalent technique so the button remains 14×14
+while the visual dot remains small.
+
+Example:
+
+```css
+.hero-carousel-controls .carousel-indicators {
+  position: static;
+
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  margin: 0;
+}
+
+.hero-carousel-controls
+.carousel-indicators
+[data-bs-target] {
+  position: relative;
+
+  width: 14px;
+  height: 14px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  opacity: 1;
+}
+
+.hero-carousel-controls
+.carousel-indicators
+[data-bs-target]::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 10px;
+  height: 10px;
+
+  border: 1px solid #fff;
+  border-radius: 50%;
+
+  background: transparent;
+
+  transform: translate(-50%, -50%);
+}
+
+.hero-carousel-controls
+.carousel-indicators
+.active::after {
+  background: #fff;
+}
+```
+
+Do not use Bootstrap's default rectangular carousel indicators.
+
+---
+
+## Play and pause
+
+Automatically advancing hero carousels provide a persistent play/pause
+control.
+
+The control appears inside the same bottom-center capsule as pagination.
+
+It appears after the pagination indicators.
+
+It does not receive its own background container.
+
+When the carousel is playing:
+
+- show the pause symbol;
+- the accessible name indicates that activation pauses the carousel.
+
+When the carousel is paused:
+
+- show the play symbol;
+- the accessible name indicates that activation resumes the carousel.
+
+Update both the visible state and accessible name.
+
+Do not restart automatic rotation merely because a user manually changes
+slides after explicitly pausing the carousel.
+
+---
+
+## Canonical control-group styling
+
+A suitable implementation is:
+
+```css
+.hero-carousel-controls {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  z-index: 8;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 4px 8px;
+  border-radius: 999px;
+
+  background: rgba(0, 0, 0, .5);
+
+  transform: translateX(-50%);
+}
+
+.hero-carousel-controls .carousel-indicators {
+  position: static;
+
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  margin: 0;
+}
+
+.hero-carousel-toggle {
+  position: static;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 18px;
+  min-height: 18px;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color: #fff;
+}
+```
+
+---
+
+## Bootstrap 5 requirements
+
+Use Bootstrap 5 carousel markup and attributes.
+
+Do not reproduce Bootstrap 3 carousel syntax.
+
+Translate legacy behavior as follows:
+
+- `.item` → `.carousel-item`
+- `data-ride="carousel"` → `data-bs-ride="carousel"`
+- `data-slide="prev"` → `data-bs-slide="prev"`
+- `data-slide="next"` → `data-bs-slide="next"`
+- `data-slide-to` → `data-bs-slide-to`
+- `data-target` → `data-bs-target`
+
+Use `<button>` elements for:
+
+- previous;
+- next;
+- pagination;
+- play/pause.
+
+Use Bootstrap 5 for carousel mechanics.
+
+Do not use Bootstrap's default visual treatment for:
+
+- previous/next arrows;
+- pagination indicators.
+
+Preserve the documented UC San Diego appearance instead.
+
+Do not add `tabindex="0"` to static headings or paragraphs merely to make them
+keyboard focusable.
+
+---
+
+## Canonical Bootstrap 5 example
+
+```html
+<section
+  class="hero-homepage"
+  aria-label="Featured content"
+>
+  <div
+    id="heroCarousel"
+    class="carousel slide"
+    data-bs-ride="carousel"
+  >
+
+    <div class="carousel-inner">
+
+      <div class="carousel-item active">
+        <div class="hero-media hero-image-light">
+
+          <img
+            src="hero-image.jpg"
+            alt=""
+          >
+
+          <div class="hero-content">
+            <div class="container">
+
+              <div class="hero-copy rt-text-light">
+
+                <h1>
+                  Hero headline
+                  <br>
+                  <span>Optional second line</span>
+                </h1>
+
+                <p>
+                  Concise supporting copy.
+                </p>
+
+                <a
+                  class="btn btn-primary"
+                  href="#"
+                >
+                  Primary action
+                </a>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#heroCarousel"
+      data-bs-slide="prev"
+    >
+      <span
+        class="
+          hero-carousel-chevron
+          hero-carousel-chevron-prev
+        "
+        aria-hidden="true"
+      ></span>
+
+      <span class="visually-hidden">
+        Previous slide
+      </span>
+    </button>
+
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#heroCarousel"
+      data-bs-slide="next"
+    >
+      <span
+        class="
+          hero-carousel-chevron
+          hero-carousel-chevron-next
+        "
+        aria-hidden="true"
+      ></span>
+
+      <span class="visually-hidden">
+        Next slide
+      </span>
+    </button>
+
+    <div class="hero-carousel-controls">
+
+      <div class="carousel-indicators">
+
+        <button
+          type="button"
+          data-bs-target="#heroCarousel"
+          data-bs-slide-to="0"
+          class="active"
+          aria-current="true"
+          aria-label="Slide 1"
+        ></button>
+
+        <button
+          type="button"
+          data-bs-target="#heroCarousel"
+          data-bs-slide-to="1"
+          aria-label="Slide 2"
+        ></button>
+
+      </div>
+
+      <button
+        class="hero-carousel-toggle"
+        type="button"
+        aria-label="Pause carousel"
+        aria-pressed="false"
+      >
+        <span
+          class="hero-carousel-pause"
+          aria-hidden="true"
+        >
+          Ⅱ
+        </span>
+
+        <span
+          class="hero-carousel-play"
+          aria-hidden="true"
+          hidden
+        >
+          ▶
+        </span>
+      </button>
+
+    </div>
+
+  </div>
+</section>
+```
+
+---
+
+## Motion
+
+Carousel transitions should be restrained and must not compete with the hero
+content.
+
+Respect `prefers-reduced-motion`.
+
+When reduced motion is requested:
+
+- remove or minimize animated transitions;
+- do not introduce zoom or parallax;
+- preserve carousel navigation controls;
+- preserve pagination;
+- preserve play/pause functionality.
+
+---
+
+## Accessibility
+
+The Hero module must remain operable using:
+
+- keyboard;
+- pointer;
+- touch;
+- assistive technology.
+
+For multi-slide heroes:
+
+- expose the carousel as a clearly named region;
+- provide accessible names for previous and next controls;
+- provide accessible names for pagination indicators;
+- provide an accessible name for play/pause;
+- indicate the active pagination item;
+- preserve 24×24 pagination targets;
+- ensure controls have visible focus states;
+- keep static headings and blurbs out of the tab order;
+- ensure automatic rotation can be paused;
+- ensure written content and controls never overlap;
+- ensure all text maintains required contrast throughout the complete
+  background area behind it.
+
+The visual grouping of pagination and playback controls does not merge their
+individual accessible functions.
+
+The page must retain a logical semantic heading hierarchy regardless of which
+carousel slide is visible.
+
+---
+
+## Generation rules
+
+When an established UC San Diego Hero module is requested or applicable,
+reproduce its documented layout envelope, control anatomy, visual treatments,
+and interaction behavior.
+
+Do not merely imitate its general visual appearance.
+
+When selecting a Hero presentation, choose one of the six documented
+canonical variants:
+
+- image with light text;
+- Blue Orb grit background;
+- yellow grit background;
+- navy grit background;
+- image with text box;
+- image with gradient.
+
+For text-box heroes, choose only:
+
+- Blue;
+- Navy;
+- Translucent Blue;
+- Translucent Navy.
+
+For grit-background heroes, permitted button colors are:
+
+- Yellow;
+- Turquoise;
+- Orange;
+- Gold;
+- Navy;
+
+provided the button color does not match or visually disappear into the module
+background.
+
+For Hero modules specifically:
+
+- preserve the full-width visual treatment;
+- preserve the constrained written-content container;
+- allow headlines to occupy one or two lines;
+- keep headline, blurb, and button grouped;
+- use normal body typography for blurbs;
+- preserve left or center alignment when specified;
+- preserve deliberate headline breaks when specified;
+- preserve documented contrast treatments;
+- reserve dedicated side gutters for previous and next controls;
+- reserve dedicated bottom space for pagination and playback;
+- never overlap carousel controls with written content;
+- use compact custom UC San Diego chevrons;
+- keep the visible arrow smaller than its interactive target;
+- use the unified bottom-center pagination/playback capsule;
+- use `rgba(0, 0, 0, .5)` for the capsule background;
+- use 24×24 pagination click targets;
+- use approximately 10×10 visible pagination circles;
+- use a 1px white ring for inactive pagination indicators;
+- use a solid white active pagination indicator;
+- use exactly 2px between pagination targets;
+- keep play/pause inside the same capsule;
+- use Bootstrap 5 carousel behavior;
+- preserve established UC San Diego button treatments;
+- use surface-aware button hover colors.
+
+Do not:
+
+- substitute a generic split hero;
+- convert the hero image into a rounded card;
+- add an eyebrow or kicker without a documented variant;
+- invent additional hero variants;
+- use oversized blurb typography;
+- omit carousel pagination from a multi-slide hero;
+- reduce pagination click targets below the documented size;
+- allow arrows to overlap written content;
+- allow pagination/playback controls to overlap written content;
+- render play/pause as a separately floating button;
+- use Bootstrap's default rectangular pagination indicators;
+- use Bootstrap's default previous/next icon artwork;
+- place arrows inside visible circles, squares, or pills;
+- use a button hover color that matches the surface behind it;
+- use navy hover on a navy surface;
+- use navy hover when it visually disappears into the Blue Orb grit
+  background;
+- use obsolete Bootstrap 3 carousel markup;
+- invent new background treatments;
+- make static hero text keyboard focusable;
+- change the established hero anatomy merely for visual variety.
+
+## Call to Action
+
+Use the Call to Action module to pair a concise message with one clear action.
+
+The module may combine text with an image, video, or approved UC San Diego grit background.
+
+Do not create a generic card or two-column marketing component when the Call to Action pattern is appropriate.
+
+The Call to Action module follows the established UC San Diego CMS pattern and should preserve its recognizable proportions, spacing, image treatment, typography, and button behavior.
+
+### Purpose
+
+A Call to Action should focus on one idea and one primary next step.
+
+Typical uses include:
+
+- introducing a program;
+- directing visitors to an important resource;
+- promoting a service;
+- highlighting an opportunity;
+- encouraging contact or participation;
+- pairing explanatory text with a relevant image or video.
+
+Do not use a Call to Action as a substitute for:
+
+- a general-purpose content grid;
+- a list of unrelated links;
+- a navigation menu;
+- a news listing;
+- a multi-action promotional card.
+
+If several equal actions must be presented together, consider another module such as Tiles with Links.
+
+### Call to Action content
+
+A standard Call to Action may contain:
+
+- image, video, or approved grit background;
+- headline;
+- supporting copy;
+- one CTA button.
+
+The image or video may be positioned beside the written content depending on the selected variant.
+
+The button is optional when the content does not require an explicit next step, but most Call to Action implementations should contain one clear action.
+
+Do not add multiple competing CTA buttons to a single module.
+
+### Headline
+
+Use the heading level appropriate to the page hierarchy.
+
+For a typical standalone Call to Action within a page, use an `h2`.
+
+Use the `type.h2` typography role.
+
+The headline:
+
+- should normally fit within approximately 25 characters per line;
+- should not exceed approximately two lines;
+- should be sentence case;
+- should describe the purpose of the action clearly.
+
+Do not uppercase the entire headline.
+
+Do not shrink typography merely to force an overly long headline into the module.
+
+Do not substitute decorative display text for the documented heading role.
+
+### Supporting copy
+
+Supporting copy appears beneath the headline.
+
+Use standard body typography.
+
+Keep the text focused on the single purpose of the module.
+
+Approximately 100 words or fewer is recommended.
+
+The traditional CMS pattern allows approximately 8–9 lines of supporting content.
+
+Keep formatting simple.
+
+Avoid:
+
+- long nested lists;
+- multiple subheadings;
+- several unrelated paragraphs;
+- multiple calls to action;
+- oversized lead text.
+
+### Button
+
+The Call to Action button appears beneath the supporting copy.
+
+Use the established button component.
+
+Button labels should be short, action-oriented, and rendered using the component's uppercase styling.
+
+Examples:
+
+```text
+MEET THE STAFF
+```
+
+```text
+EXPLORE PROGRAMS
+```
+
+```text
+LEARN MORE
+```
+
+```text
+GET STARTED
+```
+
+The source text does not need to be written in uppercase if the button component applies uppercase styling through CSS.
+
+Do not place a `<button>` inside an `<a>`.
+
+Navigation actions should use an anchor styled as a button.
+
+## Image requirements
+
+Images displayed beside CTA content use the established approximate source dimensions:
+
+```text
+550 × 370 pixels
+```
+
+Use an image with an appropriate composition for the available landscape area.
+
+Images must:
+
+- retain their natural aspect ratio;
+- remain responsive;
+- use `max-width: 100%`;
+- use `height: auto`;
+- have rounded corners;
+- use a `14px` border radius.
+
+Do not stretch images.
+
+Do not distort their aspect ratio.
+
+Do not use arbitrary fixed-height cropping when the canonical image treatment allows the image to retain its natural dimensions.
+
+### Canonical image styling
+
+Use:
+
+```css
+.cta-module img {
+  border-radius: 14px;
+  max-width: 100%;
+  height: auto;
+}
+```
+
+When the image appears in a sand-background CTA, preserve the established inset treatment:
+
+```css
+.jumbotron-sand img {
+  border-radius: 14px;
+  margin: 25px 0;
+  max-width: 100%;
+  height: auto;
+}
+```
+
+The image margin creates visible sand space above and below the image.
+
+Do not create an additional gray frame, matte, placeholder surface, or background around the image.
+
+The visible area surrounding an inset image must come from the module background itself.
+
+### Image corners
+
+All photographic CTA images use rounded corners.
+
+Use:
+
+```css
+border-radius: 14px;
+```
+
+This applies regardless of whether the image:
+
+- appears on the left;
+- appears on the right;
+- uses no overlay;
+- uses an approved image overlay.
+
+Any overlay applied to an image must be clipped to the exact same rounded image boundary.
+
+Do not allow an overlay to extend beyond the image and create a visible rectangular box.
+
+A suitable relationship is:
+
+```css
+.cta-media-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.cta-media-frame img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+```
+
+If the image does not require an overlay, an additional wrapper is not required solely to create the rounded corners.
+
+### Canonical Call to Action variants
+
+The Call to Action component supports the following canonical variants.
+
+#### 1. Left Image — Dark Style
+
+The image appears on the left.
+
+The written content appears on the right.
+
+The module uses the sand background treatment.
+
+The image uses no overlay.
+
+The image is inset vertically into the sand module background.
+
+Use:
+
+```css
+.jumbotron-sand img {
+  border-radius: 14px;
+  margin: 25px 0;
+  max-width: 100%;
+  height: auto;
+}
+```
+
+The module structure should preserve this relationship:
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│  ╭──────────────────────╮     Headline                     │
+│  │                      │                                  │
+│  │        Image         │     Supporting copy              │
+│  │                      │                                  │
+│  ╰──────────────────────╯     CTA button                   │
+└──────────────────────────────────────────────────────────────┘
+                 Sand background
+```
+
+The sand background must remain visible around the inset image.
+
+Do not place the image inside a gray box.
+
+Do not use an additional background color behind the image.
+
+Do not make the image flush with the top or bottom of the sand panel.
+
+#### 2. Right Image — Light Style — Overlay 1
+
+The written content appears on the left.
+
+The image appears on the right.
+
+Use the documented Overlay 1 treatment.
+
+The image retains:
+
+```css
+border-radius: 14px;
+```
+
+The overlay must be clipped to the rounded image.
+
+Do not allow the overlay surface to extend outside the image boundary.
+
+A suitable implementation is:
+
+```css
+.cta-overlay-1 .cta-media-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.cta-overlay-1 .cta-media-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+}
+```
+
+The exact approved overlay color or opacity should come from the design-system token or documented CTA implementation.
+
+Do not invent additional overlay treatments.
+
+#### 3. Right Image — Light Style — Overlay 2
+
+The written content appears on the left.
+
+The image appears on the right.
+
+Use the documented Overlay 2 treatment.
+
+As with Overlay 1:
+
+- image corners remain `14px`;
+- the overlay follows the exact same rounded boundary;
+- no visible rectangular overlay may extend beyond the image;
+- no gray frame is added behind the image.
+
+Overlay 2 is a distinct approved treatment, not an arbitrary opacity variation generated for visual variety.
+
+#### 4. Yellow Grit Background
+
+This variant does not require a photograph.
+
+Use the approved UC San Diego yellow grit background.
+
+Written content appears directly on the grit surface.
+
+Use dark text with sufficient contrast.
+
+The content should include:
+
+- headline;
+- supporting copy;
+- optional CTA button.
+
+Do not place a decorative photo beside the grit treatment.
+
+Do not combine the grit background with a separate image unless another documented module explicitly permits it.
+
+Do not create new grit colors.
+
+#### 5. Grit Circles Background
+
+This variant uses the approved UC San Diego blue/circle grit treatment.
+
+Written content appears directly on the grit surface.
+
+Use light text where required for contrast.
+
+The content may include:
+
+- headline;
+- supporting copy;
+- CTA button.
+
+Use surface-aware button behavior.
+
+A button's hover state must remain visually distinct from the background behind it.
+
+For a dark or blue grit surface, do not change the button on hover to a color that disappears into the background.
+
+#### 6. Video Embed
+
+A Call to Action may substitute a video embed for the image.
+
+The video occupies the media side of the module.
+
+Written content occupies the opposite side.
+
+Use a responsive video container.
+
+The video should visually follow the same general media proportions as the image variants.
+
+Where rounded media treatment is used, clip the video to the same `14px` radius.
+
+A suitable implementation is:
+
+```css
+.cta-video-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  aspect-ratio: 550 / 370;
+}
+
+.cta-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+```
+
+The embedded video must have an accessible title.
+
+Do not autoplay video with sound.
+
+### Visual contract
+
+The Call to Action module must preserve the following visual characteristics:
+
+- content constrained to the standard page container;
+- two-column relationship for image/video variants;
+- approximately equal media and content columns on desktop;
+- rounded media corners;
+- `14px` media radius;
+- responsive media;
+- simple content hierarchy;
+- one prominent headline;
+- concise supporting text;
+- one primary CTA;
+- substantial but controlled whitespace;
+- vertically balanced media and written content;
+- documented UC San Diego surfaces and colors.
+
+The module should feel like a single composition.
+
+Do not style the image and written content as two unrelated cards.
+
+Do not add borders around each column.
+
+Do not add shadows unless the documented pattern explicitly requires them.
+
+Do not wrap the entire module in an arbitrary rounded card.
+
+### Layout
+
+Image and video variants use a Bootstrap grid.
+
+A canonical desktop structure is:
+
+```html
+<section class="cta-module jumbotron-sand">
+  <div class="container">
+    <div class="row align-items-center">
+
+      <div class="col-md-6">
+        <figure>
+          <img
+            class="img-fluid"
+            src="IMAGE_SOURCE"
+            alt="IMAGE_DESCRIPTION"
+          >
+        </figure>
+      </div>
+
+      <div class="col-md-6">
+        <h2>Call to Action Headline</h2>
+
+        <p>
+          Supporting copy for the Call to Action.
+        </p>
+
+        <p>
+          <a class="btn btn-primary" href="#">
+            Call to Action
+          </a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+```
+
+The image may be moved to the right by reversing the column order.
+
+Do not use absolute positioning to construct the primary two-column layout.
+
+Use the Bootstrap grid.
+
+### Figure behavior
+
+Images may be wrapped in `<figure>`.
+
+Do not allow default figure margins to accidentally alter the documented module spacing.
+
+If `<figure>` is used, normalize its margin as needed:
+
+```css
+.cta-module figure {
+  margin: 0;
+}
+```
+
+The intentional image spacing should come from the documented module/image rules rather than browser-default figure margins.
+
+### Sand-background treatment
+
+When the CTA uses the dark/sand style, apply the sand surface to the module panel.
+
+The photograph remains visibly inset within this sand surface.
+
+The sand area surrounding the image is intentional.
+
+Use the documented sand surface token rather than an arbitrary beige.
+
+The image does not receive a separate gray background.
+
+Correct:
+
+```text
+Sand module
+  └── Rounded image with vertical inset
+```
+
+Incorrect:
+
+```text
+Sand module
+  └── Gray image box
+        └── Rounded image
+```
+
+### Image overlays
+
+Only use documented overlay variants.
+
+An image overlay:
+
+- sits directly over the image;
+- follows the image's exact size;
+- uses the same `14px` rounded corners;
+- is clipped to the image;
+- does not alter module dimensions;
+- does not create a visible background outside the photo.
+
+A suitable pattern is:
+
+```css
+.cta-media-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.cta-media-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.cta-media-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+}
+```
+
+Do not create an overlay by assigning a colored background to an oversized wrapper.
+
+### Background behavior
+
+The Call to Action may use the documented:
+
+- white/light surface;
+- sand/dark-style surface;
+- Yellow Grit;
+- Grit Circles treatment.
+
+Do not arbitrarily alternate background colors for decoration.
+
+Use a background because it belongs to the selected canonical variant.
+
+### Button behavior
+
+Buttons must use established design-system button treatments.
+
+The button's default and hover colors must maintain sufficient contrast against the surface behind the button.
+
+On a light or sand surface, the standard primary button may use the established yellow treatment.
+
+On dark or blue grit surfaces, use surface-aware hover behavior.
+
+Do not allow a button to become visually indistinguishable from its surrounding surface on hover.
+
+Do not introduce undocumented button colors merely for visual variety.
+
+### Optional fields
+
+The supporting copy and CTA button may be omitted when appropriate.
+
+Omitted elements create no empty placeholders.
+
+For example:
+
+- no blurb → headline is followed directly by the button;
+- no button → content ends after the supporting copy.
+
+Do not reserve blank vertical space for omitted content.
+
+The image or other media should not be omitted from an image-specific variant.
+
+If no media is required, use an appropriate grit-background variant instead.
+
+### Content limits
+
+Keep the module concise.
+
+Recommended limits:
+
+- headline: approximately 25 characters per line;
+- headline: approximately two lines maximum;
+- supporting copy: approximately 100 words maximum;
+- supporting copy: approximately 8–9 lines in the traditional desktop layout;
+- CTA buttons: one.
+
+These are content-design guidelines rather than reasons to alter typography.
+
+Do not shrink fonts to accommodate excessive copy.
+
+Edit the content instead.
+
+### Responsive behavior
+
+On smaller screens, the two-column CTA becomes a stacked layout.
+
+Media should normally appear before the written content unless content requirements specify otherwise.
+
+Images remain:
+
+- responsive;
+- `max-width: 100%`;
+- `height: auto`;
+- `14px` rounded.
+
+Preserve reasonable inset spacing around sand-background images.
+
+Do not remove rounded corners on mobile.
+
+Do not horizontally scroll the module.
+
+Do not allow overlays to separate from their images during responsive stacking.
+
+### Bootstrap 5 requirements
+
+Use Bootstrap 5 grid and responsive utilities.
+
+Canonical column behavior may use:
+
+```html
+<div class="row align-items-center">
+  <div class="col-md-6">...</div>
+  <div class="col-md-6">...</div>
+</div>
+```
+
+Use:
+
+```html
+class="img-fluid"
+```
+
+or equivalent responsive behavior.
+
+Do not reproduce obsolete Bootstrap 3 implementation details merely because they appear in the legacy CMS source.
+
+Translate legacy classes where appropriate.
+
+Examples:
+
+```text
+.img-responsive → .img-fluid
+.btn-default → current documented button component
+```
+
+Bootstrap supplies layout mechanics.
+
+The design system supplies the visual appearance.
+
+Do not use Bootstrap defaults as the final visual treatment where the design system defines a different appearance.
+
+### Accessibility
+
+Images that communicate information must have meaningful alternative text.
+
+Decorative images use:
+
+```html
+alt=""
+```
+
+Do not use placeholder alternative text such as:
+
+```text
+Important: add image description
+```
+
+in production.
+
+Video embeds must include an accessible title.
+
+CTA links must have understandable link text.
+
+Avoid vague button labels such as:
+
+```text
+CLICK HERE
+```
+
+unless the surrounding context makes the destination unmistakable.
+
+Keyboard focus must remain visible.
+
+Color contrast must meet the project's accessibility requirements.
+
+Do not rely on an image overlay alone to communicate information.
+
+### Structure
+
+A canonical sand-background, left-image CTA may use:
+
+```html
+<section
+  class="jumbotron-sand cta-module"
+  data-module="call-to-action"
+>
+  <div class="container">
+    <div class="row align-items-center">
+
+      <div class="col-md-6">
+        <figure>
+          <img
+            class="img-fluid"
+            src="IMAGE_SOURCE"
+            alt="IMAGE_DESCRIPTION"
+          >
+        </figure>
+      </div>
+
+      <div class="col-md-6">
+        <h2>
+          Call to Action Headline
+        </h2>
+
+        <p>
+          Supporting copy for the Call to Action.
+        </p>
+
+        <p>
+          <a
+            class="btn btn-primary"
+            href="DESTINATION"
+          >
+            Call to Action
+          </a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+```
+
+Canonical image styling:
+
+```css
+.jumbotron-sand img {
+  border-radius: 14px;
+  margin: 25px 0;
+  max-width: 100%;
+  height: auto;
+}
+```
+
+### Generation rules
+
+When generating a Call to Action:
+
+- use one of the documented canonical variants;
+- preserve the established two-column composition for media variants;
+- keep content within the standard container;
+- use Bootstrap 5 grid mechanics;
+- use the appropriate heading level;
+- use the documented typography roles;
+- keep supporting copy concise;
+- use no more than one primary CTA;
+- use approximately `550 × 370` source imagery where practical;
+- make images responsive;
+- use `14px` rounded image corners;
+- preserve the `25px 0` image margin for the sand-background inset treatment;
+- allow the module background itself to show around inset images;
+- clip image overlays to the rounded image boundary;
+- ensure video embeds are responsive and accessible;
+- use only documented grit backgrounds;
+- use surface-aware button hover behavior;
+- remove omitted optional fields without placeholders.
+
+Do not:
+
+- create generic marketing cards instead of the CTA pattern;
+- add gray image frames;
+- place a gray background behind CTA imagery;
+- add a separate decorative matte around images;
+- use square image corners;
+- allow overlays to extend beyond images;
+- stretch or distort images;
+- arbitrarily crop images with fixed-height containers when natural responsive dimensions are appropriate;
+- add more than one competing CTA;
+- add multiple unrelated messages;
+- introduce undocumented overlays;
+- invent new grit backgrounds;
+- use arbitrary background colors;
+- add shadows for decoration;
+- create a mega-card treatment around the entire module;
+- shrink typography to accommodate excessive content;
+- use Bootstrap 3 classes or interaction patterns when Bootstrap 5 equivalents exist.
+
+The Call to Action should remain recognizable as the established UC San Diego CMS pattern while using the current design-system typography, colors, spacing, accessibility requirements, Bootstrap 5 behavior, and component styling.
+
+## News With Images
+
+When generating a UC San Diego News With Images module, use the established UC San Diego CMS news pattern. Do not substitute a generic card grid, blog-card layout, marketing-card component, or custom editorial grid.
+
+The News With Images module presents a small, curated group of recent stories using an image, publication date, and linked headline.
+
+The module must use Bootstrap 5 conventions together with the established UC San Diego module anatomy.
+
+The standard module contains three news items.
+
+### Purpose
+
+Use News With Images when a page needs to highlight a small group of recent news stories, announcements, articles, or editorial content.
+
+Typical uses include:
+
+* recent campus news;
+* departmental news;
+* related stories;
+* research news;
+* institutional announcements;
+* externally published stories from an approved UC San Diego source.
+
+Do not use News With Images as a substitute for:
+
+* a general-purpose card grid;
+* a navigation module;
+* Tiles with Links;
+* a Call to Action;
+* a list of unrelated resources;
+* a large searchable news archive.
+
+If more than three stories need to be displayed, use a dedicated news listing or archive pattern rather than continually extending this module.
+
+### Module background
+
+The News With Images module uses a constrained Sand panel within the page's standard content container.
+
+Use:
+
+* Sand: `#F5F0E6`
+
+The Sand surface provides subtle grouping without giving the module the visual weight of a Navy or Blue branded section.
+
+The module background must not extend edge to edge across the viewport.
+
+The module must remain centered within the page's standard content container.
+
+Do not:
+
+* use a full-width Sand band for this module;
+* use Navy, Blue, Yellow, or expressive accent colors as interchangeable module backgrounds;
+* place each news item on a separate colored card;
+* add default drop shadows;
+* add decorative gradients or textures.
+
+### Module header
+
+The module header contains:
+
+* an `h2` module heading;
+* an optional module-level text link aligned opposite the heading.
+
+The standard presentation places the heading at the left and the module-level action at the right on larger viewports.
+
+Example:
+
+```html
+<div class="news-heading-row">
+  <div>
+    <h2 id="news-heading">AI news from UC San Diego</h2>
+  </div>
+
+  <div class="view-all-link">
+    <a class="text-link" href="/news/">
+      View all news
+    </a>
+  </div>
+</div>
+```
+
+The module-level action is a text link, not a filled button.
+
+Use it for actions such as:
+
+* View all news
+* More news
+* See all stories
+
+Do not add an eyebrow, kicker, overline, category label, or decorative rule above the module heading.
+
+### Module heading
+
+Use the `type.h2` typography role.
+
+The heading uses:
+
+* Font family: Refrigerator Deluxe
+* Font size: `40px`
+* Line height: `40px`
+* Font weight: `900`
+* Letter spacing: `0.5px`
+* Color: Navy `#182B49`
+
+Example:
+
+```css
+.news-heading-row h2 {
+  font-family: var(--ucsd-font-display);
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: 900;
+  letter-spacing: .5px;
+  color: var(--ucsd-color-foreground-h2-heading);
+  margin: 0;
+}
+```
+
+Do not substitute Brix Sans for the module heading.
+
+Do not uppercase the heading.
+
+### Module-level text link
+
+The module-level action uses the UC San Diego text-link treatment rather than `btn-primary` or `btn-secondary`.
+
+The text link uses:
+
+* Navy label text;
+* Brix Sans;
+* `15px` font size;
+* `20px` line height;
+* font weight `900`;
+* `1.4px` letter spacing;
+* uppercase text;
+* a `1px` UC San Diego Blue underline;
+* no background;
+* no border radius.
+
+The underline must use UC San Diego Blue `#00629B`.
+
+Example:
+
+```css
+.news-heading-row .text-link {
+  display: inline-block;
+  color: #182b49;
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid #00629b;
+}
+
+.news-heading-row .text-link:hover {
+  color: #00629b;
+  border-bottom-color: #00629b;
+}
+
+.news-heading-row .text-link:focus-visible {
+  outline: 3px solid #ffcd00;
+  outline-offset: 4px;
+}
+```
+
+Do not use a Navy underline.
+
+Do not style this module-level action as a filled secondary button.
+
+### Visual contract
+
+The News With Images module must preserve the following visual relationships:
+
+* The entire module is centered within the standard page container.
+* The Sand module surface is constrained to that container rather than spanning the viewport.
+* The module includes substantial internal padding.
+* The heading and module-level action occupy the same introductory row.
+* The heading aligns to the left.
+* The module-level text link aligns to the right on desktop.
+* Three news items appear in one equal-width row on standard desktop viewports.
+* News-item gutters are consistent.
+* Every news image uses the same aspect ratio.
+* The date appears immediately below the image and above the headline.
+* The headline appears below the date.
+* The headline itself is the story link.
+* Items align consistently even when headline lengths differ.
+* News items do not use a default box shadow.
+* News items do not appear as floating SaaS-style cards.
+* Content leads; borders, shadows, and decorative chrome remain minimal.
+
+### News grid
+
+The standard desktop presentation contains three equal-width news items.
+
+Use three columns at desktop widths.
+
+The grid collapses responsively:
+
+* desktop: three columns;
+* medium viewports: two columns;
+* small/mobile viewports: one column.
+
+Example:
+
+```css
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ucsd-space-lg);
+}
+
+@media (max-width: 991px) {
+  .news-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+A Bootstrap 5 implementation may instead use:
+
+```html
+<div class="row g-4">
+  <div class="col-md-6 col-lg-4">...</div>
+  <div class="col-md-6 col-lg-4">...</div>
+  <div class="col-md-6 col-lg-4">...</div>
+</div>
+```
+
+Prefer the Bootstrap 5 grid when implementing the module inside the UC San Diego Bootstrap package.
+
+### News item
+
+Each news item contains:
+
+1. image;
+2. publication date;
+3. linked headline.
+
+Only the headline is the story link.
+
+The image and publication date are not links by default.
+
+Canonical anatomy:
+
+```html
+<article class="news-panel">
+  <img
+    src="/images/story.jpg"
+    alt="Descriptive image alternative text"
+  >
+
+  <div class="news-panel-heading">
+    <time
+      class="panel-news-date"
+      datetime="2026-09-09"
+    >
+      September 9, 2026
+    </time>
+
+    <h3 class="panel-news-title">
+      <a href="/news/story/">
+        Example news headline
+      </a>
+    </h3>
+  </div>
+</article>
+```
+
+Do not wrap the entire news item in an anchor.
+
+Do not add a second generic link such as `Read more`, `Read the story`, or `Learn more` beneath the headline.
+
+Do not use `alt` on the `<a>` element. The `alt` attribute is for images, not links.
+
+### News images
+
+News images use the established UC San Diego News With Images proportion:
+
+* Width reference: `388px`
+* Height reference: `246px`
+* Aspect ratio: `388 / 246`
+
+Use:
+
+```css
+.news-panel img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 388 / 246;
+  object-fit: cover;
+}
+```
+
+Images must:
+
+* fill the available card width;
+* use a consistent aspect ratio;
+* use `object-fit: cover`;
+* use meaningful alternative text when the image conveys information;
+* use `alt=""` when the image is entirely decorative and its content is already fully represented by adjacent text.
+
+Do not:
+
+* allow mixed image heights within a single module;
+* stretch images;
+* distort image proportions;
+* use unrelated decorative stock imagery;
+* put text over the news images;
+* use arbitrary image ratios within the same module.
+
+### Image corner treatment
+
+Use the standard medium-radius treatment:
+
+```css
+.news-panel img {
+  border-radius: var(--ucsd-radius-md);
+}
+```
+
+Do not add excessive rounding.
+
+The image may carry the radius without placing the entire news item inside a rounded card.
+
+### Publication date
+
+The publication date appears immediately beneath the image and above the headline.
+
+Use a semantic `<time>` element whenever the date is known.
+
+Example:
+
+```html
+<time
+  class="panel-news-date"
+  datetime="2026-09-09"
+>
+  September 9, 2026
+</time>
+```
+
+Date typography:
+
+* Brix Sans;
+* `15px`;
+* `20px` line height;
+* weight `400`;
+* uppercase;
+* Navy.
+
+Example:
+
+```css
+.panel-news-date {
+  display: block;
+  margin: 0 0 .35rem;
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #182b49;
+}
+```
+
+Do not use low-contrast gray merely to make the date appear secondary.
+
+### News headline
+
+Each news item uses an `h3` for its headline when the module heading is an `h2`.
+
+Headline typography:
+
+* Brix Sans;
+* `24px`;
+* `28px` line height;
+* weight `900`;
+* Navy.
+
+Example:
+
+```css
+.panel-news-title {
+  margin: 0;
+  font-family: var(--ucsd-font-body);
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 900;
+  color: #182b49;
+}
+```
+
+On desktop, the headline area may use a minimum height to keep story rows visually aligned.
+
+Example:
+
+```css
+.panel-news-title {
+  min-height: 88px;
+}
+```
+
+Remove the minimum height when news items stack vertically on small screens:
+
+```css
+@media (max-width: 767px) {
+  .panel-news-title {
+    min-height: 0;
+  }
+}
+```
+
+Keep headlines concise.
+
+Prefer headlines that occupy approximately two to four lines at the standard desktop width.
+
+Do not truncate meaningful headlines with ellipses solely to force identical heights.
+
+### Linked headline behavior
+
+The news headline is the story link.
+
+Because the headline itself names the destination, no additional descriptive link is required beneath it.
+
+The linked headline uses the same visual typography as the `h3` headline:
+
+* Brix Sans;
+* `24px`;
+* `28px` line height;
+* weight `900`;
+* Navy.
+
+The link should not introduce a separate button-like treatment.
+
+Use:
+
+```css
+.panel-news-title a {
+  color: var(--ucsd-color-theme-primary);
+  text-decoration: none;
+}
+
+.panel-news-title a:hover {
+  text-decoration: underline;
+}
+
+.panel-news-title a:focus-visible {
+  outline: 3px solid var(--ucsd-color-theme-secondary);
+  outline-offset: 4px;
+}
+```
+
+The full news item is not a link.
+
+Do not:
+
+* wrap the complete news item in an anchor;
+* make the image a separate link to the same story;
+* add a second link beneath the headline;
+* use generic repeated links such as `Read more`, `Learn more`, or `Read the story`;
+* lift the item vertically;
+* add a hover shadow;
+* scale the card;
+* zoom the image;
+* change the entire item to a saturated background color.
+
+The News With Images module is editorial content, not Tiles with Links. It should not inherit the Tiles scale interaction.
+
+### Keyboard focus
+
+Every linked news headline must have a clearly visible keyboard focus indicator.
+
+Use:
+
+```css
+.panel-news-title a:focus-visible {
+  outline: 3px solid #ffcd00;
+  outline-offset: 4px;
+}
+```
+
+The module-level View All link must also have a visible focus indicator.
+
+Do not remove browser focus styling without replacing it with an equally visible treatment.
+
+### Module panel
+
+The module is a constrained panel inside the page container.
+
+Canonical treatment:
+
+```css
+.jumbotron-news {
+  padding-block: var(--ucsd-space-xxxl);
+}
+
+.jumbotron-news > .container {
+  background: var(--ucsd-color-surface-2);
+  padding: var(--ucsd-space-xxl);
+  border-radius: var(--ucsd-radius-md);
+}
+```
+
+This produces a Sand content panel surrounded by the page's normal canvas.
+
+Do not allow the Sand surface to bleed to the edges of the browser viewport.
+
+### Header layout
+
+Desktop:
+
+```css
+.news-heading-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  align-items: start;
+  gap: var(--ucsd-space-lg);
+  margin-bottom: var(--ucsd-space-xl);
+}
+
+.news-heading-row .view-all-link {
+  text-align: right;
+  padding-top: .35rem;
+}
+```
+
+At smaller breakpoints, allow the action to move below the heading:
+
+```css
+@media (max-width: 767px) {
+  .news-heading-row {
+    display: block;
+  }
+
+  .news-heading-row .view-all-link {
+    margin-top: var(--ucsd-space-md);
+    text-align: left;
+  }
+}
+```
+
+Do not force the View All link to remain right aligned when doing so causes crowding or overlap.
+
+### Structure
+
+The outer section identifies the module and provides semantic grouping.
+
+The canonical hierarchy is:
+
+* `<section class="jumbotron-news" data-module="news-with-images">`
+* `.container`
+* `.news-heading-row`
+* module `<h2>`
+* optional `.view-all-link`
+* `.news-grid` or Bootstrap `.row`
+* individual `.news-panel`
+* `<img>`
+* `.news-panel-heading`
+* `<time class="panel-news-date">`
+* `<h3 class="panel-news-title">`
+* headline `<a>` inside the `h3`
+
+The module heading must be associated with the section using `aria-labelledby`.
+
+Example:
+
+```html
+<section
+  class="jumbotron-news"
+  data-module="news-with-images"
+  aria-labelledby="news-heading"
+>
+```
+
+Do not use `aria-label` when an existing visible heading can provide the accessible name through `aria-labelledby`.
+
+### Canonical Bootstrap 5 example
+
+```html
+<section
+  class="jumbotron-news"
+  data-module="news-with-images"
+  aria-labelledby="news-heading"
+>
+  <div class="container">
+
+    <div class="news-heading-row">
+      <div>
+        <h2 id="news-heading">
+          AI news from UC San Diego
+        </h2>
+      </div>
+
+      <div class="view-all-link">
+        <a
+          class="text-link"
+          href="/news/"
+        >
+          View all news
+        </a>
+      </div>
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-4">
+        <article class="news-panel">
+          <img
+            src="/images/story-one.jpg"
+            alt="Description of the story image"
+          >
+
+          <div class="news-panel-heading">
+            <time
+              class="panel-news-date"
+              datetime="2026-09-09"
+            >
+              September 9, 2026
+            </time>
+
+            <h3 class="panel-news-title">
+              <a href="/news/story-one/">
+                The Imagination Advantage:
+                A Conversation with Cassandra Vieten
+              </a>
+            </h3>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <article class="news-panel">
+          <img
+            src="/images/story-two.jpg"
+            alt="Description of the story image"
+          >
+
+          <div class="news-panel-heading">
+            <time
+              class="panel-news-date"
+              datetime="2026-09-01"
+            >
+              September 1, 2026
+            </time>
+
+            <h3 class="panel-news-title">
+              <a href="/news/story-two/">
+                Strengthening America's AI Ecosystem
+                with the Launch of the NSF NAIRR
+                Operations Center
+              </a>
+            </h3>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <article class="news-panel">
+          <img
+            src="/images/story-three.jpg"
+            alt="Description of the story image"
+          >
+
+          <div class="news-panel-heading">
+            <time
+              class="panel-news-date"
+              datetime="2026-08-31"
+            >
+              August 31, 2026
+            </time>
+
+            <h3 class="panel-news-title">
+              <a href="/news/story-three/">
+                A Summer of Learning by Doing
+              </a>
+            </h3>
+          </div>
+        </article>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+```
+
+### Canonical CSS
+
+```css
+.jumbotron-news {
+  padding-block: var(--ucsd-space-xxxl);
+}
+
+.jumbotron-news > .container {
+  background: var(--ucsd-color-surface-2);
+  padding: var(--ucsd-space-xxl);
+  border-radius: var(--ucsd-radius-md);
+}
+
+/* Header */
+
+.news-heading-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  align-items: start;
+  gap: var(--ucsd-space-lg);
+  margin-bottom: var(--ucsd-space-xl);
+}
+
+.news-heading-row h2 {
+  margin: 0;
+
+  font-family: var(--ucsd-font-display);
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: 900;
+  letter-spacing: .5px;
+
+  color: var(--ucsd-color-foreground-h2-heading);
+}
+
+.news-heading-row .view-all-link {
+  padding-top: .35rem;
+  text-align: right;
+}
+
+/* Module-level text link */
+
+.news-heading-row .text-link {
+  display: inline-block;
+
+  color: var(--ucsd-color-theme-primary);
+
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+
+  text-transform: uppercase;
+  text-decoration: none;
+
+  border-bottom:
+    1px solid
+    var(--ucsd-color-component-btn-secondary);
+}
+
+.news-heading-row .text-link:hover {
+  color: var(--ucsd-color-component-btn-secondary);
+  border-bottom-color:
+    var(--ucsd-color-component-btn-secondary);
+}
+
+.news-heading-row .text-link:focus-visible {
+  outline:
+    3px solid
+    var(--ucsd-color-theme-secondary);
+  outline-offset: 4px;
+}
+
+/* News grid */
+
+.news-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: var(--ucsd-space-lg);
+}
+
+/* News item */
+
+.news-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  color: var(--ucsd-color-theme-primary);
+  background: transparent;
+}
+
+/* Image */
+
+.news-panel img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 388 / 246;
+  object-fit: cover;
+
+  border-radius: var(--ucsd-radius-md);
+  background: var(--ucsd-color-surface-5);
+}
+
+/* Story content */
+
+.news-panel-heading {
+  padding:
+    var(--ucsd-space-md)
+    var(--ucsd-space-sm)
+    0;
+}
+
+.panel-news-date {
+  display: block;
+  margin: 0 0 .35rem;
+
+  font-family: var(--ucsd-font-body);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+
+  text-transform: uppercase;
+
+  color: var(--ucsd-color-theme-primary);
+}
+
+.panel-news-title {
+  min-height: 88px;
+  margin: 0;
+
+  font-family: var(--ucsd-font-body);
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 900;
+
+  color: var(--ucsd-color-theme-primary);
+}
+
+.panel-news-title a {
+  color: var(--ucsd-color-theme-primary);
+  text-decoration: none;
+}
+
+.panel-news-title a:hover {
+  text-decoration: underline;
+}
+
+.panel-news-title a:focus-visible {
+  outline:
+    3px solid
+    var(--ucsd-color-theme-secondary);
+  outline-offset: 4px;
+}
+
+/* Responsive */
+
+@media (max-width: 991px) {
+  .news-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .news-heading-row {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .news-heading-row {
+    display: block;
+  }
+
+  .news-heading-row h2 {
+    font-size: 34px;
+    line-height: 34px;
+  }
+
+  .news-heading-row .view-all-link {
+    margin-top: var(--ucsd-space-md);
+    text-align: left;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-news-title {
+    min-height: 0;
+  }
+}
+```
+
+### Bootstrap 5 requirements
+
+Use Bootstrap 5 markup and utilities.
+
+Do not reproduce obsolete Bootstrap 3 implementation details from legacy CMS examples.
+
+In particular:
+
+* do not depend on Bootstrap 3's `.jumbotron` component;
+* do not use `.col-xs-*`;
+* do not use `.text-right`;
+* use `.text-md-end` when Bootstrap alignment utilities are appropriate;
+* do not use `.panel`, `.panel-default`, `.panel-heading`, or `.panel-body` as Bootstrap components;
+* use semantic UC San Diego module classes instead;
+* use `.row`, `.g-4`, `.col-md-6`, and `.col-lg-4` when using the Bootstrap grid;
+* use real links for navigation;
+* do not place a `<button>` inside an `<a>`.
+
+Legacy UC San Diego class names may inform the module's visual ancestry, but new implementations must use Bootstrap 5 conventions.
+
+### Accessibility
+
+The News With Images module must meet the following requirements:
+
+* The outer section has an accessible name through `aria-labelledby`.
+* The visible module heading is an `h2` when appropriate to the page hierarchy.
+* Story headlines use `h3` beneath that module heading.
+* Publication dates use semantic `<time datetime="">` markup.
+* Images have meaningful `alt` text when informative.
+* Decorative images use `alt=""`.
+* Linked news headlines have visible keyboard focus.
+* Each story headline is the story link, so its visible text provides the accessible link purpose.
+* Do not add repeated generic links such as `Read more`, `Learn more`, or `Read the story` beneath the headlines.
+* Module-level link text is descriptive.
+* Link and focus treatments do not rely on color alone.
+* Text maintains WCAG-compliant contrast against the Sand surface.
+* Heading order remains logical when the module is placed within a page.
+* Responsive reflow does not change the semantic reading order.
+
+Do not wrap the complete news item in a link. Only the headline is linked.
+
+### Content guidance
+
+Use exactly three stories in the standard News With Images module.
+
+For each story:
+
+* use a concise headline;
+* provide a publication date;
+* provide one representative image;
+* make the headline itself the story link;
+* ensure the headline remains specific enough to identify the destination when encountered as link text.
+
+Do not add a separate `Read more`, `Learn more`, `Read the story`, or equivalent link beneath the headline.
+
+Keep headlines concise, but do not shorten them until they become ambiguous.
+
+### Do not
+
+Do not:
+
+* turn News With Images into a generic card deck;
+* make the module full viewport width;
+* make each story a white floating card on Sand;
+* add card shadows by default;
+* add decorative eyebrow text;
+* use more than three stories merely because additional grid space is available;
+* use inconsistent image ratios;
+* place category badges over the images;
+* use a Tiles with Links scale interaction;
+* add a separate generic story link beneath the headline;
+* truncate headlines with ellipses by default;
+* introduce arbitrary accent colors;
+* wrap the complete news item in a link;
+* make the image a duplicate link to the same story;
+* use a filled button for the module-level `View all news` action;
+* use Brix Sans for the module H2 in place of Refrigerator Deluxe;
+* omit visible keyboard focus;
+* use legacy Bootstrap 3 grid or panel behavior in new implementations.
+
+The target is a restrained editorial module: one clear heading, three consistently structured stories, strong photography, plain metadata, linked headlines, and recognizable UC San Diego interaction styling.
